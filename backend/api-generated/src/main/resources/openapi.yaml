@@ -1,0 +1,316 @@
+openapi: 3.0.0
+info:
+  title: API
+  version: 1.3.0
+servers:
+- url: http://localhost:8080/api
+tags:
+- name: User
+paths:
+  /user:
+    get:
+      operationId: list users
+      parameters:
+      - description: The word to apply for filtering
+        explode: true
+        in: query
+        name: search
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: The number of page to be returned
+        explode: true
+        in: query
+        name: page
+        required: false
+        schema:
+          default: 0
+          type: integer
+        style: form
+      - description: The size of page to be returned
+        explode: true
+        in: query
+        name: size
+        required: false
+        schema:
+          default: 10
+          type: integer
+        style: form
+      - description: The sort rules to be applied for define paging order
+        explode: true
+        in: query
+        name: sort
+        required: false
+        schema:
+          items:
+            example: "name,asc"
+            type: string
+          type: array
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userInfoPage'
+          description: Page of users matching specified filtering and paging criteria
+      summary: Receives users info
+      tags:
+      - User
+      x-accepts: application/json
+      x-tags:
+      - tag: User
+    post:
+      operationId: create user
+      requestBody:
+        $ref: '#/components/requestBodies/userCreation'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userInfo'
+          description: Created user
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/validationException'
+          description: Validation Exception
+      summary: Creates a new user
+      tags:
+      - User
+      x-content-type: application/json
+      x-accepts: application/json
+      x-tags:
+      - tag: User
+  /user/{userId}:
+    delete:
+      operationId: delete user
+      parameters:
+      - explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: Operation succeeded
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/notFoundException'
+          description: Not Found Exception
+      summary: Deletes a user by its id
+      tags:
+      - User
+      x-accepts: application/json
+      x-tags:
+      - tag: User
+    get:
+      operationId: find user
+      parameters:
+      - explode: false
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userInfo'
+          description: Created user
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/notFoundException'
+          description: Not Found Exception
+      summary: Returns a user info found by its id
+      tags:
+      - User
+      x-accepts: application/json
+      x-tags:
+      - tag: User
+components:
+  parameters:
+    userId:
+      explode: false
+      in: path
+      name: userId
+      required: true
+      schema:
+        type: string
+      style: simple
+    page:
+      description: The number of page to be returned
+      explode: true
+      in: query
+      name: page
+      required: false
+      schema:
+        default: 0
+        type: integer
+      style: form
+    search:
+      description: The word to apply for filtering
+      explode: true
+      in: query
+      name: search
+      required: false
+      schema:
+        type: string
+      style: form
+    size:
+      description: The size of page to be returned
+      explode: true
+      in: query
+      name: size
+      required: false
+      schema:
+        default: 10
+        type: integer
+      style: form
+    sort:
+      description: The sort rules to be applied for define paging order
+      explode: true
+      in: query
+      name: sort
+      required: false
+      schema:
+        items:
+          example: "name,asc"
+          type: string
+        type: array
+      style: form
+  requestBodies:
+    userCreation:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/userCreation'
+      required: true
+  responses:
+    userInfoPageResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/userInfoPage'
+      description: Page of users matching specified filtering and paging criteria
+    userInfoResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/userInfo'
+      description: Created user
+    emptySuccessfulResponse:
+      description: Operation succeeded
+    notFoundException:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/notFoundException'
+      description: Not Found Exception
+    validationException:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/validationException'
+      description: Validation Exception
+  schemas:
+    userCreation:
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+      required:
+      - email
+      - firstName
+      - lastName
+      - password
+      type: object
+    userInfo:
+      example:
+        firstName: firstName
+        lastName: lastName
+        id: id
+        email: email
+      properties:
+        id:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+      type: object
+    userInfoPage:
+      allOf:
+      - $ref: '#/components/schemas/paged'
+      - $ref: '#/components/schemas/userInfoPageElements'
+      type: object
+    paged:
+      properties:
+        page:
+          $ref: '#/components/schemas/pageInfo'
+        sort:
+          items:
+            type: string
+          type: array
+        totalElements:
+          type: integer
+        totalPages:
+          type: integer
+        first:
+          type: boolean
+        last:
+          type: boolean
+        empty:
+          type: boolean
+      type: object
+    pageInfo:
+      properties:
+        number:
+          type: integer
+        size:
+          type: integer
+        offset:
+          type: integer
+        paged:
+          type: boolean
+      type: object
+    sort:
+      items:
+        type: string
+      type: array
+    userInfoPageElements:
+      properties:
+        content:
+          items:
+            $ref: '#/components/schemas/userInfo'
+          type: array
+      type: object
+    notFoundException:
+      properties:
+        message:
+          type: string
+      type: object
+    validationException:
+      properties:
+        message:
+          type: string
+      type: object
