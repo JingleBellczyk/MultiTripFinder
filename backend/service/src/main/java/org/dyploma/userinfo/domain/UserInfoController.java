@@ -1,9 +1,8 @@
 package org.dyploma.userinfo.domain;
 
-import com.example.api.UserApi;
-import com.example.model.UserCreation;
-import com.example.model.UserInfo;
-import com.example.model.UserInfoPage;
+import com.openapi.api.UserApi;
+import com.openapi.model.UserCreation;
+import com.openapi.model.UserInfoPage;
 import org.dyploma.userinfo.UserInfoService;
 import org.dyploma.userinfo.dto.UserInfoRequest;
 import org.dyploma.userinfo.dto.UserInfoResponse;
@@ -22,12 +21,12 @@ public class UserInfoController implements UserApi {
     }
 
     @Override
-    public ResponseEntity<UserInfo> createUser(UserCreation userCreation) {
+    public ResponseEntity<com.openapi.model.UserInfo> createUser(UserCreation userCreation) {
         return null;
     }
 
     @Override
-    public ResponseEntity<UserInfo> findUser(String userId) {
+    public ResponseEntity<com.openapi.model.UserInfo> findUser(String userId) {
         return UserApi.super.findUser(userId);
     }
 
