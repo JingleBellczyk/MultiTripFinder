@@ -1,9 +1,9 @@
 package org.dyploma.userinfo.domain;
 
-import com.example.generated.api.UserApi;
-import com.example.generated.model.UserCreation;
-import com.example.generated.model.UserInfo;
-import com.example.generated.model.UserInfoPage;
+import com.example.api.UserApi;
+import com.example.model.UserCreation;
+import com.example.model.UserInfo;
+import com.example.model.UserInfoPage;
 import org.dyploma.userinfo.UserInfoService;
 import org.dyploma.userinfo.dto.UserInfoRequest;
 import org.dyploma.userinfo.dto.UserInfoResponse;

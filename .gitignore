@@ -2,3 +2,6 @@
 *.iws
 *.iml
 *.ipr
+backend/api-definition/target
+backend/api-generated/target
+backend/service/target

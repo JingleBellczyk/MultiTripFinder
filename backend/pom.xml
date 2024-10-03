@@ -13,8 +13,6 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<modules>
-		<module>api-definition</module>
-		<module>api-generated</module>
 		<module>service</module>
 	</modules>
 	<name>EngineeringWork</name>
