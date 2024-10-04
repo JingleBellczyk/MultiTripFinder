@@ -2,11 +2,7 @@
 *.iws
 *.iml
 *.ipr
-backend/api-definition/target
-backend/api-generated/target
-backend/service/target
-backend/api-generated/.openapi-generator
-backend/api-generated/.openapi-generator-ignore
+**/target
+backend/api-generated/.openapi-generator*
 backend/api-generated/README.md
-backend/api-generated/
-target
+backend/api-generated/src
