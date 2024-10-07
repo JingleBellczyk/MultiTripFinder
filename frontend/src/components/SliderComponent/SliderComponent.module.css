@@ -1,0 +1,7 @@
+.boxStyle {
+    padding: var(--mantine-spacing-sm) var(--mantine-spacing-xl);
+    max-width: 400px;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+}
