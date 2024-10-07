@@ -1,6 +1,6 @@
-**/.idea
-**/*.iws
-**/*.iml
+.idea
+*.iws
+*.iml
 *.ipr
 **/target
 backend/api-generated/.openapi-generator*
