@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.3.3</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>org</groupId>
+	<artifactId>EngineeringWork</artifactId>
+	<version>0.0.1</version>
+	<packaging>pom</packaging>
+	<modules>
+		<module>api-definition</module>
+		<module>api-generated</module>
+		<module>service</module>
+	</modules>
+	<name>EngineeringWork</name>
+	<description>Webowa/mobilna aplikacja do planowania podróży. Aplikacja przy wykorzystaniu SkyScanner API (dla znajdowania ścieżek lotniczych) oraz Google API (dla znajdowania ścieżek naziemnych) ma wyszukiwać optymalną trasę pomiędzy miastem wylotu, wszystkimi miastami do zwiedzenia i miastem powrotu. Kryteria wyszukiwania tras mają obejmować m.in: - listę miast, z których może rozpocząć się podróż, - listę miast, w których podróż może się zakończyć, - najwcześniejszą datę rozpoczęcia podróży, - najpóźniejszą datę zakończenia podróż, - minimalną i maksymalną liczbę dni podróży, - listę miast, które podróż ma uwzględnić (odwiedzić) oraz liczbę dni spędzoną w tych miastach.</description>
+	<properties>
+		<maven.compiler.source>21</maven.compiler.source>
+		<maven.compiler.target>21</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>
