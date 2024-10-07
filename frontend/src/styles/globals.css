@@ -1,0 +1,12 @@
+/**
+    to use globals styles you have to import it in tsx file eg. name.tsx and then you can use it in name.module.css
+ */
+:root {
+    --primary-color: rgb(61,64,91);
+    --secondary-color: #ffffff;
+    --hover-color: #ff69b4 !important;;
+    --font-family: 'Roboto', sans-serif;
+    --text-color: var(--mantine-color-dark-8);
+    --text-white: var(--mantine-color-white);
+
+}
