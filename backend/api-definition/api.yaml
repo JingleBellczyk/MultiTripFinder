@@ -1,7 +1,7 @@
 openapi: '3.0.0'
 info:
-  version: '1.3.0'
   title: 'API'
+  version: '1.0.0'
 
 servers:
   - url: 'http://localhost:8080/api'
@@ -61,10 +61,91 @@ paths:
         404:
           $ref: '#/components/responses/notFoundException'
 
+
+  /search:
+    get:
+      operationId: 'search'
+      summary: 'Searches for trip'
+      requestBody:
+        $ref: '#/components/requestBodies/searchRequest'
+      responses:
+        200:
+          $ref: '#/components/responses/tripResponse'
+        409:
+          $ref: '#/components/responses/validationException'
+
+  /searchHistory:
+    get:
+      tags:
+        - 'Search History'
+      summary: 'Receives search history'
+      operationId: 'list search history'
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/size'
+        - $ref: '#/components/parameters/sort'
+        - $ref: '#/components/parameters/publicOnly'
+        - $ref: '#/components/parameters/transports'
+        - $ref: '#/components/parameters/fromDate'
+        - $ref: '#/components/parameters/toDate'
+      responses:
+        200:
+          $ref: '#/components/responses/searchHistoryPageResponse'
+  /searchHistory/searchDetails/{searchId}:
+    get:
+      tags:
+        - 'Search History'
+      summary: 'Returns a search history details found by its id'
+      operationId: 'find search history details'
+      parameters:
+        - $ref: '#/components/parameters/searchId'
+      responses:
+        200:
+          $ref: '#/components/responses/searchHistoryDetailsResponse'
+        404:
+          $ref: '#/components/responses/notFoundException'
+  /searchHistory/user/{userId}:
+    get:
+      tags:
+        - 'Search History'
+      summary: 'Receives search history of a user'
+      operationId: 'list user search history'
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/size'
+        - $ref: '#/components/parameters/sort'
+        - $ref: '#/components/parameters/publicOnly'
+        - $ref: '#/components/parameters/transports'
+        - $ref: '#/components/parameters/fromDate'
+        - $ref: '#/components/parameters/toDate'
+      responses:
+        200:
+          $ref: '#/components/responses/searchHistoryPageResponse'
+  /searchHistory/user/{userId}/searchDetails/{searchId}:
+    get:
+      tags:
+        - 'Search History'
+      summary: 'Returns search history details of a user found by its id'
+      operationId: 'find user search history details'
+      parameters:
+        - $ref: '#/components/parameters/searchId'
+        - $ref: '#/components/parameters/userId'
+      responses:
+        200:
+          $ref: '#/components/responses/searchHistoryDetailsResponse'
+        404:
+          $ref: '#/components/responses/notFoundException'
+
 components:
   parameters:
     userId:
       name: userId
+      in: path
+      required: true
+      schema:
+        type: string
+    searchId:
+      name: searchId
       in: path
       required: true
       schema:
@@ -103,6 +184,36 @@ components:
         items:
           type: string
           example: 'name,asc'
+    publicOnly:
+      name: publicOnly
+      description: 'The flag to filter only public searches'
+      in: query
+      required: false
+      schema:
+        type: boolean
+    transports:
+      name: transports
+      description: 'The flag to filter transport search history'
+      in: query
+      required: false
+      schema:
+        type: array
+        items:
+          $ref: '#/components/schemas/transportType'
+    fromDate:
+      name: fromDate
+      description: 'The start date to filter search history'
+      in: query
+      required: false
+      schema:
+        type: string
+    toDate:
+      name: toDate
+      description: 'The end date to filter search history'
+      in: query
+      required: false
+      schema:
+        type: string
 
   requestBodies:
     userCreation:
@@ -111,6 +222,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/userCreation'
+    searchRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/searchRequest'
 
   responses:
     userInfoPageResponse:
@@ -125,6 +242,25 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/userInfo'
+    searchHistoryPageResponse:
+      description: 'Page of search history'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/searchHistoryPage'
+    searchHistoryDetailsResponse:
+      description: 'Search history'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/searchHistoryDetails'
+    tripResponse:
+      description: 'Search response'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/tripResponse'
+
     emptySuccessfulResponse:
       description: 'Operation succeeded'
     notFoundException:
@@ -141,6 +277,75 @@ components:
             $ref: '#/components/schemas/validationException'
 
   schemas:
+    searchRequest:
+      type: object
+      properties:
+        startPlace:
+          type: string
+        endPlace:
+          type: string
+        goalPlaces:
+          type: array
+          items:
+            $ref: '#/components/schemas/destinationPlace'
+        passengersNumber:
+          type: integer
+        hoursToSpend:
+          type: integer
+        startDate:
+          type: string
+        preferredTransport:
+          $ref: '#/components/schemas/transportType'
+        preferredCriteria:
+          $ref: '#/components/schemas/criteriaType'
+    tripResponse:
+      type: object
+      properties:
+        locations:
+          type: array
+          items:
+            $ref: '#/components/schemas/tripPlace'
+        totalTripTime:
+          type: integer
+        totalPrice:
+          type: number
+        passengersNumber:
+          type: integer
+
+    tripPlace:
+      type: object
+      properties:
+        place:
+          type: string
+        streetName:
+          type: string
+        streetNumber:
+          type: string
+        country:
+          type: string
+        departureTime:
+          type: string
+        arrivalTime:
+          type: string
+        transport:
+          $ref: '#/components/schemas/transportType'
+        price:
+          type: number
+        transferTime:
+          type: integer
+
+    criteriaType:
+      type: string
+      enum:
+        - PRICE
+        - TIME
+    destinationPlace:
+      type: object
+      properties:
+        place:
+          type: string
+        hoursToSpend:
+          type: integer
     userCreation:
       type: object
       required:
@@ -173,6 +378,11 @@ components:
       allOf:
         - $ref: '#/components/schemas/paged'
         - $ref: '#/components/schemas/userInfoPageElements'
+    searchHistoryPage:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/paged'
+        - $ref: '#/components/schemas/searchHistoryPageElements'
     paged:
       type: object
       properties:
@@ -212,6 +422,75 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/userInfo'
+    searchHistoryOverview:
+      type: object
+      properties:
+        name:
+          type: string
+        rides:
+          type: array
+          items:
+            $ref: '#/components/schemas/rideOverview'
+        passengers:
+          type: array
+          items:
+            $ref: '#/components/schemas/passenger'
+        transport:
+          type: array
+          items:
+            $ref: '#/components/schemas/transportType'
+        searchDate:
+          type: string
+    passenger:
+      type: object
+      properties:
+        passengerType:
+          $ref: '#/components/schemas/passengerType'
+        amount:
+          type: integer
+    passengerType:
+      type: string
+      enum:
+        - ADULT
+        - CHILD
+        - INFANT
+        - STUDENT
+        - SENIOR
+    transportType:
+      type: string
+      enum:
+        - BUS
+        - TRAIN
+        - PLANE
+    rideOverview:
+      type: object
+      properties:
+        startPlace:
+          type: string
+        endPlace:
+          type: string
+        range:
+          type: string
+    searchHistoryDetails:
+      type: object
+      properties:
+        rides:
+          type: array
+          items:
+            $ref: '#/components/schemas/rideOverview'
+        search:
+          type: string
+        searchDate:
+          type: string
+        userId:
+          type: string
+    searchHistoryPageElements:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/searchHistoryOverview'
     notFoundException:
       type: object
       properties:

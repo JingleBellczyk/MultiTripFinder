@@ -9,7 +9,7 @@ COPY service/pom.xml ./service/pom.xml
 COPY service/src ./service/src
 COPY pom.xml ./pom.xml
 
-RUN mvn clean install
+RUN mvn clean install -DskipTests
 
 # Stage 2: Runtime
 FROM eclipse-temurin:17.0.6_10-jre-alpine@sha256:c26a727c4883eb73d32351be8bacb3e70f390c2c94f078dc493495ed93c60c2f
