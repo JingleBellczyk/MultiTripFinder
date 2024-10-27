@@ -10,13 +10,6 @@ import "../styles/globals.css"
 import styles from "./SearchPage.module.css"
 import {AddButton} from "../components/AddButton/AddButton";
 
-const links = [
-    {link: '/account', label: 'My account'},
-    {link: '/travels', label: 'My Travels'},
-    {link: '/searches', label: 'My Searches'},
-    {link: '/support', label: 'Support'},
-];
-
 const gridItems: string[] = [
     'Choose places and number of days',
     'Choose passengers',
@@ -45,7 +38,7 @@ function Demo() {
     return (
         <>
             <MantineProvider theme={{primaryColor: 'grape'}}>
-                <HeaderSearch links={links}></HeaderSearch>
+                <HeaderSearch></HeaderSearch>
                 <GridComponent gridItems={gridItems} gridItemsMultiplier={gridItemsMultiplier}></GridComponent>
                 <div style={{height: '100vh', width: '80%', margin: '0 auto'}}>
                     <Grid
