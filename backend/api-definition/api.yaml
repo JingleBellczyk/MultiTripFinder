@@ -63,15 +63,15 @@ paths:
 
 
   /search:
-    get:
+    post:
       operationId: 'search'
       summary: 'Searches for trip'
       requestBody:
         $ref: '#/components/requestBodies/searchRequest'
       responses:
         200:
-          $ref: '#/components/responses/tripResponse'
-        409:
+          $ref: '#/components/responses/tripListResponse'
+        422:
           $ref: '#/components/responses/validationException'
 
   /searchHistory:
@@ -254,13 +254,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/searchHistoryDetails'
-    tripResponse:
-      description: 'Search response'
+    tripListResponse:
+      description: 'List of trips returned by search'
       content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/tripResponse'
-
+          application/json:
+            schema:
+              $ref: '#/components/schemas/tripListResponse'
     emptySuccessfulResponse:
       description: 'Operation succeeded'
     notFoundException:
@@ -280,17 +279,13 @@ components:
     searchRequest:
       type: object
       properties:
-        startPlace:
-          type: string
-        endPlace:
-          type: string
-        goalPlaces:
+        places:
           type: array
           items:
-            $ref: '#/components/schemas/destinationPlace'
+            $ref: '#/components/schemas/placeRequest'
         passengersNumber:
           type: integer
-        hoursToSpend:
+        maxHoursToSpend:
           type: integer
         startDate:
           type: string
@@ -298,48 +293,59 @@ components:
           $ref: '#/components/schemas/transportType'
         preferredCriteria:
           $ref: '#/components/schemas/criteriaType'
+
+    tripListResponse:
+      type: object
+      properties:
+        trips:
+          type: array
+          items:
+            $ref: '#/components/schemas/tripResponse'
+
     tripResponse:
       type: object
       properties:
-        locations:
+        places:
           type: array
           items:
-            $ref: '#/components/schemas/tripPlace'
-        totalTripTime:
-          type: integer
+            type: string
+        totalTransferDuration:
+          type: string
         totalPrice:
           type: number
         passengersNumber:
           type: integer
+        transfers:
+          type: array
+          items:
+            $ref: '#/components/schemas/transfer'
 
-    tripPlace:
+    transfer:
       type: object
       properties:
-        place:
+        startPlace:
           type: string
-        streetName:
+        endPlace:
           type: string
-        streetNumber:
+        startDate:
           type: string
-        country:
+        endDate:
           type: string
-        departureTime:
-          type: string
-        arrivalTime:
+        transitLine:
           type: string
         transport:
           $ref: '#/components/schemas/transportType'
         price:
           type: number
-        transferTime:
-          type: integer
+        duration:
+          type: string
 
     criteriaType:
       type: string
       enum:
         - PRICE
-        - TIME
-    destinationPlace:
+        - DURATION
+    placeRequest:
       type: object
       properties:
         place:

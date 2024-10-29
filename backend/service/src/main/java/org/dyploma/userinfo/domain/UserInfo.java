@@ -1,23 +1,23 @@
 package org.dyploma.userinfo.domain;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.dyploma.infrastructure.model.AbstractEntity;
 
 import java.time.Instant;
 import java.util.UUID;
 
 @Entity
 @Data
-@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Table(name = "user_info")
-public class UserInfo extends AbstractEntity {
+public class UserInfo {
+    @Id
+    private UUID uuid;
     private String firstName;
     private String lastName;
     @Email
@@ -32,7 +32,6 @@ public class UserInfo extends AbstractEntity {
             String firstName,
             String lastName,
             String email) {
-        super(uuid, version, createdDate, lastModifiedDate);
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
