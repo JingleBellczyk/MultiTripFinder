@@ -39,7 +39,7 @@ export function HeaderSearch({links}: Props) {
         <header className={classes.header}>
             <Container size="md" className={classes.inner}>
                 <Logo/>
-                <Group gap={5} visibleFrom="xs">
+                <Group gap={5} visibleFrom="md">
                     {items}
                 </Group>
                 <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm"/>
