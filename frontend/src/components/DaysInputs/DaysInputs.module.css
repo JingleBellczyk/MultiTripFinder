@@ -1,0 +1,19 @@
+.boxStyle {
+    padding: var(--mantine-spacing-sm) var(--mantine-spacing-xl);
+    max-width: 400px;
+    width: 80%;
+    display: flex; /* Use flexbox for layout */
+    gap: var(--mantine-spacing-md); /* Add space between inputs */
+    align-items: flex-start; /* Align items at the top */
+}
+
+/* Style for individual NumberInput labels */
+.numberInput {
+    flex: 1;
+    display: flex;
+    flex-direction: column; /* Stack label on top of input */
+}
+
+input {
+    width: 100%; /* Ensure the input takes full width */
+}

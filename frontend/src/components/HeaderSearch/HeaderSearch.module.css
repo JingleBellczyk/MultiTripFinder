@@ -16,11 +16,11 @@
 .link {
     display: block;
     line-height: 1;
-    padding: 8px 12px;
+    padding: 8px 8px;
     border-radius: var(--mantine-radius-sm);
     text-decoration: none;
     color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
-    font-size: var(--mantine-font-size-sm);
+    font-size: var(--mantine-font-size-md);
     font-weight: 500;
 
     @mixin hover {

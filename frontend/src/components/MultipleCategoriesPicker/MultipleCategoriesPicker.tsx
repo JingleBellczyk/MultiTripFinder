@@ -1,45 +1,60 @@
-import {Button, Group, Popover, Stack, Text} from '@mantine/core';
-import {useState} from 'react';
+import { Button, Group, Popover, Stack, Text } from '@mantine/core';
+import { useState } from 'react';
 import styles from "./MultipleCategoriesPicker.module.css";
-import "../../styles/globals.css"
+import "../../styles/globals.css";
+import { SearchDTO } from "../../types/SearchDTO";
 
+/**
+ * component for adding passengers, adjusted to have multiple categories, but only one also works
+ */
 interface MultipleCategoriesPickerProps {
     categories: string[];
+    dto: SearchDTO;
+    onUpdate: (newValues: Partial<SearchDTO>) => void;
 }
 
-export function MultipleCategoriesPicker({categories}: MultipleCategoriesPickerProps) {
-
-    /**
-     * hooks for counting specific passengers
-     * @author Agata
-     */
+export function MultipleCategoriesPicker({ categories, dto, onUpdate }: MultipleCategoriesPickerProps) {
     const [counts, setCounts] = useState<Record<string, number>>(
-        categories.reduce((acc, category) => ({...acc, [category]: 0}), {})
+        categories.reduce((acc, category) => ({ ...acc, [category]: 1 }), {}) // Start with 1 for each category
     );
 
-    const [totalSelected, setTotalSelected] = useState<number>(0);
+    const initialTotalSelected = categories.length; // Initially, all categories are selected
+    const [totalSelected, setTotalSelected] = useState<number>(initialTotalSelected);
 
-    /**
-     * function that increments total number of passengers
-     * @param category
-     */
     const increment = (category: string): void => {
         setCounts((prev) => {
             const newCount = prev[category] + 1;
-            setTotalSelected((total) => total + 1); // Zwiększenie całkowitej liczby
-            return {...prev, [category]: newCount};
+            const updatedDiscounts = { ...dto.discounts, [category]: newCount };
+
+            // Increase the totalSelected by 1
+            const newTotalSelected = totalSelected + 1;
+
+            onUpdate({ discounts: updatedDiscounts });
+
+            setTotalSelected(newTotalSelected); // Update totalSelected synchronously
+            return { ...prev, [category]: newCount };
         });
     };
 
-    /**
-     * function that decrements total number of passengers
-     * @param category
-     */
     const decrement = (category: string): void => {
         setCounts((prev) => {
-            const newCount = prev[category] > 0 ? prev[category] - 1 : 0;
-            setTotalSelected((total) => (newCount < prev[category] ? total - 1 : total)); // Zmniejszenie całkowitej liczby
-            return {...prev, [category]: newCount};
+            const currentCount = prev[category];
+
+            if (currentCount <= 1) {
+                return prev; // No change if current count is already 1
+            }
+
+            const newCount = currentCount - 1;
+
+            // Create a copy of the existing discounts and update the relevant category
+            const updatedDiscounts = { ...dto.discounts, [category]: newCount };
+
+            // Call onUpdate with the new discounts
+            onUpdate({ discounts: updatedDiscounts });
+            const newTotalSelected = totalSelected - 1;
+
+            setTotalSelected(newTotalSelected); // Update totalSelected synchronously
+            return { ...prev, [category]: newCount };
         });
     };
 
@@ -47,27 +62,18 @@ export function MultipleCategoriesPicker({categories}: MultipleCategoriesPickerP
         <Popover width={300} position="bottom" withArrow shadow="md">
             <Popover.Target>
                 <Button className={styles.pinkButton}>
-                    Number of passengers {totalSelected > 0 && `(${totalSelected})`}
+                    Number of passengers {totalSelected}
                 </Button>
             </Popover.Target>
             <Popover.Dropdown>
                 <Stack>
                     {categories.map((category) => (
-                        <Group key={category} style={{justifyContent: 'space-between', width: '100%'}}>
-                            <Text size="md">
-                                {category}
-                            </Text>
-                            <Group
-                                style={{justifyContent: 'flex-end'}}>
-                                <Button variant="default" onClick={() => decrement(category)}>
-                                    -
-                                </Button>
-                                <Text>
-                                    {counts[category]}
-                                </Text>
-                                <Button variant="default" onClick={() => increment(category)}>
-                                    +
-                                </Button>
+                        <Group key={category} style={{ justifyContent: 'space-between', width: '100%' }}>
+                            <Text size="md">{category}</Text>
+                            <Group style={{ justifyContent: 'flex-end' }}>
+                                <Button variant="default" onClick={() => decrement(category)}>-</Button>
+                                <Text>{counts[category]}</Text>
+                                <Button variant="default" onClick={() => increment(category)}>+</Button>
                             </Group>
                         </Group>
                     ))}
