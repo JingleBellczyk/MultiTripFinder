@@ -293,6 +293,13 @@ components:
           $ref: '#/components/schemas/transportType'
         preferredCriteria:
           $ref: '#/components/schemas/criteriaType'
+      required:
+        - places
+        - passengersNumber
+        - startDate
+        - preferredCriteria
+        - maxHoursToSpend
+
 
     tripListResponse:
       type: object
@@ -310,6 +317,8 @@ components:
           items:
             type: string
         totalTransferDuration:
+          type: string
+        totalDuration:
           type: string
         totalPrice:
           type: number
@@ -338,7 +347,8 @@ components:
         price:
           type: number
         duration:
-          type: string
+          description: 'Duration in minutes'
+          type: integer
 
     criteriaType:
       type: string
@@ -352,6 +362,8 @@ components:
           type: string
         hoursToSpend:
           type: integer
+      required:
+        - place
     userCreation:
       type: object
       required:
