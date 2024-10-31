@@ -1,38 +1,31 @@
 import '@mantine/core/styles.css';
 
-import {useState} from 'react';
-import {Container, Group, Burger, Text, MantineProvider, Flex} from '@mantine/core';
+import {Container, Group, Burger} from '@mantine/core';
+import {Link, useLocation} from 'react-router-dom';
 import {useDisclosure} from '@mantine/hooks';
 import classes from './HeaderSearch.module.css';
 import {Logo} from '../Logo/Logo';
+import Login from "../Login/Login";
+import useAuth from "../Login/useAuth";
+import {AUTHENTICATED_LINKS, UNAUTHENTICATED_LINKS, ADMIN_LINKS} from "../../constants/constants";
 
-// params
-type LinkItem = {
-    link: string;
-    label: string;
-};
-
-type Props = {
-    links: LinkItem[];
-};
-
-export function HeaderSearch({links}: Props) {
+export function HeaderSearch() {
+    const { isAuthenticated, token, loading } = useAuth();
     const [opened, {toggle}] = useDisclosure(false);
-    const [active, setActive] = useState(links[0].link);
+    const location = useLocation()
 
-    const items = links.map((link) => (
-        <a
+    const linksToDisplay = isAuthenticated
+        ? AUTHENTICATED_LINKS : UNAUTHENTICATED_LINKS;
+
+    const items = linksToDisplay.map((link) => (
+        <Link
             key={link.label}
-            href={link.link}
+            to={link.link}
             className={classes.link}
-            data-active={active === link.link || undefined}
-            onClick={(event) => {
-                event.preventDefault();
-                setActive(link.link);
-            }}
+            data-active={location.pathname === link.link || undefined}
         >
             {link.label}
-        </a>
+        </Link>
     ));
 
     return (
@@ -42,6 +35,9 @@ export function HeaderSearch({links}: Props) {
                 <Group gap={5} visibleFrom="md">
                     {items}
                 </Group>
+                <div className={classes.login}>
+                    <Login isAuthenticated={isAuthenticated} token={token}/>
+                </div>
                 <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm"/>
             </Container>
         </header>

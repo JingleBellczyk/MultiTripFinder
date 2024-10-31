@@ -4,7 +4,6 @@ import {DndListHandle} from "../components/DndListHandle/DndListHandle";
 import {GridComponent} from "../components/GridComponent/GridComponent";
 import {
     GRID_ITEMS_SEARCH,
-    LINKS,
     MAX_PASSENGERS_NUMBER,
     MEANS_OF_TRANSPORT,
     MINIMIZED_CRITERION
@@ -119,7 +118,7 @@ function SearchFunction() {
     return (
         <>
             <MantineProvider theme={{primaryColor: 'grape'}}>
-                <HeaderSearch links={LINKS}></HeaderSearch>
+                <HeaderSearch></HeaderSearch>
                 <GridComponent gridItems={GRID_ITEMS_SEARCH} gridItemsMultiplier={gridItemsMultiplier}></GridComponent>
                 <div style={{width: '80%', margin: '0 auto'}}>
                     <Grid
