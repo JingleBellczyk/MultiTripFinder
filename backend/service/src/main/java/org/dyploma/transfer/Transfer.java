@@ -1,10 +1,11 @@
-package org.dyploma.search.dto.response;
+package org.dyploma.transfer;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.dyploma.place.Place;
 import org.dyploma.transport.TransportType;
 import org.dyploma.trip.Trip;
 
@@ -22,7 +23,7 @@ public class Transfer {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    private String startPlace;
+    //private Place startPlace;
     private String endPlace;
     private Instant startDate;
     private Instant endDate;

@@ -3,10 +3,10 @@ package org.dyploma.search.domain;
 
 import com.openapi.model.TripListResponse;
 import org.dyploma.criteria.CriteriaType;
-import org.dyploma.search.dto.request.PlaceRequest;
+import org.dyploma.place.PlaceDto;
 import org.dyploma.search.dto.request.SearchRequest;
-import org.dyploma.search.dto.response.Transfer;
 import org.dyploma.search.dto.response.TripResponse;
+import org.dyploma.transfer.TransferResponse;
 import org.dyploma.transport.TransportType;
 import java.time.Instant;
 import java.time.format.DateTimeParseException;
@@ -19,12 +19,19 @@ public class SearchMapper {
 
         for (TripResponse tripResponse : tripResponses) {
             com.openapi.model.TripResponse tripResponseResult = new com.openapi.model.TripResponse();
-            tripResponseResult.setPlaces(tripResponse.getPlaces());
-            tripResponseResult.setTotalTransferDuration(tripResponse.getTotalDuration().toString());
-            tripResponseResult.setPassengersNumber(tripResponse.getPassengersNumber());
+            tripResponseResult.setPlaces(tripResponse.getPlaces().stream()
+                    .map(SearchMapper::mapToPlaceResponse)
+                    .collect(Collectors.toList()));
+            tripResponseResult.setStartPlace(tripResponse.getStartPlace());
+            tripResponseResult.setEndPlace(tripResponse.getEndPlace());
+            tripResponseResult.setStartTime(tripResponse.getStartTime().toString());
+            tripResponseResult.setEndTime(tripResponse.getEndTime().toString());
+            tripResponseResult.setTotalDuration(tripResponse.getTotalDuration());
+            tripResponseResult.setTotalTransferDuration(tripResponse.getTotalDuration());
             tripResponseResult.setTotalPrice(tripResponse.getTotalPrice());
+            tripResponseResult.setPassengersNumber(tripResponse.getPassengersNumber());
             tripResponseResult.setTransfers(tripResponse.getTransfers().stream()
-                    .map(SearchMapper::mapToTransfer)
+                    .map(SearchMapper::mapToTransferResponse)
                     .collect(Collectors.toList()));
             tripListResponse.addTripsItem(tripResponseResult);
         }
@@ -35,24 +42,20 @@ public class SearchMapper {
 
     public static SearchRequest mapToSearchRequest(com.openapi.model.SearchRequest searchRequest) {
         return SearchRequest.builder()
-                .places(searchRequest.getPlaces().stream()
+                .placesToVisit(
+                        searchRequest.getPlacesToVisit().stream()
                         .map(SearchMapper::mapToPlaceRequest)
                         .collect(Collectors.toList()))
+                .startPlace(searchRequest.getStartPlace())
+                .endPlace(searchRequest.getEndPlace())
                 .maxHoursToSpend(searchRequest.getMaxHoursToSpend())
-                .passengersNumber(searchRequest.getPassengersNumber())
-                .preferredCriteria(mapToCriteriaTypeRequest(searchRequest.getPreferredCriteria()))
-                .preferredTransport(mapToTransportTypeRequest(searchRequest.getPreferredTransport()))
                 .startDate(parseStartDate(searchRequest.getStartDate()))
+                .passengersNumber(searchRequest.getPassengersNumber())
+                .preferredTransport(mapToTransportTypeRequest(searchRequest.getPreferredTransport()))
+                .preferredCriteria(mapToCriteriaTypeRequest(searchRequest.getPreferredCriteria()))
                 .build();
     }
 
-
-    private static PlaceRequest mapToPlaceRequest(com.openapi.model.PlaceRequest placeRequest) {
-        return PlaceRequest.builder()
-                .place(placeRequest.getPlace())
-                .hoursToSpend(placeRequest.getHoursToSpend())
-                .build();
-    }
 
     private static CriteriaType mapToCriteriaTypeRequest(com.openapi.model.CriteriaType criteriaType) {
         return switch (criteriaType) {
@@ -88,18 +91,37 @@ public class SearchMapper {
         }
     }
 
-    private static com.openapi.model.Transfer mapToTransfer(Transfer transfer) {
-        com.openapi.model.Transfer transferResult = new com.openapi.model.Transfer();
+    private static com.openapi.model.TransferResponse mapToTransferResponse(TransferResponse transfer) {
+        com.openapi.model.TransferResponse transferResult = new com.openapi.model.TransferResponse();
 
-        transferResult.setStartPlace(transfer.getStartPlace());
-        transferResult.setEndPlace(transfer.getEndPlace());
+        transferResult.setStartPlace(mapToPlaceResponse(transfer.getStartPlace()));
+        transferResult.setEndPlace(mapToPlaceResponse(transfer.getEndPlace()));
         transferResult.setStartDate(transfer.getStartDate().toString());
         transferResult.setEndDate(transfer.getEndDate().toString());
         transferResult.setTransitLine(transfer.getTransitLine());
         transferResult.setTransport(mapToTransportTypeResponse(transfer.getTransport()));
         transferResult.setPrice(transfer.getPrice());
-        transferResult.setDuration(transfer.getDuration().toString());
+        transferResult.setDuration(transfer.getDuration());
+        transferResult.setOrder(transfer.getOrder());
 
         return transferResult;
+    }
+
+    private static com.openapi.model.Place mapToPlaceResponse(PlaceDto placeDto) {
+        com.openapi.model.Place place = new com.openapi.model.Place();
+        place.setName(placeDto.getName());
+        place.setHoursToSpend(placeDto.getHoursToSpend());
+        place.setOrder(placeDto.getOrder());
+        place.setIsChange(placeDto.isChange());
+        return place;
+    }
+
+    private static PlaceDto mapToPlaceRequest(com.openapi.model.Place place) {
+        return PlaceDto.builder()
+                .name(place.getName())
+                .hoursToSpend(place.getHoursToSpend())
+                .order(place.getOrder())
+                .isChange(place.getIsChange())
+                .build();
     }
 }
