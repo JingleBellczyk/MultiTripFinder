@@ -5,8 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.dyploma.search.dto.response.Transfer;
-import org.dyploma.search.dto.response.TripResponse;
+import org.dyploma.transfer.Transfer;
 import org.dyploma.tag.TripTag;
 
 import java.math.BigDecimal;

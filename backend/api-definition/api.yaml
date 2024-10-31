@@ -279,10 +279,14 @@ components:
     searchRequest:
       type: object
       properties:
-        places:
+        placesToVisit:
           type: array
           items:
-            $ref: '#/components/schemas/placeRequest'
+            $ref: '#/components/schemas/place'
+        startPlace:
+          type: string
+        endPlace:
+          type: string
         passengersNumber:
           type: integer
         maxHoursToSpend:
@@ -294,7 +298,8 @@ components:
         preferredCriteria:
           $ref: '#/components/schemas/criteriaType'
       required:
-        - places
+        - startPlace
+        - endPlace
         - passengersNumber
         - startDate
         - preferredCriteria
@@ -315,11 +320,19 @@ components:
         places:
           type: array
           items:
-            type: string
-        totalTransferDuration:
+            $ref: '#/components/schemas/place'
+        startPlace:
+          type: string
+        endPlace:
+          type: string
+        startTime:
+          type: string
+        endTime:
           type: string
         totalDuration:
-          type: string
+          type: integer
+        totalTransferDuration:
+          type: integer
         totalPrice:
           type: number
         passengersNumber:
@@ -327,15 +340,15 @@ components:
         transfers:
           type: array
           items:
-            $ref: '#/components/schemas/transfer'
+            $ref: '#/components/schemas/transferResponse'
 
-    transfer:
+    transferResponse:
       type: object
       properties:
         startPlace:
-          type: string
+          $ref: '#/components/schemas/place'
         endPlace:
-          type: string
+          $ref: '#/components/schemas/place'
         startDate:
           type: string
         endDate:
@@ -349,21 +362,32 @@ components:
         duration:
           description: 'Duration in minutes'
           type: integer
+        order:
+          type: integer
 
     criteriaType:
       type: string
       enum:
         - PRICE
         - DURATION
-    placeRequest:
+    place:
       type: object
       properties:
-        place:
+        name:
           type: string
         hoursToSpend:
           type: integer
+        order:
+          type: integer
+        isChange:
+          type: boolean
+          default: false
       required:
-        - place
+        - name
+        - hoursToSpend
+        - order
+        - isChange
+
     userCreation:
       type: object
       required:
