@@ -11,7 +11,7 @@ export interface SearchDTO {
 export interface SearchDTOPost {
     places: PlaceTime[];
     passengersNumber: number;
-    hoursToSpend: number;
+    maxHoursToSpend: number;
     startDate: Date | null;
     preferredTransport: string | null;
     preferredCriteria: string;

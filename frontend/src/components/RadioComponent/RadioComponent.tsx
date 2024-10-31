@@ -7,7 +7,7 @@ interface RadioComponentProps {
     onChange: (value: string) => void; // Callback to update the parent state
 }
 
-const RadioComponent: React.FC<RadioComponentProps> = ({ labels, selectedValue, onChange }) => {
+const RadioComponent: React.FC<RadioComponentProps> = ({ labels, selectedValue = "PRICE", onChange }) => {
     return (
         <Radio.Group
             value={selectedValue}
@@ -20,7 +20,7 @@ const RadioComponent: React.FC<RadioComponentProps> = ({ labels, selectedValue, 
                     key={label}
                     m="lg"
                     size="lg"
-                    value={label.toLowerCase()} // Ensure the value is lowercase for consistency
+                    value={label.toUpperCase()} // Value should match what you want in selectedCriterion
                     label={label}
                 />
             ))}

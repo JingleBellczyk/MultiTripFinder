@@ -1,12 +1,13 @@
 import {useEffect, useRef, useState} from 'react';
 import {useMapsLibrary} from '@vis.gl/react-google-maps';
-import {Select} from '@mantine/core';
+import {Input} from '@mantine/core';
 
 interface PlaceAutocompleteInputProps {
     onPlaceSelect: (place: google.maps.places.PlaceResult | null) => void;
+    label: string;
 }
 
-export const PlaceAutocompleteInput = ({onPlaceSelect}: PlaceAutocompleteInputProps) => {
+export const PlaceAutocompleteInput = ({onPlaceSelect, label}: PlaceAutocompleteInputProps) => {
     const [options, setOptions] = useState<string[]>([]);
     const inputRef = useRef<HTMLInputElement>(null);
     const places = useMapsLibrary('places');
@@ -41,7 +42,6 @@ export const PlaceAutocompleteInput = ({onPlaceSelect}: PlaceAutocompleteInputPr
             onPlaceSelect(null);
             return;
         }
-
         const service = new places.AutocompleteService();
         service.getPlacePredictions({input: value}, (predictions, status) => {
             if (status === google.maps.places.PlacesServiceStatus.OK && predictions) {
@@ -55,11 +55,13 @@ export const PlaceAutocompleteInput = ({onPlaceSelect}: PlaceAutocompleteInputPr
     return (
         <div
             style={{width: '100%'}}>
-            <input
-                ref={inputRef}
-                placeholder="Enter a location"
-                onChange={(e) => handleInputChange(e.target.value)}  // Update options on input change
-            />
+            <Input.Wrapper label={label} size="md">
+                <Input
+                    ref={inputRef}
+                    placeholder="Enter a location"
+                    onChange={(e) => handleInputChange(e.target.value)}  // Update options on input change
+                />
+            </Input.Wrapper>
         </div>
     );
 };

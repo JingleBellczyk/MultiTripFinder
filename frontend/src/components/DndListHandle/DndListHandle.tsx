@@ -1,11 +1,10 @@
 import {Button, CloseButton, Text} from '@mantine/core';
 import {useListState} from '@mantine/hooks';
 import classes from './DndListHandle.module.css';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {PlaceTime, SearchDTO} from "../../types/SearchDTO"; // Importuj odpowiednie typy
 import {DaysInputs} from '../DaysInputs/DaysInputs';
 import {LocationSelector} from '../PlaceAutocompleteInput/LocationSelector'
-import { useEffect } from 'react';
 
 // Define a type for the data items
 interface Place {
@@ -16,7 +15,7 @@ interface Place {
 
 // Initial data
 const initialData: Place[] = [
-    { id: 1, name: "", hours: 0 },
+    // {id: 1, name: "", hours: 0},
 ];
 
 // Component for an individual list item
@@ -27,25 +26,32 @@ interface ListItemProps {
     onNameChange: (id: number, name: string) => void; // Nowa prop dla zmiany nazwy
 }
 
-const ListItem: React.FC<ListItemProps> = ({ item, onRemove, onHoursChange, onNameChange }) => (
+const ListItem: React.FC<ListItemProps> = ({item, onRemove, onHoursChange, onNameChange}) => (
     <div className={classes.item}>
         <LocationSelector
             value={item.name} // Pass the current item name as the value
-            onChange={(newValue:string) => onNameChange(item.id, newValue)} // Update the item name on change
+            onChange={(newValue: string) => onNameChange(item.id, newValue)} // Update the item name on change
+            label={"Place to visit"}
         />
-        <DaysInputs value={item.hours}  onChange={(hours) => onHoursChange(item.id, hours)}></DaysInputs>
+        <DaysInputs value={item.hours} onChange={(hours) => onHoursChange(item.id, hours)}></DaysInputs>
         {/* CloseButton do usunięcia elementu */}
-        <CloseButton onClick={onRemove} />
+        <CloseButton onClick={onRemove}/>
     </div>
 );
 
 // Component for the starting and ending list item
-const ListItemStartEnd: React.FC<{ id: string; item: string; value: string; onNameChange: (name: string) => void; }> = ({ id, item, value, onNameChange }) => (
+const ListItemStartEnd: React.FC<{
+    id: string;
+    item: string;
+    value: string;
+    onNameChange: (name: string) => void;
+}> = ({id, item, value, onNameChange}) => (
     <div className={classes.item} id={id}>
-        <Text mx={"md"}>{item}</Text>
+        <Text fw={500} mx={"md"}>{item}</Text>
         <LocationSelector
             value={value} // Pass the current item name as the value
-            onChange={(newValue:string) => onNameChange(newValue)} // Update the item name on change
+            onChange={(newValue: string) => onNameChange(newValue)} // Update the item name on change
+            label={""}
         />
     </div>
 );
@@ -61,7 +67,13 @@ interface DndListHandleProps {
     endPlaceError: string | null; // Update the type as necessary
 }
 
-export const DndListHandle: React.FC<DndListHandleProps> = ({ dto, onUpdate, placesTimeError, startPlaceError, endPlaceError, }) => {
+export const DndListHandle: React.FC<DndListHandleProps> = ({
+                                                                dto,
+                                                                onUpdate,
+                                                                placesTimeError,
+                                                                startPlaceError,
+                                                                endPlaceError,
+                                                            }) => {
     // State do zarządzania listą miejsc
     const [state, handlers] = useListState<Place>(initialData);
     const [startItemName, setStartItemName] = useState(dto.start); // Stan dla nazwy elementu startowego
@@ -73,7 +85,7 @@ export const DndListHandle: React.FC<DndListHandleProps> = ({ dto, onUpdate, pla
                 place: place.name,
                 hoursToSpend: place.hours,
             }));
-            onUpdate({ ...dto, placesTime, start: startItemName, end: endItemName });
+            onUpdate({...dto, placesTime, start: startItemName, end: endItemName});
         }
     }, []);
 
@@ -82,7 +94,7 @@ export const DndListHandle: React.FC<DndListHandleProps> = ({ dto, onUpdate, pla
             const newId = state.length + 1;
             const updatedState = [
                 ...state,
-                { id: newId, name: "", hours: 0 },
+                {id: newId, name: "", hours: 0},
             ];
 
             handlers.setState(updatedState);
@@ -92,15 +104,15 @@ export const DndListHandle: React.FC<DndListHandleProps> = ({ dto, onUpdate, pla
                 place: place.name,
                 hoursToSpend: place.hours
             }));
-            onUpdate({ ...dto, placesTime, start: startItemName, end: endItemName });
+            onUpdate({...dto, placesTime, start: startItemName, end: endItemName});
         }
     };
 
     const removePlace = (id: number) => {
-        if (state.length > 1) { // Only allow removal if there's more than one item
+        if (state.length > 0) { // Only allow removal if there's more than one item
             const newState = state
                 .filter(item => item.id !== id)
-                .map((item, index) => ({ ...item, id: (index + 1) })); // Re-index IDs
+                .map((item, index) => ({...item, id: (index + 1)})); // Re-index IDs
 
             handlers.setState(newState);
 
@@ -110,13 +122,13 @@ export const DndListHandle: React.FC<DndListHandleProps> = ({ dto, onUpdate, pla
                 hoursToSpend: place.hours
             }));
 
-            onUpdate({ ...dto, placesTime, start: startItemName, end: endItemName });
+            onUpdate({...dto, placesTime, start: startItemName, end: endItemName});
         }
     };
     // Funkcja do obsługi zmian godzin
     const handleHoursChange = (id: number, hours: number) => {
         const updatedPlaces = state.map(item =>
-            item.id === id ? { ...item, hours } : item
+            item.id === id ? {...item, hours} : item
         );
         handlers.setState(updatedPlaces);
 
@@ -126,13 +138,13 @@ export const DndListHandle: React.FC<DndListHandleProps> = ({ dto, onUpdate, pla
             hoursToSpend: place.hours // Używamy hours
         }));
         // Aktualizuj dto z nowymi nazwami start i end
-        onUpdate({ ...dto, placesTime, start: startItemName, end: endItemName });
+        onUpdate({...dto, placesTime, start: startItemName, end: endItemName});
     };
 
     // Funkcja do obsługi zmian nazwy dla elementów listy
     const handleNameChange = (id: number, name: string) => {
         const updatedPlaces = state.map(item =>
-            item.id === id ? { ...item, name } : item
+            item.id === id ? {...item, name} : item
         );
         handlers.setState(updatedPlaces);
 
@@ -140,25 +152,25 @@ export const DndListHandle: React.FC<DndListHandleProps> = ({ dto, onUpdate, pla
             place: place.name,
             hoursToSpend: place.hours
         }));
-        onUpdate({ ...dto, placesTime, start: startItemName, end: endItemName });
-        // handleHoursChange(id, updatedPlaces.find(item => item.id === id)?.hours || 0); // Upewnij się, że godziny również są zaktualizowane
+        onUpdate({...dto, placesTime, start: startItemName, end: endItemName});
     };
 
     // Funkcja do obsługi zmian nazwy dla elementów startowych i końcowych
     const handleStartNameChange = (name: string) => {
         setStartItemName(name);
-        onUpdate({ ...dto, placesTime: dto.placesTime, start: name, end: endItemName }); // Aktualizuj dto z nową nazwą start
+        onUpdate({...dto, placesTime: dto.placesTime, start: name, end: endItemName}); // Aktualizuj dto z nową nazwą start
     };
 
     const handleEndNameChange = (name: string) => {
         setEndItemName(name);
-        onUpdate({ ...dto, placesTime: dto.placesTime, start: startItemName, end: name }); // Aktualizuj dto z nową nazwą end
+        onUpdate({...dto, placesTime: dto.placesTime, start: startItemName, end: name}); // Aktualizuj dto z nową nazwą end
     };
 
     return (
         <div>
-            <ListItemStartEnd id="start-item" item={"Start"} value={startItemName} onNameChange={handleStartNameChange} />
-            {startPlaceError  && <Text color="red" size="sm">{startPlaceError }</Text>}
+            <ListItemStartEnd id="start-item" item={"Start"} value={startItemName}
+                              onNameChange={handleStartNameChange}/>
+            {startPlaceError && <Text color="red" size="sm">{startPlaceError}</Text>}
 
             {/* Mapowanie przez elementy, aby renderować komponenty ListItem */}
             {state.map((item, index) => (
@@ -170,13 +182,13 @@ export const DndListHandle: React.FC<DndListHandleProps> = ({ dto, onUpdate, pla
                     onNameChange={handleNameChange}
                 />
             ))}
-            {placesTimeError  && <Text color="red" size="sm">{placesTimeError }</Text>}
+            {placesTimeError && <Text color="red" size="sm">{placesTimeError}</Text>}
 
             <Button onClick={addPlace} className={classes.pinkButton} disabled={state.length >= 5}>
                 Add Place
             </Button>
 
-            <ListItemStartEnd id="end-item" item={"End"} value={endItemName} onNameChange={handleEndNameChange} />
+            <ListItemStartEnd id="end-item" item={"End"} value={endItemName} onNameChange={handleEndNameChange}/>
             {endPlaceError && <Text color="red" size="sm">{endPlaceError}</Text>}
         </div>
     );
