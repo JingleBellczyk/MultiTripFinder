@@ -7,9 +7,10 @@ const GOOGLE_API_KEY: string = process.env.REACT_APP_GOOGLE_API_KEY;
 interface LocationSelectorProps {
     value: string; // Current value of the input
     onChange: (value: string) => void; // Callback to handle changes
+    label: string
 }
 
-export const LocationSelector: React.FC<LocationSelectorProps> = ({value, onChange}) => {
+export const LocationSelector: React.FC<LocationSelectorProps> = ({value, onChange, label}) => {
     const [selectedPlace, setSelectedPlace] = useState<google.maps.places.PlaceResult | null>(null);
 
     const handlePlaceSelect = (place: google.maps.places.PlaceResult | null) => {
@@ -23,7 +24,7 @@ export const LocationSelector: React.FC<LocationSelectorProps> = ({value, onChan
 
     return (
         <APIProvider apiKey={GOOGLE_API_KEY}>
-            <PlaceAutocompleteInput onPlaceSelect={handlePlaceSelect}/>
+            <PlaceAutocompleteInput onPlaceSelect={handlePlaceSelect} label={label}/>
         </APIProvider>
     );
 };

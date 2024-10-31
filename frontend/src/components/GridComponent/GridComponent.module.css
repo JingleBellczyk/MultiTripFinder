@@ -3,4 +3,6 @@
     padding: 16px;
     text-align: center;
     border: 1px solid #ddd;
+    font-size: var(--mantine-font-size-xl);
+    font-weight: 500;
 }

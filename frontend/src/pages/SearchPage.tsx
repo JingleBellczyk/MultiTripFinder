@@ -2,18 +2,23 @@ import {Button, Divider, Grid, GridCol, MantineProvider, NativeSelect, NumberInp
 import {HeaderSearch} from "../components/HeaderSearch/HeaderSearch";
 import {DndListHandle} from "../components/DndListHandle/DndListHandle";
 import {GridComponent} from "../components/GridComponent/GridComponent";
-import {DISCOUNTS, MEANS_OF_TRANSPORT, MINIMIZED_CRITERION, LINKS, GRID_ITEMS_SEARCH} from "../constants/constants";
+import {
+    GRID_ITEMS_SEARCH,
+    LINKS,
+    MAX_PASSENGERS_NUMBER,
+    MEANS_OF_TRANSPORT,
+    MINIMIZED_CRITERION
+} from "../constants/constants";
 import {DatePicker} from "../components/DatePicker/DatePicker";
-import {MultipleCategoriesPicker} from "../components/MultipleCategoriesPicker/MultipleCategoriesPicker";
 import RadioComponent from "../components/RadioComponent/RadioComponent";
-import {ValidationErrors} from '../utils/placesTimeUtils'
+import {validateForm, ValidationErrors} from '../utils/placesTimeUtils'
 import {useMaxTotalTime} from '../hooks/useMaxTotalTime'
-import {validateForm} from '../utils/placesTimeUtils'
 import "../styles/globals.css"
 import styles from "./SearchPage.module.css"
 import {SearchDTO, SearchDTOPost} from "../types/SearchDTO"
-import React, {useState, useRef} from 'react';
+import React, {useState} from 'react';
 import {postSearch} from "../api/services/searchService";
+import {usePassengersNumber} from "../hooks/usePassengersNumber";
 
 const span = 12;
 const columnNumber = 1 / 5;
@@ -34,14 +39,17 @@ export function SearchPage() {
 function SearchFunction() {
     const [meanOfTransport, setMeanOfTransport] = useState(MEANS_OF_TRANSPORT[0]);
     const [selectedDate, setSelectedDate] = useState<Date | null>(null); // Track the date
-    const [selectedCriterion, setSelectedCriterion] = useState('PRICE');
+    const [selectedCriterion, setSelectedCriterion] = React.useState("PRICE");
     const {maxTotalTime, handleMaxTotalTimeChange} = useMaxTotalTime(24);
+    const {passengersNumber, handlePassengersNumberChange} = usePassengersNumber(1)
+
 
     const [errors, setErrors] = useState<ValidationErrors>({
         dateError: null,
         placesTimeError: null,
         startPlaceError: null,
         endPlaceError: null,
+        maxHoursToSpendError: null
     });
 
     // Initialize the SearchDTO state as an empty object
@@ -52,24 +60,13 @@ function SearchFunction() {
         maxTotalTime: maxTotalTime,
         transport: null,
         startDate: null,
-        discounts: {},
-        preferredCriteria: selectedCriterion
+        discounts: {"Adult": 1},
+        preferredCriteria: 'PRICE'
     });
 
-    const handlePassengersChange = (newValues: Partial<SearchDTO>) => {
-        // Ensure discounts is always defined
-        const updatedDto = {
-            ...searchDto,
-            discounts: {
-                ...searchDto.discounts,
-                ...newValues.discounts, // Merge the updated discounts
-            },
-        };
-        setSearchDto(updatedDto);
-    };
-
     const handleTransportChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setMeanOfTransport(event.target.value); // Update state with the selected value
+        const selectedValue = event.target.value;
+        setMeanOfTransport(selectedValue.toUpperCase());
     };
 
     const handleDateChange = (date: Date | null) => {
@@ -78,14 +75,14 @@ function SearchFunction() {
 
     const handleSubmit = async () => {
         const selectedTransport = meanOfTransport === MEANS_OF_TRANSPORT[0] ? null : meanOfTransport;
-        const numberOfPassnegers = searchDto.discounts["Adult"];
+        const numberOfPassengers = passengersNumber;
         const placesTimeList = searchDto.placesTime;
         const startPlace = searchDto.start;
         const endPlace = searchDto.end;
         const preferredCriteria = selectedCriterion
 
         // validation of errors
-        const newErrors = validateForm(selectedDate, placesTimeList, startPlace, endPlace);
+        const newErrors = validateForm(selectedDate, placesTimeList, startPlace, endPlace, maxTotalTime);
         setErrors(newErrors);
 
         // if errors, break
@@ -100,11 +97,10 @@ function SearchFunction() {
             ...placesTimeList,                       // Dodaj miejsca docelowe
             {place: endPlace, hoursToSpend: 0}     // Dodaj end na końcu
         ];
-
         const dto: SearchDTOPost = {
             places: goalPlacesTime,
-            passengersNumber: numberOfPassnegers,
-            hoursToSpend: maxTotalTime,
+            passengersNumber: numberOfPassengers,
+            maxHoursToSpend: maxTotalTime,
             startDate: selectedDate,
             preferredTransport: selectedTransport,
             preferredCriteria: preferredCriteria
@@ -144,12 +140,19 @@ function SearchFunction() {
 
                         {/*column with passengers*/}
                         <GridCol key={2} span={span * gridItemsMultiplier[1]}>
-                            <MultipleCategoriesPicker
-                                categories={DISCOUNTS}
-                                dto={searchDto}
-                                onUpdate={handlePassengersChange}
-                            ></MultipleCategoriesPicker>
+                            <NumberInput
+                                size="md"
+                                radius="md"
+                                mx="md"
+                                name={"passengersNumber"}
+                                min={1}
+                                max={MAX_PASSENGERS_NUMBER}
+                                onChange={handlePassengersNumberChange}
+                                defaultValue={1}
+                            />
                             <Button size={"xl"} className={styles.pinkButton} onClick={handleSubmit}>Search!</Button>
+
+
                         </GridCol>
 
                         {/*column with transport*/}
@@ -159,21 +162,21 @@ function SearchFunction() {
                                 size="md"
                                 radius="md"
                                 data={MEANS_OF_TRANSPORT}
-                                defaultValue={MEANS_OF_TRANSPORT.at(0)}
+                                defaultValue={(MEANS_OF_TRANSPORT.at(0))}
                                 onChange={handleTransportChange}
                             />
                         </GridCol>
 
                         {/*column with date, criterion and maxTotalDays*/}
                         <GridCol key={4} span={span * gridItemsMultiplier[3]}>
-                            <Text mb={"sm"} style={{textAlign: 'left'}}>Start date</Text>
+                            <Text className={styles.textStyle}>Start date</Text>
                             <DatePicker onDateChange={handleDateChange}/>
                             {errors.dateError &&
                                 <Text color="red"
                                       size="sm">{errors.dateError}</Text>} {/* Display error if date is null */}
                             <Divider my="md"/>
 
-                            <Text mb={"sm"} style={{textAlign: 'left'}}>What do you want to minimize?</Text>
+                            <Text className={styles.textStyle}>What do you want to minimize?</Text>
                             <RadioComponent
                                 labels={MINIMIZED_CRITERION}
                                 selectedValue={selectedCriterion}
@@ -181,7 +184,7 @@ function SearchFunction() {
                             />
                             <Divider my="md"/>
 
-                            <Text mb={"sm"} style={{textAlign: 'left'}}>Maximum total days number</Text>
+                            <Text className={styles.textStyle}>Maximum total days number</Text>
                             <NumberInput
                                 size="md"
                                 name={"maxTotalTime"}
@@ -190,6 +193,9 @@ function SearchFunction() {
                                 onChange={handleMaxTotalTimeChange}
                                 defaultValue={1}
                             />
+                            {errors.maxHoursToSpendError &&
+                                <Text color="red" size="sm">{errors.maxHoursToSpendError}</Text>}
+
                         </GridCol>
                     </Grid>
                 </div>

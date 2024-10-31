@@ -7,7 +7,6 @@
     padding-left: calc(var(--mantine-spacing-xl) - var(--mantine-spacing-md));
     background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-5));
     margin-bottom: var(--mantine-spacing-lg);
-    margin-top: var(--mantine-spacing-lg);
 }
 
 .itemDragging {
@@ -30,7 +29,8 @@
     border-radius: 5px;
     transition: background-color 0.3s ease; /* Smooth transition effect */
     font-size: var(--mantine-font-size-md);
-    size: var(--mantine-breakpoint-sm)
+    size: var(--mantine-breakpoint-sm);
+    margin-bottom: var(--mantine-spacing-md);
 }
 .pinkButton:hover {
     background-color: var(--hover-color);
