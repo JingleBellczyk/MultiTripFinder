@@ -1,4 +1,4 @@
-package org.dyploma.search.dto.response;
+package org.dyploma.search.algorithm.response;
 import lombok.Builder;
 import lombok.Data;
 import org.dyploma.transfer.TransferResponse;
@@ -9,7 +9,7 @@ import java.util.List;
 
 @Data
 @Builder
-public class TripResponse {
+public class SearchResponseElement {
     private Instant startTime;
     private Instant endTime;
     private int totalDuration;

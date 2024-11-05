@@ -67,7 +67,7 @@ paths:
         $ref: '#/components/requestBodies/searchRequest'
       responses:
         200:
-          $ref: '#/components/responses/tripListResponse'
+          $ref: '#/components/responses/searchResponse'
         422:
           $ref: '#/components/responses/validationException'
   /searchList/{userId}:
@@ -83,17 +83,17 @@ paths:
         - $ref: '#/components/parameters/tags'
       responses:
         200:
-          $ref: '#/components/responses/searchPageResponse'
+          $ref: '#/components/responses/searchPage'
     post:
       summary: 'Saves user search'
       operationId: 'save search'
       parameters:
         - $ref: '#/components/parameters/userId'
       requestBody:
-        $ref: '#/components/requestBodies/searchRequest'
+        $ref: '#/components/requestBodies/searchStoring'
       responses:
         200:
-          $ref: '#/components/responses/searchResponse'
+          $ref: '#/components/responses/search'
         422:
           $ref: '#/components/responses/validationException'
         409:
@@ -107,7 +107,7 @@ paths:
         - $ref: '#/components/parameters/userId'
       responses:
         200:
-          $ref: '#/components/responses/searchResponse'
+          $ref: '#/components/responses/search'
         404:
           $ref: '#/components/responses/notFoundException'
     put:
@@ -117,10 +117,10 @@ paths:
         - $ref: '#/components/parameters/searchId'
         - $ref: '#/components/parameters/userId'
       requestBody:
-        $ref: '#/components/requestBodies/searchRequest'
+        $ref: '#/components/requestBodies/searchUpdating'
       responses:
         200:
-          $ref: '#/components/responses/searchResponse'
+          $ref: '#/components/responses/search'
         404:
           $ref: '#/components/responses/notFoundException'
     delete:
@@ -205,6 +205,18 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/searchRequest'
+    searchStoring:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/search'
+    searchUpdating:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/searchUpdating'
 
   responses:
     userInfoPageResponse:
@@ -219,24 +231,24 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/userInfo'
-    searchPageResponse:
+    searchPage:
       description: 'Page of search history'
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/searchPage'
-    searchResponse:
+    search:
       description: 'User saved search'
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/search'
-    tripListResponse:
-      description: 'List of trips returned by search'
+    searchResponse:
+      description: 'Search response'
       content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/tripListResponse'
+        application/json:
+          schema:
+            $ref: '#/components/schemas/searchResponse'
     emptySuccessfulResponse:
       description: 'Operation succeeded'
     notFoundException:
@@ -255,7 +267,7 @@ components:
         tags:
           type: array
           items:
-            $ref: '#/components/schemas/searchTag'
+            type: string
         placesToVisit:
           type: array
           items:
@@ -282,16 +294,15 @@ components:
         - preferredCriteria
         - maxHoursToSpend
 
-
-    tripListResponse:
+    searchResponse:
       type: object
       properties:
         trips:
           type: array
           items:
-            $ref: '#/components/schemas/tripResponse'
+            $ref: '#/components/schemas/searchResponseElement'
 
-    tripResponse:
+    searchResponseElement:
       type: object
       properties:
         startTime:
@@ -309,9 +320,9 @@ components:
         transfers:
           type: array
           items:
-            $ref: '#/components/schemas/transferResponse'
+            $ref: '#/components/schemas/transfer'
 
-    transferResponse:
+    transfer:
       type: object
       properties:
         startPlace:
@@ -369,7 +380,7 @@ components:
         tags:
           type: array
           items:
-            $ref: '#/components/schemas/searchTag'
+            type: string
         placesToVisit:
           type: array
           items:
@@ -409,28 +420,6 @@ components:
         - BUS
         - TRAIN
         - PLANE
-    rideOverview:
-      type: object
-      properties:
-        startPlace:
-          type: string
-        endPlace:
-          type: string
-        range:
-          type: string
-    searchHistoryDetails:
-      type: object
-      properties:
-        rides:
-          type: array
-          items:
-            $ref: '#/components/schemas/rideOverview'
-        search:
-          type: string
-        searchDate:
-          type: string
-        userId:
-          type: string
     searchPageElements:
       type: object
       properties:
@@ -438,20 +427,15 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/search'
-    searchTag:
+    searchUpdating:
       type: object
       properties:
-        id:
-          type: string
         name:
           type: string
-    tripTag:
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
+        tags:
+          type: array
+          items:
+            type: string
     userCreation:
       type: object
       required:

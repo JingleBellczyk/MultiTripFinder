@@ -1,12 +1,20 @@
 package org.dyploma.tag;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.dyploma.search.domain.Search;
 
 import java.util.List;
 import java.util.UUID;
 
 @Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Table(name = "search_tag")
 public class SearchTag {
     @Id

@@ -2,7 +2,7 @@ package org.dyploma.search.validator;
 
 import org.dyploma.exception.ValidationException;
 import org.dyploma.place.PlaceDto;
-import org.dyploma.search.dto.request.SearchRequest;
+import org.dyploma.search.algorithm.request.SearchRequest;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;

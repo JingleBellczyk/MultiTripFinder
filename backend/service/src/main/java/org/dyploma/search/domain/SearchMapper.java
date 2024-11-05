@@ -1,47 +1,27 @@
 package org.dyploma.search.domain;
 
 
-import com.openapi.model.TripListResponse;
 import org.dyploma.criteria.CriteriaType;
+import org.dyploma.place.Place;
 import org.dyploma.place.PlaceDto;
-import org.dyploma.search.dto.request.SearchRequest;
-import org.dyploma.search.dto.response.TripResponse;
+import org.dyploma.search.algorithm.request.SearchRequest;
+import org.dyploma.search.algorithm.response.SearchResponseElement;
+import org.dyploma.tag.SearchTag;
+import org.dyploma.tag.TripTag;
 import org.dyploma.transfer.TransferResponse;
 import org.dyploma.transport.TransportType;
 import java.time.Instant;
 import java.time.format.DateTimeParseException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class SearchMapper {
-    public static com.openapi.model.TripListResponse mapToTripListResponse(List<TripResponse> tripResponses) {
-        TripListResponse tripListResponse = new TripListResponse();
-
-        for (TripResponse tripResponse : tripResponses) {
-            com.openapi.model.TripResponse tripResponseResult = new com.openapi.model.TripResponse();
-            tripResponseResult.setStartTime(tripResponse.getStartTime().toString());
-            tripResponseResult.setEndTime(tripResponse.getEndTime().toString());
-            tripResponseResult.setTotalDuration(tripResponse.getTotalDuration());
-            tripResponseResult.setTotalTransferDuration(tripResponse.getTotalDuration());
-            tripResponseResult.setTotalPrice(tripResponse.getTotalPrice());
-            tripResponseResult.setPassengersNumber(tripResponse.getPassengersNumber());
-            tripResponseResult.setTransfers(tripResponse.getTransfers().stream()
-                    .map(SearchMapper::mapToTransferResponse)
-                    .collect(Collectors.toList()));
-            tripListResponse.addTripsItem(tripResponseResult);
-        }
-
-        return tripListResponse;
-    }
-
 
     public static SearchRequest mapToSearchRequest(com.openapi.model.SearchRequest searchRequest) {
         return SearchRequest.builder()
-                .name(searchRequest.getName())
                 .placesToVisit(
                         searchRequest.getPlacesToVisit().stream()
-                        .map(SearchMapper::mapToPlaceRequest)
-                        .collect(Collectors.toList()))
+                                .map(SearchMapper::mapToPlaceRequest)
+                                .toList())
                 .startPlace(searchRequest.getStartPlace())
                 .endPlace(searchRequest.getEndPlace())
                 .maxHoursToSpend(searchRequest.getMaxHoursToSpend())
@@ -51,7 +31,65 @@ public class SearchMapper {
                 .preferredCriteria(mapToCriteriaTypeRequest(searchRequest.getPreferredCriteria()))
                 .build();
     }
+    public static com.openapi.model.SearchResponse mapToSearchResponse(List<SearchResponseElement> searchResponse) {
+        com.openapi.model.SearchResponse searchResponseResult = new com.openapi.model.SearchResponse();
 
+        for (SearchResponseElement searchResponseElement : searchResponse) {
+            com.openapi.model.SearchResponseElement searchResponseElementResult = new com.openapi.model.SearchResponseElement();
+            searchResponseElementResult.setStartTime(searchResponseElement.getStartTime().toString());
+            searchResponseElementResult.setEndTime(searchResponseElement.getEndTime().toString());
+            searchResponseElementResult.setTotalDuration(searchResponseElement.getTotalDuration());
+            searchResponseElementResult.setTotalTransferDuration(searchResponseElement.getTotalDuration());
+            searchResponseElementResult.setTotalPrice(searchResponseElement.getTotalPrice());
+            searchResponseElementResult.setPassengersNumber(searchResponseElement.getPassengersNumber());
+            searchResponseElementResult.setTransfers(searchResponseElement.getTransfers().stream()
+                    .map(SearchMapper::mapTranferResponseToTransfer).toList());
+            searchResponseResult.addTripsItem(searchResponseElementResult);
+        }
+
+        return searchResponseResult;
+    }
+
+    public static Search mapToSearchDomain(com.openapi.model.Search search) {
+        return Search.builder()
+                .name(search.getName())
+                .tags(search.getTags().stream()
+                        .map(SearchMapper::mapToSearchTagDomain)
+                        .toList())
+                .placesToVisit(
+                        search.getPlacesToVisit().stream()
+                        .map(SearchMapper::mapToPlaceDomain)
+                        .toList())
+                .startPlace(search.getStartPlace())
+                .endPlace(search.getEndPlace())
+                .maxHoursToSpend(search.getMaxHoursToSpend())
+                .startDate(parseStartDate(search.getStartDate()))
+                .passengersNumber(search.getPassengersNumber())
+                .preferredTransport(mapToTransportTypeRequest(search.getPreferredTransport()))
+                .preferredCriteria(mapToCriteriaTypeRequest(search.getPreferredCriteria()))
+                .build();
+    }
+
+    public static com.openapi.model.Search mapToSearch(Search search) {
+        com.openapi.model.Search searchResult = new com.openapi.model.Search();
+
+        searchResult.setName(search.getName());
+        searchResult.setTags(search.getTags().stream()
+                .map(SearchTag::getTag)
+                .toList());
+        searchResult.setPlacesToVisit(search.getPlacesToVisit().stream()
+                .map(SearchMapper::mapPlaceDomainToPlace)
+                .toList());
+        searchResult.setStartPlace(search.getStartPlace());
+        searchResult.setEndPlace(search.getEndPlace());
+        searchResult.setMaxHoursToSpend(search.getMaxHoursToSpend());
+        searchResult.setStartDate(search.getStartDate().toString());
+        searchResult.setPassengersNumber(search.getPassengersNumber());
+        searchResult.setPreferredTransport(mapToTransportTypeResponse(search.getPreferredTransport()));
+        searchResult.setPreferredCriteria(mapToCriteriaTypeResponse(search.getPreferredCriteria()));
+
+        return searchResult;
+    }
 
     private static CriteriaType mapToCriteriaTypeRequest(com.openapi.model.CriteriaType criteriaType) {
         return switch (criteriaType) {
@@ -87,11 +125,11 @@ public class SearchMapper {
         }
     }
 
-    private static com.openapi.model.TransferResponse mapToTransferResponse(TransferResponse transfer) {
-        com.openapi.model.TransferResponse transferResult = new com.openapi.model.TransferResponse();
+    private static com.openapi.model.Transfer mapTranferResponseToTransfer(TransferResponse transfer) {
+        com.openapi.model.Transfer transferResult = new com.openapi.model.Transfer();
 
-        transferResult.setStartPlace(mapToPlaceResponse(transfer.getStartPlace()));
-        transferResult.setEndPlace(mapToPlaceResponse(transfer.getEndPlace()));
+        transferResult.setStartPlace(mapPlaceDtoToPlaceResponse(transfer.getStartPlace()));
+        transferResult.setEndPlace(mapPlaceDtoToPlaceResponse(transfer.getEndPlace()));
         transferResult.setStartDate(transfer.getStartDate().toString());
         transferResult.setEndDate(transfer.getEndDate().toString());
         transferResult.setTransitLine(transfer.getTransitLine());
@@ -103,7 +141,7 @@ public class SearchMapper {
         return transferResult;
     }
 
-    private static com.openapi.model.Place mapToPlaceResponse(PlaceDto placeDto) {
+    private static com.openapi.model.Place mapPlaceDtoToPlace(PlaceDto placeDto) {
         com.openapi.model.Place place = new com.openapi.model.Place();
         place.setName(placeDto.getName());
         place.setHoursToSpend(placeDto.getHoursToSpend());
@@ -112,12 +150,42 @@ public class SearchMapper {
         return place;
     }
 
+    private static com.openapi.model.Place mapPlaceDomainToPlace(Place place) {
+        com.openapi.model.Place placeResult = new com.openapi.model.Place();
+        placeResult.setName(place.getName());
+        placeResult.setHoursToSpend(place.getHoursToSpend());
+        placeResult.setOrder(place.getOrder());
+        placeResult.setIsChange(place.isChange());
+        return placeResult;
+    }
+
     private static PlaceDto mapToPlaceRequest(com.openapi.model.Place place) {
         return PlaceDto.builder()
                 .name(place.getName())
                 .hoursToSpend(place.getHoursToSpend())
                 .order(place.getOrder())
                 .isChange(place.getIsChange())
+                .build();
+    }
+
+    private static Place mapToPlaceDomain(com.openapi.model.Place place) {
+        return Place.builder()
+                .name(place.getName())
+                .hoursToSpend(place.getHoursToSpend())
+                .order(place.getOrder())
+                .isChange(place.getIsChange())
+                .build();
+    }
+
+    private static SearchTag mapToSearchTagDomain(String searchTag) {
+        return SearchTag.builder()
+                .tag(searchTag)
+                .build();
+    }
+
+    private static TripTag mapToTripTagDomain(String tripTag) {
+        return TripTag.builder()
+                .tag(tripTag)
                 .build();
     }
 }

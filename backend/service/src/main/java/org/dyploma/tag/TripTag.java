@@ -1,12 +1,20 @@
 package org.dyploma.tag;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.dyploma.trip.Trip;
 
 import java.util.List;
 import java.util.UUID;
 
 @Entity
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Table(name = "trip_tags")
 public class TripTag {
     @Id

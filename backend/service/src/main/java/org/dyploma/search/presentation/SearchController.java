@@ -1,7 +1,7 @@
 package org.dyploma.search.presentation;
 
 import com.openapi.model.SearchRequest;
-import com.openapi.model.TripListResponse;
+import com.openapi.model.SearchResponse;
 import org.dyploma.search.domain.SearchMapper;
 import org.dyploma.search.domain.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class SearchController implements SearchApi {
     }
 
     @Override
-    public ResponseEntity<TripListResponse> search(SearchRequest searchRequest) {
-        return ResponseEntity.ok(SearchMapper.mapToTripListResponse(searchService.search(SearchMapper.mapToSearchRequest(searchRequest))));
+    public ResponseEntity<SearchResponse> search(SearchRequest searchRequest) {
+        return ResponseEntity.ok(SearchMapper.mapToSearchResponse(searchService.search(SearchMapper.mapToSearchRequest(searchRequest))));
     }
 }
