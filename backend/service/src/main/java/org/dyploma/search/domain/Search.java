@@ -11,6 +11,7 @@ import org.dyploma.tag.SearchTag;
 import org.dyploma.transport.TransportType;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,7 +26,7 @@ public class Search {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String name;
-    private Instant creationDate;
+    private LocalDate creationDate;
     @ManyToMany
     @JoinTable(
             name = "search_tag",
@@ -38,7 +39,7 @@ public class Search {
     private String startPlace;
     private String endPlace;
     private int maxHoursToSpend;
-    private Instant startDate;
+    private LocalDate startDate;
     private int passengersNumber;
     private TransportType preferredTransport;
     private CriteriaType preferredCriteria;
