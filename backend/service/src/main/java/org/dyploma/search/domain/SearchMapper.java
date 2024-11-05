@@ -19,11 +19,6 @@ public class SearchMapper {
 
         for (TripResponse tripResponse : tripResponses) {
             com.openapi.model.TripResponse tripResponseResult = new com.openapi.model.TripResponse();
-            tripResponseResult.setPlaces(tripResponse.getPlaces().stream()
-                    .map(SearchMapper::mapToPlaceResponse)
-                    .collect(Collectors.toList()));
-            tripResponseResult.setStartPlace(tripResponse.getStartPlace());
-            tripResponseResult.setEndPlace(tripResponse.getEndPlace());
             tripResponseResult.setStartTime(tripResponse.getStartTime().toString());
             tripResponseResult.setEndTime(tripResponse.getEndTime().toString());
             tripResponseResult.setTotalDuration(tripResponse.getTotalDuration());
@@ -42,6 +37,7 @@ public class SearchMapper {
 
     public static SearchRequest mapToSearchRequest(com.openapi.model.SearchRequest searchRequest) {
         return SearchRequest.builder()
+                .name(searchRequest.getName())
                 .placesToVisit(
                         searchRequest.getPlacesToVisit().stream()
                         .map(SearchMapper::mapToPlaceRequest)

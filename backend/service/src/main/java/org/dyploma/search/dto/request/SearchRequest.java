@@ -12,6 +12,8 @@ import java.util.List;
 @Data
 @Builder
 public class SearchRequest {
+    private String name;
+    //tags
     private List<PlaceDto> placesToVisit;
     private String startPlace;
     private String endPlace;

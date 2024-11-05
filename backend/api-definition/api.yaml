@@ -16,10 +16,8 @@ paths:
       summary: 'Receives users info'
       operationId: 'list users'
       parameters:
-        - $ref: '#/components/parameters/search'
         - $ref: '#/components/parameters/page'
         - $ref: '#/components/parameters/size'
-        - $ref: '#/components/parameters/sort'
       responses:
         200:
           $ref: '#/components/responses/userInfoPageResponse'
@@ -61,7 +59,6 @@ paths:
         404:
           $ref: '#/components/responses/notFoundException'
 
-
   /search:
     post:
       operationId: 'search'
@@ -73,68 +70,71 @@ paths:
           $ref: '#/components/responses/tripListResponse'
         422:
           $ref: '#/components/responses/validationException'
-
-  /searchHistory:
+  /searchList/{userId}:
     get:
-      tags:
-        - 'Search History'
-      summary: 'Receives search history'
-      operationId: 'list search history'
+      summary: 'Receives user search list (paged)'
+      operationId: 'list user search'
       parameters:
+        - $ref: '#/components/parameters/userId'
         - $ref: '#/components/parameters/page'
         - $ref: '#/components/parameters/size'
-        - $ref: '#/components/parameters/sort'
-        - $ref: '#/components/parameters/publicOnly'
         - $ref: '#/components/parameters/transports'
-        - $ref: '#/components/parameters/fromDate'
-        - $ref: '#/components/parameters/toDate'
+        - $ref: '#/components/parameters/date'
+        - $ref: '#/components/parameters/tags'
       responses:
         200:
-          $ref: '#/components/responses/searchHistoryPageResponse'
-  /searchHistory/searchDetails/{searchId}:
-    get:
-      tags:
-        - 'Search History'
-      summary: 'Returns a search history details found by its id'
-      operationId: 'find search history details'
+          $ref: '#/components/responses/searchPageResponse'
+    post:
+      summary: 'Saves user search'
+      operationId: 'save search'
       parameters:
-        - $ref: '#/components/parameters/searchId'
+        - $ref: '#/components/parameters/userId'
+      requestBody:
+        $ref: '#/components/requestBodies/searchRequest'
       responses:
         200:
-          $ref: '#/components/responses/searchHistoryDetailsResponse'
-        404:
-          $ref: '#/components/responses/notFoundException'
-  /searchHistory/user/{userId}:
+          $ref: '#/components/responses/searchResponse'
+        422:
+          $ref: '#/components/responses/validationException'
+        409:
+          $ref: '#/components/responses/conflictException'
+  /searchList/{userId}{searchId}:
     get:
-      tags:
-        - 'Search History'
-      summary: 'Receives search history of a user'
-      operationId: 'list user search history'
-      parameters:
-        - $ref: '#/components/parameters/page'
-        - $ref: '#/components/parameters/size'
-        - $ref: '#/components/parameters/sort'
-        - $ref: '#/components/parameters/publicOnly'
-        - $ref: '#/components/parameters/transports'
-        - $ref: '#/components/parameters/fromDate'
-        - $ref: '#/components/parameters/toDate'
-      responses:
-        200:
-          $ref: '#/components/responses/searchHistoryPageResponse'
-  /searchHistory/user/{userId}/searchDetails/{searchId}:
-    get:
-      tags:
-        - 'Search History'
-      summary: 'Returns search history details of a user found by its id'
-      operationId: 'find user search history details'
+      summary: 'Returns user search found by search id'
+      operationId: 'find user search'
       parameters:
         - $ref: '#/components/parameters/searchId'
         - $ref: '#/components/parameters/userId'
       responses:
         200:
-          $ref: '#/components/responses/searchHistoryDetailsResponse'
+          $ref: '#/components/responses/searchResponse'
         404:
           $ref: '#/components/responses/notFoundException'
+    put:
+      summary: 'Updates user search'
+      operationId: 'update search'
+      parameters:
+        - $ref: '#/components/parameters/searchId'
+        - $ref: '#/components/parameters/userId'
+      requestBody:
+        $ref: '#/components/requestBodies/searchRequest'
+      responses:
+        200:
+          $ref: '#/components/responses/searchResponse'
+        404:
+          $ref: '#/components/responses/notFoundException'
+    delete:
+      summary: 'Deletes user search'
+      operationId: 'delete search'
+      parameters:
+        - $ref: '#/components/parameters/searchId'
+        - $ref: '#/components/parameters/userId'
+      responses:
+        200:
+          $ref: '#/components/responses/emptySuccessfulResponse'
+        404:
+          $ref: '#/components/responses/notFoundException'
+
 
 components:
   parameters:
@@ -158,13 +158,6 @@ components:
       schema:
         type: integer
         default: 0
-    search:
-      name: search
-      description: 'The word to apply for filtering'
-      in: query
-      required: false
-      schema:
-        type: string
     size:
       name: size
       description: 'The size of page to be returned'
@@ -173,47 +166,31 @@ components:
       schema:
         type: integer
         default: 10
-    sort:
-      name: sort
-      description: 'The sort rules to be applied for define paging order'
-      explode: true
-      in: query
-      required: false
-      schema:
-        type: array
-        items:
-          type: string
-          example: 'name,asc'
-    publicOnly:
-      name: publicOnly
-      description: 'The flag to filter only public searches'
-      in: query
-      required: false
-      schema:
-        type: boolean
     transports:
       name: transports
-      description: 'The flag to filter transport search history'
+      description: 'Transports to filter transport search list'
       in: query
       required: false
       schema:
         type: array
         items:
           $ref: '#/components/schemas/transportType'
-    fromDate:
-      name: fromDate
-      description: 'The start date to filter search history'
+    date:
+      name: date
+      description: 'Date to filter search list'
       in: query
       required: false
       schema:
         type: string
-    toDate:
-      name: toDate
-      description: 'The end date to filter search history'
+    tags:
+      name: tags
+      description: 'Tags to filter search list'
       in: query
       required: false
       schema:
-        type: string
+        type: array
+        items:
+          type: string
 
   requestBodies:
     userCreation:
@@ -242,18 +219,18 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/userInfo'
-    searchHistoryPageResponse:
+    searchPageResponse:
       description: 'Page of search history'
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/searchHistoryPage'
-    searchHistoryDetailsResponse:
-      description: 'Search history'
+            $ref: '#/components/schemas/searchPage'
+    searchResponse:
+      description: 'User saved search'
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/searchHistoryDetails'
+            $ref: '#/components/schemas/search'
     tripListResponse:
       description: 'List of trips returned by search'
       content:
@@ -264,21 +241,21 @@ components:
       description: 'Operation succeeded'
     notFoundException:
       description: 'Not Found Exception'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/notFoundException'
     validationException:
       description: 'Validation Exception'
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/validationException'
+    conflictException:
+      description: 'Conflict Exception'
 
   schemas:
     searchRequest:
       type: object
       properties:
+        name:
+          type: string
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/searchTag'
         placesToVisit:
           type: array
           items:
@@ -317,14 +294,6 @@ components:
     tripResponse:
       type: object
       properties:
-        places:
-          type: array
-          items:
-            $ref: '#/components/schemas/place'
-        startPlace:
-          type: string
-        endPlace:
-          type: string
         startTime:
           type: string
         endTime:
@@ -388,101 +357,37 @@ components:
         - order
         - isChange
 
-    userCreation:
-      type: object
-      required:
-        - firstName
-        - lastName
-        - email
-        - password
-      properties:
-        firstName:
-          type: string
-        lastName:
-          type: string
-        email:
-          type: string
-        password:
-          type: string
-    userInfo:
+    search:
       type: object
       properties:
         id:
           type: string
-        firstName:
+        creationDate:
           type: string
-        lastName:
-          type: string
-        email:
-          type: string
-    userInfoPage:
-      type: object
-      allOf:
-        - $ref: '#/components/schemas/paged'
-        - $ref: '#/components/schemas/userInfoPageElements'
-    searchHistoryPage:
-      type: object
-      allOf:
-        - $ref: '#/components/schemas/paged'
-        - $ref: '#/components/schemas/searchHistoryPageElements'
-    paged:
-      type: object
-      properties:
-        page:
-          $ref: '#/components/schemas/pageInfo'
-        sort:
-          $ref: '#/components/schemas/sort'
-        totalElements:
-          type: integer
-        totalPages:
-          type: integer
-        first:
-          type: boolean
-        last:
-          type: boolean
-        empty:
-          type: boolean
-    pageInfo:
-      type: object
-      properties:
-        number:
-          type: integer
-        size:
-          type: integer
-        offset:
-          type: integer
-        paged:
-          type: boolean
-    sort:
-      type: array
-      items:
-        type: string
-    userInfoPageElements:
-      type: object
-      properties:
-        content:
-          type: array
-          items:
-            $ref: '#/components/schemas/userInfo'
-    searchHistoryOverview:
-      type: object
-      properties:
         name:
           type: string
-        rides:
+        tags:
           type: array
           items:
-            $ref: '#/components/schemas/rideOverview'
-        passengers:
+            $ref: '#/components/schemas/searchTag'
+        placesToVisit:
           type: array
           items:
-            $ref: '#/components/schemas/passenger'
-        transport:
-          type: array
-          items:
-            $ref: '#/components/schemas/transportType'
-        searchDate:
+            $ref: '#/components/schemas/place'
+        startPlace:
           type: string
+        endPlace:
+          type: string
+        passengersNumber:
+          type: integer
+        maxHoursToSpend:
+          type: integer
+        startDate:
+          type: string
+        preferredTransport:
+          $ref: '#/components/schemas/transportType'
+        preferredCriteria:
+          $ref: '#/components/schemas/criteriaType'
     passenger:
       type: object
       properties:
@@ -526,20 +431,91 @@ components:
           type: string
         userId:
           type: string
-    searchHistoryPageElements:
+    searchPageElements:
       type: object
       properties:
         content:
           type: array
           items:
-            $ref: '#/components/schemas/searchHistoryOverview'
-    notFoundException:
+            $ref: '#/components/schemas/search'
+    searchTag:
       type: object
       properties:
-        message:
+        id:
           type: string
-    validationException:
+        name:
+          type: string
+    tripTag:
       type: object
       properties:
-        message:
+        id:
           type: string
+        name:
+          type: string
+    userCreation:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+    userInfo:
+      type: object
+      properties:
+        id:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+    userInfoPage:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/paged'
+        - $ref: '#/components/schemas/userInfoPageElements'
+    searchPage:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/paged'
+        - $ref: '#/components/schemas/searchPageElements'
+    paged:
+      type: object
+      properties:
+        page:
+          $ref: '#/components/schemas/pageInfo'
+        sort:
+          $ref: '#/components/schemas/sort'
+        totalElements:
+          type: integer
+        totalPages:
+          type: integer
+        first:
+          type: boolean
+        last:
+          type: boolean
+        empty:
+          type: boolean
+    pageInfo:
+      type: object
+      properties:
+        number:
+          type: integer
+        size:
+          type: integer
+        offset:
+          type: integer
+        paged:
+          type: boolean
+    sort:
+      type: array
+      items:
+        type: string
+    userInfoPageElements:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/userInfo'

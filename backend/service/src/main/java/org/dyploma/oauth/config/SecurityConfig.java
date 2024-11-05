@@ -17,6 +17,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
+/*
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -77,5 +78,22 @@ public class SecurityConfig {
     @Bean
     public JwtDecoder jwtDecoder() {
         return JwtDecoders.fromIssuerLocation("https://accounts.google.com");
+    }
+}
+*/
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF if needed, especially for stateless APIs
+                .authorizeHttpRequests(auth -> auth
+                        .anyRequest().permitAll() // Allow all requests without authorization
+                );
+
+        return http.build();
     }
 }
