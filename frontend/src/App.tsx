@@ -1,4 +1,5 @@
 import {SearchPage} from "./pages/SearchPage"
+import SearchesList from "./pages/SearchesList"
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import AuthGuard from "./components/Login/AuthGuard";
 
@@ -9,11 +10,11 @@ function App() {
                 <Routes>
                     {/*<Route path="/" element={<HomePage />} />  /!* Default *!/*/}
                     <Route path="/" element={<SearchPage />} /> {/* Search page */}
-                    {/*<Route path="/travel" element={*/}
-                    {/*    <AuthGuard>*/}
-                    {/*        /!* put here element which only authenticated users can access*!/*/}
-                    {/*    </AuthGuard>*/}
-                    {/*}  />*/}
+                    <Route path="/searches" element={
+                        // <AuthGuard>
+                            <SearchesList/>
+                        // </AuthGuard>
+                    }  />
                     {/*<Route path="/about" element={<AboutPage />} /> /!* About us *!/*/}
                 </Routes>
             </Router>

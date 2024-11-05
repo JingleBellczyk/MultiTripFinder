@@ -1,0 +1,50 @@
+.tableContainer {
+    background-color: white;
+    color: black;
+    padding: 20px;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.tableHead {
+    text-align: center;
+}
+
+.tableHead {
+    width: 260px;
+}
+
+.transportColumn {
+    width: 120px;
+}
+.smallHead {
+    width: 50px;
+}
+
+.table th, .table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.table tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+
+.badgeStyle {
+    display: inline-block;
+    padding: 3px;
+}
+
+.dividerPadding {
+    padding: 20px;
+}
+
+.paginationContainer {
+    padding: 25px 20px;
+}
+
+.titleContainer {
+    padding: 20px 25px;
+}
