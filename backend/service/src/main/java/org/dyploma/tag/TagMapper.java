@@ -2,8 +2,8 @@ package org.dyploma.tag;
 
 public class TagMapper {
 
-    public static SearchTag mapToSearchTagDomain(String searchTag) {
-        return SearchTag.builder()
+    public static Tag mapToSearchTagDomain(String searchTag) {
+        return Tag.builder()
                 .tag(searchTag)
                 .build();
     }

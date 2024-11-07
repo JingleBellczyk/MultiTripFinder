@@ -174,7 +174,7 @@ components:
       schema:
         type: array
         items:
-          $ref: '#/components/schemas/transportType'
+          $ref: '#/components/schemas/transportMode'
     date:
       name: date
       description: 'Date to filter search list'
@@ -262,37 +262,31 @@ components:
     searchRequest:
       type: object
       properties:
-        name:
-          type: string
-        tags:
-          type: array
-          items:
-            type: string
         placesToVisit:
           type: array
           items:
-            $ref: '#/components/schemas/place'
+            $ref: '#/components/schemas/placeInSearch'
         startPlace:
-          type: string
+          $ref: '#/components/schemas/placeInSearch'
         endPlace:
-          type: string
-        passengersNumber:
+          $ref: '#/components/schemas/placeInSearch'
+        passengerCount:
           type: integer
-        maxHoursToSpend:
+        maxTripDuration:
           type: integer
-        startDate:
+        tripStartDate:
           type: string
         preferredTransport:
-          $ref: '#/components/schemas/transportType'
-        preferredCriteria:
-          $ref: '#/components/schemas/criteriaType'
+          $ref: '#/components/schemas/transportMode'
+        optimizationCriteria:
+          $ref: '#/components/schemas/criteriaMode'
       required:
         - startPlace
         - endPlace
-        - passengersNumber
-        - startDate
-        - preferredCriteria
-        - maxHoursToSpend
+        - passengerCount
+        - tripStartDate
+        - optimizationCriteria
+        - maxTripDuration
 
     searchResponse:
       type: object
@@ -325,57 +319,56 @@ components:
     transfer:
       type: object
       properties:
-        startPlace:
-          $ref: '#/components/schemas/place'
-        endPlace:
-          $ref: '#/components/schemas/place'
-        startDate:
+        startDateTime:
           type: string
-        endDate:
+        endDateTime:
           type: string
-        transitLine:
+        carrier:
           type: string
-        transport:
-          $ref: '#/components/schemas/transportType'
-        price:
+        transportMode:
+          $ref: '#/components/schemas/transportMode'
+        cost:
           type: number
         duration:
           description: 'Duration in minutes'
           type: integer
-        order:
+        transferOrder:
           type: integer
+        startAddress:
+          type: string
+        endAddress:
+          type: string
 
-    criteriaType:
+    criteriaMode:
       type: string
       enum:
         - PRICE
         - DURATION
-    place:
+    placeInSearch:
       type: object
       properties:
-        name:
+        country:
           type: string
-        hoursToSpend:
+        city:
+          type: string
+        stayDuration:
           type: integer
-        order:
+        entryOrder:
           type: integer
-        isChange:
-          type: boolean
-          default: false
       required:
-        - name
-        - hoursToSpend
-        - order
-        - isChange
+        - country
+        - city
+        - stayDuration
+        - entryOrder
 
     search:
       type: object
       properties:
         id:
           type: string
-        creationDate:
-          type: string
         name:
+          type: string
+        searchDate:
           type: string
         tags:
           type: array
@@ -384,37 +377,22 @@ components:
         placesToVisit:
           type: array
           items:
-            $ref: '#/components/schemas/place'
+            $ref: '#/components/schemas/placeInSearch'
         startPlace:
-          type: string
+          $ref: '#/components/schemas/placeInSearch'
         endPlace:
-          type: string
-        passengersNumber:
+          $ref: '#/components/schemas/placeInSearch'
+        passengerCount:
           type: integer
-        maxHoursToSpend:
+        maxTripDuration:
           type: integer
-        startDate:
+        tripStartDate:
           type: string
         preferredTransport:
-          $ref: '#/components/schemas/transportType'
-        preferredCriteria:
-          $ref: '#/components/schemas/criteriaType'
-    passenger:
-      type: object
-      properties:
-        passengerType:
-          $ref: '#/components/schemas/passengerType'
-        amount:
-          type: integer
-    passengerType:
-      type: string
-      enum:
-        - ADULT
-        - CHILD
-        - INFANT
-        - STUDENT
-        - SENIOR
-    transportType:
+          $ref: '#/components/schemas/transportMode'
+        optimizationCriteria:
+          $ref: '#/components/schemas/criteriaMode'
+    transportMode:
       type: string
       enum:
         - BUS

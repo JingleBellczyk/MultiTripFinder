@@ -1,7 +1,7 @@
 package org.dyploma.search.algorithm.response;
 import lombok.Builder;
 import lombok.Data;
-import org.dyploma.transfer.TransferResponse;
+import org.dyploma.trip.transfer.TransferResponse;
 
 import java.math.BigDecimal;
 import java.time.Instant;

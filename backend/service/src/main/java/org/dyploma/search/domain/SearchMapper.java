@@ -1,13 +1,13 @@
 package org.dyploma.search.domain;
 
 
-import org.dyploma.criteria.CriteriaType;
+import org.dyploma.criteria.CriteriaMode;
 import org.dyploma.place.PlaceMapper;
 import org.dyploma.search.algorithm.request.SearchRequest;
 import org.dyploma.search.algorithm.response.SearchResponseElement;
-import org.dyploma.tag.SearchTag;
+import org.dyploma.tag.Tag;
 import org.dyploma.tag.TagMapper;
-import org.dyploma.transfer.TransferMapper;
+import org.dyploma.trip.transfer.TransferMapper;
 import java.time.Instant;
 import java.time.format.DateTimeParseException;
 import java.util.List;
@@ -77,7 +77,7 @@ public class SearchMapper {
 
         searchResult.setName(search.getName());
         searchResult.setTags(search.getTags().stream()
-                .map(SearchTag::getTag)
+                .map(Tag::getTag)
                 .toList());
         searchResult.setPlacesToVisit(search.getPlacesToVisit().stream()
                 .map(PlaceMapper::mapPlaceDomainToPlace)
@@ -94,14 +94,14 @@ public class SearchMapper {
     }
 
 
-    private static CriteriaType mapToCriteriaTypeRequest(com.openapi.model.CriteriaType criteriaType) {
+    private static CriteriaMode mapToCriteriaTypeRequest(com.openapi.model.CriteriaType criteriaType) {
         return switch (criteriaType) {
-            case PRICE -> CriteriaType.PRICE;
-            case DURATION -> CriteriaType.DURATION;
+            case PRICE -> CriteriaMode.PRICE;
+            case DURATION -> CriteriaMode.DURATION;
         };
     }
 
-    private static com.openapi.model.CriteriaType mapToCriteriaTypeResponse(CriteriaType criteriaType) {
+    private static com.openapi.model.CriteriaType mapToCriteriaTypeResponse(CriteriaMode criteriaType) {
         return switch (criteriaType) {
             case PRICE -> com.openapi.model.CriteriaType.PRICE;
             case DURATION -> com.openapi.model.CriteriaType.DURATION;

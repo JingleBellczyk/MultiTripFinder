@@ -1,11 +1,11 @@
-package org.dyploma.transfer;
+package org.dyploma.trip.transfer;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.dyploma.place.PlaceDto;
-import org.dyploma.transport.TransportType;
+import org.dyploma.transport.TransportMode;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -20,7 +20,7 @@ public class TransferResponse {
     private Instant startDate;
     private Instant endDate;
     private String transitLine;
-    private TransportType transport;
+    private TransportMode transport;
     private BigDecimal price;
     private int duration;
     private int order;

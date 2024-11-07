@@ -1,4 +1,4 @@
-package org.dyploma.transfer;
+package org.dyploma.trip.transfer;
 
 import static org.dyploma.place.PlaceMapper.mapPlaceDtoToPlace;
 import static org.dyploma.transport.TransportMapper.mapToTransportTypeResponse;

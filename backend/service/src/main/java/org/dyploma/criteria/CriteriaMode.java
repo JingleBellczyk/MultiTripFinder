@@ -1,6 +1,6 @@
 package org.dyploma.criteria;
 
-public enum CriteriaType {
+public enum CriteriaMode {
     PRICE,
     DURATION
 }

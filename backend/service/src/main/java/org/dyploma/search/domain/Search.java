@@ -5,15 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.dyploma.criteria.CriteriaType;
-import org.dyploma.place.Place;
-import org.dyploma.tag.SearchTag;
-import org.dyploma.transport.TransportType;
+import org.dyploma.criteria.CriteriaMode;
+import org.dyploma.search.place.PlaceInSearch;
+import org.dyploma.tag.Tag;
+import org.dyploma.transport.TransportMode;
 
-import java.time.Instant;
-import java.time.LocalDate;
+import java.sql.Date;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 @Data
@@ -23,24 +21,33 @@ import java.util.UUID;
 @Table(name = "search")
 public class Search {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @ManyToOne
+    @JoinColumn(name = "start_place_id")
+    private PlaceInSearch startPlace;
+
+    @ManyToOne
+    @JoinColumn(name = "end_place_id")
+    private PlaceInSearch endPlace;
+
     private String name;
-    private LocalDate creationDate;
+    private Date searchDate;
+    private int passengerCount;
+    private TransportMode preferredTransport;
+    private CriteriaMode optimizationCriteria;
+    private Date tripStartDate;
+    private int maxTripDuration;
+
+    @OneToMany(mappedBy = "search")
+    private List<PlaceInSearch> placesToVisit;
+
     @ManyToMany
     @JoinTable(
-            name = "search_tag",
+            name = "tag_search",
             joinColumns = @JoinColumn(name = "search_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
-    private List<SearchTag> tags;
-    @OneToMany(mappedBy = "search")
-    private List<Place> placesToVisit;
-    private String startPlace;
-    private String endPlace;
-    private int maxHoursToSpend;
-    private LocalDate startDate;
-    private int passengersNumber;
-    private TransportType preferredTransport;
-    private CriteriaType preferredCriteria;
+    private List<Tag> tags;
 }

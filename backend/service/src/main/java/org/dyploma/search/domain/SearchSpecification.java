@@ -1,7 +1,10 @@
 package org.dyploma.search.domain;
 
+import jakarta.persistence.criteria.Join;
+import org.dyploma.tag.Tag;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class SearchSpecification {
