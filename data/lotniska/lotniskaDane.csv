@@ -1,0 +1,261 @@
+TIA,TIA,Tirana,Tirana,Albania
+EVN,EVN,Yerevan Zvartnots,Yerevan Zvartnots,Armenia
+GRZ,GRZ,Graz,Graz,Austria
+INN,INN,Innsbruck,Innsbruck,Austria
+KLU,KLU,Klagenfurt,Klagenfurt,Austria
+LNZ,LNZ,Linz,Linz,Austria
+SZG,SZG,Salzburg,Salzburg,Austria
+VIE,VIE,Vienna,Vienna,Austria
+MSQ,MSQ,Minsk,Minsk,Belarus
+ANR,ANR,Antwerp,Antwerp,Belgium
+BRU,BRU,Brussels,Brussels,Belgium
+CRL,CRL,Charleroi,Charleroi,Belgium
+LGG,LGG,Liege,Liege,Belgium
+OST,OST,Ostend Bruges,Ostend Bruges,Belgium
+SJJ,SJJ,Sarajevo,Sarajevo,Bosnia and Herzegovina
+TZL,TZL,Tuzla,Tuzla,Bosnia and Herzegovina
+BOJ,BOJ,Burgas,Burgas,Bulgaria
+SOF,SOF,Sofia,Sofia,Bulgaria
+VAR,VAR,Varna,Varna,Bulgaria
+DBV,DBV,Dubrovnik,Dubrovnik,Croatia
+PUY,PUY,Pula,Pula,Croatia
+RJK,RJK,Rijeka Krk,Rijeka Krk,Croatia
+SPU,SPU,Split,Split,Croatia
+ZAD,ZAD,Zadar,Zadar,Croatia
+ZAG,ZAG,Zagreb,Zagreb,Croatia
+LCA,LCA,Larnaca,Larnaca,Cyprus
+PFO,PFO,Paphos,Paphos,Cyprus
+BRQ,BRQ,Brno,Brno,Czech Republic
+PRG,PRG,Prague,Prague,Czech Republic
+AAL,AAL,Aalborg,Aalborg,Denmark
+AAR,AAR,Aarhus,Aarhus,Denmark
+BLL,BLL,Billund,Billund,Denmark
+CPH,CPH,Copenhagen,Copenhagen,Denmark
+FAE,FAE,Vagar,Vagar,Denmark
+TLL,TLL,Tallinn,Tallinn,Estonia
+HEL,HEL,Helsinki,Helsinki,Finland
+KTT,KTT,Kittilae,Kittilae,Finland
+OUL,OUL,Oulu,Oulu,Finland
+RVN,RVN,Rovaniemi,Rovaniemi,Finland
+TMP,TMP,Tampere,Tampere,Finland
+TKU,TKU,Turku,Turku,Finland
+VAA,VAA,Vaasa,Vaasa,Finland
+AJA,AJA,Ajaccio,Ajaccio,France
+BIA,BIA,Bastia,Bastia,France
+EGC,EGC,Bergerac,Bergerac,France
+BIQ,BIQ,Biarritz,Biarritz,France
+BOD,BOD,Bordeaux,Bordeaux,France
+BES,BES,Brest Bretagne,Brest Bretagne,France
+FSC,FSC,Figari South Corsica,Figari South Corsica,France
+LIL,LIL,Lille,Lille,France
+LYS,LYS,Lyon-Saint Exupery,Lyon-Saint Exupery,France
+MRS,MRS,Marseille,Marseille,France
+MPL,MPL,Montpellier,Montpellier,France
+NTE,NTE,Nantes,Nantes,France
+NCE,NCE,Nice,Nice,France
+BVA,PAR,Paris Beauvais,Paris,France
+CDG,PAR,Paris Charles de Gaulle,Paris,France
+ORY,PAR,Paris Orly,Paris,France
+RNS,RNS,Rennes Bretagne,Rennes Bretagne,France
+RUN,RUN,Reunion Roland Garros,Reunion Roland Garros,France
+SXB,SXB,Strasbourg,Strasbourg,France
+TLN,TLN,Toulon-Hyres,Toulon-Hyres,France
+TLS,TLS,Toulouse Blagnac,Toulouse Blagnac,France
+KUT,KUT,Kutaisi,Kutaisi,Georgia
+TBS,TBS,Tbilisi,Tbilisi,Georgia
+FMM,FMM,Allgaeu Airport M,Allgaeu Airport M,Germany
+BER,BER,Berlin Brandenburg,Berlin Brandenburg,Germany
+BRE,BRE,Bremen,Bremen,Germany
+CGN,CGN,Cologne Bonn,Cologne Bonn,Germany
+DTM,DTM,Dortmund,Dortmund,Germany
+DRS,DRS,Dresden,Dresden,Germany
+DUS,DUS,Duesseldorf,Duesseldorf,Germany
+FRA,FRA,Frankfurt,Frankfurt,Germany
+HHN,FRA,Frankfurt-Hahn,Frankfurt,Germany
+FDH,FDH,Friedrichshafen,Friedrichshafen,Germany
+HAM,HAM,Hamburg,Hamburg,Germany
+HAJ,HAJ,Hanover,Hanover,Germany
+FKB,FKB,Karlsruhe Baden-Baden,Karlsruhe Baden-Baden,Germany
+LEJ,LEJ,Leipzig Halle,Leipzig Halle,Germany
+MUC,MUC,Munich,Munich,Germany
+FMO,FMO,Muenster Osnabrueck,Muenster Osnabrueck,Germany
+NUE,NUE,Nuremberg,Nuremberg,Germany
+PAD,PAD,Paderborn Lippstadt,Paderborn Lippstadt,Germany
+STR,STR,Stuttgart,Stuttgart,Germany
+NRN,NRN,Weeze,Weeze,Germany
+PVK,PVK,Aktion,Aktion,Greece
+ATH,ATH,Athens,Athens,Greece
+CHQ,CHQ,Chania,Chania,Greece
+CFU,CFU,Corfu,Corfu,Greece
+HER,HER,Heraklion,Heraklion,Greece
+EFL,EFL,Kefalonia,Kefalonia,Greece
+KGS,KGS,Kos,Kos,Greece
+MJT,MJT,Lesvos Mytilene,Lesvos Mytilene,Greece
+JMK,JMK,Mykonos,Mykonos,Greece
+RHO,RHO,Rhodes,Rhodes,Greece
+SMI,SMI,Samos,Samos,Greece
+JTR,JTR,Santorini,Santorini,Greece
+JSI,JSI,Skiathos,Skiathos,Greece
+SKG,SKG,Thessaloniki,Thessaloniki,Greece
+ZTH,ZTH,Zante,Zante,Greece
+BUD,BUD,Budapest,Budapest,Hungary
+DEB,DEB,Debrecen,Debrecen,Hungary
+KEF,KEF,Keflavik,Keflavik,Iceland
+ORK,ORK,Cork,Cork,Ireland
+DUB,DUB,Dublin,Dublin,Ireland
+NOC,NOC,Ireland West Airpo,Ireland West Airpo,Ireland
+KIR,KIR,Kerry,Kerry,Ireland
+SNN,SNN,Shannon,Shannon,Ireland
+AHO,AHO,Alghero,Alghero,Italy
+AOI,AOI,Ancona,Ancona,Italy
+BRI,BRI,Bari,Bari,Italy
+BGY,BGY,Bergamo,Bergamo,Italy
+BLQ,BLQ,Bologna,Bologna,Italy
+BDS,BDS,Brindisi,Brindisi,Italy
+CAG,CAG,Cagliari,Cagliari,Italy
+CTA,CTA,Catania Fontanarossa,Catania Fontanarossa,Italy
+CIY,CIY,Comiso,Comiso,Italy
+FLR,FLR,Florence,Florence,Italy
+GOA,GOA,Genoa,Genoa,Italy
+SUF,SUF,Lamezia Terme,Lamezia Terme,Italy
+LIN,MIL,Milan Linate,Milan,Italy
+MXP,MIL,Milan Malpensa,Milan,Italy
+NAP,NAP,Naples,Naples,Italy
+OLB,OLB,Olbia Costa Smeralda,Olbia Costa Smeralda,Italy
+PMO,PMO,Palermo,Palermo,Italy
+PEG,PEG,Perugia,Perugia,Italy
+PSR,PSR,Pescara,Pescara,Italy
+PSA,PSA,Pisa,Pisa,Italy
+CIA,ROM,Rome Ciampino,Rome Ciampino,Italy
+FCO,ROM,Rome Fiumicino,Rome Fiumicino,Italy
+TPS,TPS,Trapani,Trapani,Italy
+TSF,TSF,Treviso,Treviso,Italy
+TRS,TRS,Trieste,Trieste,Italy
+TRN,TRN,Turin,Turin,Italy
+VCE,VCE,Venice,Venice,Italy
+VRN,VRN,Verona,Verona,Italy
+PRN,PRN,Pristina,Pristina,Kosovo
+RIX,RIX,Riga,Riga,Latvia
+KUN,KUN,Kaunas,Kaunas,Lithuania
+VNO,VNO,Vilnius,Vilnius,Lithuania
+LUX,LUX,Luxembourg,Luxembourg,Luxembourg
+MLA,MLA,Malta,Malta,Malta
+RMO,RMO,Chisinau,Chisinau,Moldova
+TGD,TGD,Podgorica,Podgorica,Montenegro
+TIV,TIV,Tivat,Tivat,Montenegro
+AMS,AMS,Amsterdam Airport ,Amsterdam Airport ,Netherlands
+EIN,EIN,Eindhoven,Eindhoven,Netherlands
+GRQ,GRQ,Groningen Airpo,Groningen Airpo,Netherlands
+MST,MST,Maastricht Aachen,Maastricht Aachen,Netherlands
+RTM,RTM,Rotterdam The Hague,Rotterdam The Hague,Netherlands
+SKP,SKP,Skopje,Skopje,North Macedonia
+AES,AES,lesund,lesund,Norway
+BGO,BGO,Bergen,Bergen,Norway
+BOO,BOO,Bod,Bod,Norway
+HAU,HAU,Haugesund,Haugesund,Norway
+KRS,KRS,Kristiansand,Kristiansand,Norway
+OSL,OSL,Oslo,Oslo,Norway
+TRF,TRF,Sandefjord Airp,Sandefjord Airp,Norway
+SVG,SVG,Stavanger,Stavanger,Norway
+TOS,TOS,Troms,Troms,Norway
+TRD,TRD,Trondheim,Trondheim,Norway
+GDN,GDN,Gdansk,Gdansk,Poland
+KTW,KTW,Katowice,Katowice,Poland
+KRK,KRK,Krakow,Krakow,Poland
+POZ,POZ,Poznan,Poznan,Poland
+SZZ,SZZ,Szczecin-Goleniow,Szczecin-Goleniow,Poland
+WAW,WAW,Warsaw,Warsaw,Poland
+WMI,WAW,Warsaw Modlin,Warsaw,Poland
+WRO,WRO,Wroclaw,Wroclaw,Poland
+FAO,FAO,Faro,Faro,Portugal
+LIS,LIS,Lisbon,Lisbon,Portugal
+FNC,FNC,Madeira,Madeira,Portugal
+PDL,PDL,Ponta Delgada,Ponta Delgada,Portugal
+OPO,OPO,Porto,Porto,Portugal
+OTP,OTP,Bucharest Henri Coanda,Bucharest Henri Coanda,Romania
+CLJ,CLJ,Cluj-Napoca,Cluj-Napoca,Romania
+IAS,IAS,Iasi,Iasi,Romania
+SBZ,SBZ,Sibiu,Sibiu,Romania
+TSR,TSR,Timisoara,Timisoara,Romania
+KRR,KRR,Krasnodar,Krasnodar,Russia
+DME,MOW,Moscow Domodedovo,Moscow,Russia
+SVO,MOW,Moscow Sheremetyevo,Moscow,Russia
+VKO,MOW,Moscow Vnukovo,Moscow,Russia
+LED,LED,Saint Petersburg Pulkovo,Saint Petersburg Pulkovo,Russia
+AER,AER,Sochi,Sochi,Russia
+BEG,BEG,Belgrade Nikola Tesla,Belgrade Nikola Tesla,Serbia
+INI,INI,Ni,Ni,Serbia
+BTS,BTS,Bratislava,Bratislava,Slovakia
+KSC,KSC,Koice,Koice,Slovakia
+LJU,LJU,Ljubljana,Ljubljana,Slovenia
+ALC,ALC,Alicante,Alicante,Spain
+LEI,LEI,Almeria,Almeria,Spain
+OVD,OVD,Asturias,Asturias,Spain
+BCN,BCN,Barcelona,Barcelona,Spain
+BIO,BIO,Bilbao,Bilbao,Spain
+FUE,FUE,Fuerteventura,Fuerteventura,Spain
+GRO,GRO,Girona,Girona,Spain
+LPA,LPA,Gran Canaria,Gran Canaria,Spain
+GRX,GRX,Granada-Jaen,Granada-Jaen,Spain
+IBZ,IBZ,Ibiza,Ibiza,Spain
+XRY,XRY,Jerez,Jerez,Spain
+SPC,SPC,La Palma,La Palma,Spain
+ACE,ACE,Lanzarote,Lanzarote,Spain
+MAD,MAD,Madrid Barajas,Madrid Barajas,Spain
+AGP,AGP,Malaga,Malaga,Spain
+MAH,MAH,Menorca,Menorca,Spain
+PMI,PMI,Palma de Mallorca,Palma de Mallorca,Spain
+RMU,RMU,Region de Murcia,Region de Murcia,Spain
+REU,REU,Reus,Reus,Spain
+SDR,SDR,Santander,Santander,Spain
+SCQ,SCQ,Santiago de Compostela,Santiago de Compostela,Spain
+SVQ,SVQ,Seville,Seville,Spain
+TFN,TCI,Tenerife North,Tenerife,Spain
+TFS,TCI,Tenerife South,Tenerife,Spain
+VLC,VLC,Valencia,Valencia,Spain
+ZAZ,ZAZ,Zaragoza,Zaragoza,Spain
+GOT,GOT,Gothenburg Landvetter,Gothenburg Landvetter,Sweden
+MMX,MMX,Malmoe,Malmoe,Sweden
+ARN,STO,Stockholm Arlanda,Stockholm,Sweden
+BMA,STO,Stockholm Bromma,Stockholm,Sweden
+NYO,STO,Stockholm Skavsta,Stockholm,Sweden
+BSL,BSL,Basel Mulhouse Freiburg,Basel Mulhouse Freiburg,Switzerland
+GVA,GVA,Geneva,Geneva,Switzerland
+ZRH,ZRH,Zurich,Zurich,Switzerland
+ESB,ESB,Ankara Esenboga,Ankara Esenboga,Turkey
+AYT,AYT,Antalya,Antalya,Turkey
+COV,COV,Çukurova,Çukurova,Turkey
+DLM,DLM,Dalaman,Dalaman,Turkey
+IST,IST,Istanbul,Isntabul,Turkey
+SAW,IST,Istanbul Sabiha Goekcen,Isntabul,Turkey
+ADB,ADB,Izmir Adnan Menderes,Izmir Adnan Menderes,Turkey
+BJV,BJV,Milas-Bodrum,Milas-Bodrum,Turkey
+TZX,TZX,Trabzon,Trabzon,Turkey
+HRK,HRK,Kharkiv,Kharkiv,Ukraine
+KBP,IEV,Kiev Boryspil,Kiev,Ukraine
+IEV,IEV,Kiev Zhuliany,Kiev,Ukraine
+LWO,LWO,Lviv,Lviv,Ukraine
+ODS,ODS,Odessa,Odessa,Ukraine
+ABZ,ABZ,Aberdeen,Aberdeen,United Kingdom
+BHD,BFS,Belfast City,Belfast,United Kingdom
+BFS,BFS,Belfast International,Belfast,United Kingdom
+BHX,BHX,Birmingham,Birmingham,United Kingdom
+BRS,BRS,Bristol,Bristol,United Kingdom
+CWL,CWL,Cardiff,Cardiff,United Kingdom
+EMA,EMA,East Midlands,East Midlands,United Kingdom
+EDI,EDI,Edinburgh,Edinburgh,United Kingdom
+EXT,EXT,Exeter,Exeter,United Kingdom
+GLA,GLA,Glasgow,Glasgow,United Kingdom
+PIK,GLA,Glasgow Prestwick,Glasgow,United Kingdom
+JER,JER,Jersey,Jersey,United Kingdom
+LBA,LBA,Leeds Bradford,Leeds Bradford,United Kingdom
+LPL,LPL,Liverpool,Liverpool,United Kingdom
+LCY,LON,London City,London,United Kingdom
+LGW,LON,London Gatwick,London,United Kingdom
+LHR,LON,London Heathrow,London,United Kingdom
+LTN,LON,London Luton,London,United Kingdom
+SEN,LON,London Southend,London,United Kingdom
+STN,LON,London Stansted,London,United Kingdom
+MAN,MAN,Manchester,Manchester,United Kingdom
+NCL,NCL,Newcastle,Newcastle,United Kingdom
+SOU,SOU,Southampton,Southampton,United Kingdom
