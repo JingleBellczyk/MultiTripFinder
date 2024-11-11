@@ -1,4 +1,4 @@
-package org.dyploma;
+package org.dyploma.algorithm.amadeus;
 
 import org.dyploma.algorithm.amadeus.AmadeusApiClient;
 import org.dyploma.algorithm.amadeus.dto.AmadeusResponse;
