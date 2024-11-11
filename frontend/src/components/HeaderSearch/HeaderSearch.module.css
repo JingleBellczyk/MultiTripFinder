@@ -1,5 +1,5 @@
 .header {
-    height: rem(56px);
+    height: rem(50px);
     margin-bottom: rem(120px);
     padding: 2%;
     background-color: var(--primary-color);
@@ -7,7 +7,7 @@
 }
 
 .inner {
-    height: rem(56px);
+    height: rem(50px);
     display: flex;
     justify-content: space-between;
     align-items: center;

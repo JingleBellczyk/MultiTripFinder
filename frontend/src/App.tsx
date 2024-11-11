@@ -1,4 +1,4 @@
-import {SearchPage} from "./pages/SearchPage"
+import {SearchPage} from "./pages/SearchPage/SearchPage"
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import AuthGuard from "./components/Login/AuthGuard";
 
