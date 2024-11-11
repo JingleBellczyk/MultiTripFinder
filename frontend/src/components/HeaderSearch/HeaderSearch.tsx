@@ -30,8 +30,8 @@ export function HeaderSearch() {
 
     return (
         <header className={classes.header}>
-            <Container size="md" className={classes.inner}>
-                <Logo/>
+            <Container size="xl" className={classes.inner}>
+                <Logo size={13}></Logo>
                 <Group gap={5} visibleFrom="md">
                     {items}
                 </Group>

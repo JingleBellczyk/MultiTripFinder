@@ -1,185 +1,130 @@
 import {Button, CloseButton, Text} from '@mantine/core';
 import {useListState} from '@mantine/hooks';
 import classes from './DndListHandle.module.css';
-import React, {useEffect, useState} from 'react';
-import {PlaceTime, SearchDTO} from "../../types/SearchDTO"; // Importuj odpowiednie typy
+import React, {useEffect, useMemo, useState} from 'react';
+import {PlaceLocation, SearchDTO} from '../../types/SearchDTO';
 import {DaysInputs} from '../DaysInputs/DaysInputs';
-import {LocationSelector} from '../PlaceAutocompleteInput/LocationSelector'
+import {LocationSelector} from '../PlaceAutocompleteInput/LocationSelector';
 
-// Define a type for the data items
-interface Place {
+interface Place extends PlaceLocation {
     id: number;
-    name: string;
-    hours: number;
+    hours?: number;
 }
 
-// Initial data
-const initialData: Place[] = [
-    // {id: 1, name: "", hours: 0},
-];
-
-// Component for an individual list item
 interface ListItemProps {
     item: Place;
     onRemove: () => void;
-    onHoursChange: (id: number, hours: number) => void; // Nowa prop dla zmiany godzin
-    onNameChange: (id: number, name: string) => void; // Nowa prop dla zmiany nazwy
+    onHoursChange: (id: number, hours: number) => void;
+    onPlaceChange: (id: number, name: string, country: string, city: string) => void;
 }
 
-const ListItem: React.FC<ListItemProps> = ({item, onRemove, onHoursChange, onNameChange}) => (
+const ListItem: React.FC<ListItemProps> = ({ item, onRemove, onHoursChange, onPlaceChange }) => (
     <div className={classes.item}>
         <LocationSelector
-            value={item.name} // Pass the current item name as the value
-            onChange={(newValue: string) => onNameChange(item.id, newValue)} // Update the item name on change
-            label={"Place to visit"}
+            value={item.name}
+            onChange={(name, country, city) => onPlaceChange(item.id, name, country, city)}
+            label="Place to visit"
         />
-        <DaysInputs value={item.hours} onChange={(hours) => onHoursChange(item.id, hours)}></DaysInputs>
-        {/* CloseButton do usunięcia elementu */}
-        <CloseButton onClick={onRemove}/>
+        <DaysInputs value={item.hours || 0} onChange={(hours) => onHoursChange(item.id, hours)} />
+        <CloseButton onClick={onRemove} />
     </div>
 );
 
-// Component for the starting and ending list item
-const ListItemStartEnd: React.FC<{
+interface StartEndItemProps {
     id: string;
-    item: string;
-    value: string;
-    onNameChange: (name: string) => void;
-}> = ({id, item, value, onNameChange}) => (
+    label: string;
+    place: PlaceLocation;
+    onPlaceChange: (name: string, country: string, city: string) => void;
+}
+
+const StartEndItem: React.FC<StartEndItemProps> = ({ id, label, place, onPlaceChange }) => (
     <div className={classes.item} id={id}>
-        <Text fw={500} mx={"md"}>{item}</Text>
+        <Text fw={500} mx="md">{label}</Text>
         <LocationSelector
-            value={value} // Pass the current item name as the value
-            onChange={(newValue: string) => onNameChange(newValue)} // Update the item name on change
-            label={""}
+            value={place.name}
+            onChange={(name, country:string,  city) => onPlaceChange(name, country, city)}
+            label=""
         />
     </div>
 );
 
-/*
-    Handleable list
- */
 interface DndListHandleProps {
-    dto: SearchDTO; // Adjust this type according to your actual type definition
-    onUpdate: (updatedDto: SearchDTO) => void; // The function to call when the DTO is updated
-    placesTimeError: string | null; // Update the type as necessary
-    startPlaceError: string | null; // Update the type as necessary
-    endPlaceError: string | null; // Update the type as necessary
+    dto: SearchDTO;
+    onUpdate: (updatedDto: SearchDTO) => void;
+    placesTimeError?: string | null;
+    startPlaceError?: string | null;
+    endPlaceError?: string | null;
 }
 
 export const DndListHandle: React.FC<DndListHandleProps> = ({
-                                                                dto,
-                                                                onUpdate,
-                                                                placesTimeError,
-                                                                startPlaceError,
-                                                                endPlaceError,
+                                                                dto, onUpdate, placesTimeError, startPlaceError, endPlaceError
                                                             }) => {
-    // State do zarządzania listą miejsc
+    const initialData = dto.placesTime.map((place, index) => ({
+        id: index + 1,
+        name: place.name,
+        country: place.country,
+        city: place.city,
+        hours: place.hoursToSpend ?? 0,
+    }));
+
     const [state, handlers] = useListState<Place>(initialData);
-    const [startItemName, setStartItemName] = useState(dto.start); // Stan dla nazwy elementu startowego
-    const [endItemName, setEndItemName] = useState(dto.end); // Stan dla nazwy elementu końcowego
+    const [startPlace, setStartPlace] = useState<PlaceLocation>(dto.start);
+    const [endPlace, setEndPlace] = useState<PlaceLocation>(dto.end);
+
+    const placesTime = useMemo(() => state.map(({ name,country, city, hours }) => ({
+        name,
+        country,
+        city,
+        hoursToSpend: hours ?? 0,
+    })), [state]);
 
     useEffect(() => {
-        if (dto.placesTime.length === 0) {  // Update dto only if placesTime is empty
-            const placesTime = state.map(place => ({
-                place: place.name,
-                hoursToSpend: place.hours,
-            }));
-            onUpdate({...dto, placesTime, start: startItemName, end: endItemName});
-        }
-    }, []);
+        onUpdate({ ...dto, placesTime, start: startPlace, end: endPlace });
+    }, [placesTime, startPlace, endPlace]);
 
     const addPlace = () => {
         if (state.length < 5) {
-            const newId = state.length + 1;
-            const updatedState = [
-                ...state,
-                {id: newId, name: "", hours: 0},
-            ];
-
-            handlers.setState(updatedState);
-
-            // Update dto with new placesTime
-            const placesTime = updatedState.map(place => ({
-                place: place.name,
-                hoursToSpend: place.hours
-            }));
-            onUpdate({...dto, placesTime, start: startItemName, end: endItemName});
+            const newId = state.length ? Math.max(...state.map(item => item.id)) + 1 : 1;
+            handlers.append({ id: newId, name: "", country: "", city: "", hours: 0 });
         }
     };
 
     const removePlace = (id: number) => {
-        if (state.length > 0) { // Only allow removal if there's more than one item
-            const newState = state
-                .filter(item => item.id !== id)
-                .map((item, index) => ({...item, id: (index + 1)})); // Re-index IDs
-
-            handlers.setState(newState);
-
-            // Update dto with re-indexed placesTime
-            const placesTime = newState.map(place => ({
-                place: place.name,
-                hoursToSpend: place.hours
-            }));
-
-            onUpdate({...dto, placesTime, start: startItemName, end: endItemName});
+        const index = state.findIndex((item) => item.id === id);
+        if (index !== -1) {
+            handlers.remove(index);
         }
     };
-    // Funkcja do obsługi zmian godzin
+
     const handleHoursChange = (id: number, hours: number) => {
-        const updatedPlaces = state.map(item =>
-            item.id === id ? {...item, hours} : item
-        );
-        handlers.setState(updatedPlaces);
-
-        // Aktualizuj dto z nowymi wartościami
-        const placesTime: PlaceTime[] = updatedPlaces.map(place => ({
-            place: place.name,
-            hoursToSpend: place.hours // Używamy hours
-        }));
-        // Aktualizuj dto z nowymi nazwami start i end
-        onUpdate({...dto, placesTime, start: startItemName, end: endItemName});
+        const index = state.findIndex((item) => item.id === id);
+        if (index !== -1) {
+            handlers.setItem(index, { ...state[index], hours });
+        }
     };
 
-    // Funkcja do obsługi zmian nazwy dla elementów listy
-    const handleNameChange = (id: number, name: string) => {
-        const updatedPlaces = state.map(item =>
-            item.id === id ? {...item, name} : item
-        );
-        handlers.setState(updatedPlaces);
-
-        const placesTime: PlaceTime[] = updatedPlaces.map(place => ({
-            place: place.name,
-            hoursToSpend: place.hours
-        }));
-        onUpdate({...dto, placesTime, start: startItemName, end: endItemName});
+    const handlePlaceChange = (id: number, name: string, country:string, city: string) => {
+        const index = state.findIndex((item) => item.id === id);
+        if (index !== -1) {
+            handlers.setItem(index, { ...state[index], name, city});
+        }
     };
 
-    // Funkcja do obsługi zmian nazwy dla elementów startowych i końcowych
-    const handleStartNameChange = (name: string) => {
-        setStartItemName(name);
-        onUpdate({...dto, placesTime: dto.placesTime, start: name, end: endItemName}); // Aktualizuj dto z nową nazwą start
-    };
-
-    const handleEndNameChange = (name: string) => {
-        setEndItemName(name);
-        onUpdate({...dto, placesTime: dto.placesTime, start: startItemName, end: name}); // Aktualizuj dto z nową nazwą end
-    };
+    const handleStartPlaceChange = (name: string, country:string, city: string) => setStartPlace({ name, country, city});
+    const handleEndPlaceChange = (name: string, country:string, city: string) => setEndPlace({ name, country, city});
 
     return (
         <div>
-            <ListItemStartEnd id="start-item" item={"Start"} value={startItemName}
-                              onNameChange={handleStartNameChange}/>
+            <StartEndItem id="start-item" label="Start" place={startPlace} onPlaceChange={handleStartPlaceChange} />
             {startPlaceError && <Text color="red" size="sm">{startPlaceError}</Text>}
 
-            {/* Mapowanie przez elementy, aby renderować komponenty ListItem */}
-            {state.map((item, index) => (
+            {state.map((item) => (
                 <ListItem
                     key={item.id}
                     item={item}
                     onRemove={() => removePlace(item.id)}
                     onHoursChange={handleHoursChange}
-                    onNameChange={handleNameChange}
+                    onPlaceChange={handlePlaceChange}
                 />
             ))}
             {placesTimeError && <Text color="red" size="sm">{placesTimeError}</Text>}
@@ -188,8 +133,8 @@ export const DndListHandle: React.FC<DndListHandleProps> = ({
                 Add Place
             </Button>
 
-            <ListItemStartEnd id="end-item" item={"End"} value={endItemName} onNameChange={handleEndNameChange}/>
+            <StartEndItem id="end-item" label="End" place={endPlace} onPlaceChange={handleEndPlaceChange} />
             {endPlaceError && <Text color="red" size="sm">{endPlaceError}</Text>}
         </div>
     );
-};
+}
