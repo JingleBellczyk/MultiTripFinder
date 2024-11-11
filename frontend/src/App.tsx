@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
-import { SearchPage } from './pages/SearchPage';
+import { SearchPage } from './pages/SearchPage/SearchPage';
 import SearchesList from './pages/SearchesList';
 import AuthGuard from './components/Login/AuthGuard';
 import useAuth from "./hooks/useAuth";

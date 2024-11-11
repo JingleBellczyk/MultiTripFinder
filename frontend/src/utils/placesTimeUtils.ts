@@ -1,4 +1,4 @@
-import {PlaceTime} from "../types/SearchDTO";
+import {PlaceTime, PlaceLocation} from "../types/SearchDTO";
 
 /**
  * functions to valid search page
@@ -14,7 +14,7 @@ export const isDateValid = (selectedDate: Date | null): boolean => {
 
 export const isValidPlacesTime = (placesTime: PlaceTime[]): boolean => {
     for (const placeTime of placesTime) {
-        if (!placeTime.place || placeTime.place.trim() === "") {
+        if (!placeTime.name || placeTime.name.trim() === "") {
             return false;
         }
         if (placeTime.hoursToSpend <= 0) {
@@ -24,8 +24,8 @@ export const isValidPlacesTime = (placesTime: PlaceTime[]): boolean => {
     return true;
 };
 
-export const isValidPlace = (place: string | null ): boolean => {
-    if (typeof place !== "string" || place === "") {
+export const isValidPlace = (place: PlaceLocation | null ): boolean => {
+    if (typeof place?.name !== "string" || place?.name === "") {
         return false;
     }
     return true;
@@ -54,8 +54,8 @@ export interface ValidationErrors {
 export function validateForm(
     selectedDate: Date | null,
     placesTimeList: PlaceTime[],
-    startPlace: string | null,
-    endPlace: string | null,
+    startPlace: PlaceLocation | null,
+    endPlace: PlaceLocation | null,
     maxHoursToSpend: number
 ): {
     dateError: string | null;
@@ -66,7 +66,7 @@ export function validateForm(
 } {
     return {
         dateError: !selectedDate || !isDateValid(selectedDate) ? "Date can't be empty or in the past" : null,
-        placesTimeError: !isValidPlacesTime(placesTimeList) ? "Places and time can't be empty" : null,
+        placesTimeError: !isValidPlacesTime(placesTimeList) ? "Places or time can't be empty" : null,
         startPlaceError: !isValidPlace(startPlace) ? "Start place can't be empty" : null,
         endPlaceError: !isValidPlace(endPlace) ? "End place can't be empty" : null,
         maxHoursToSpendError: !isValidMaxHoursToSpend(selectedDate, maxHoursToSpend) ? "The total travel duration can't end later than one year from now" : null

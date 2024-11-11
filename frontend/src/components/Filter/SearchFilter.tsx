@@ -1,5 +1,22 @@
 import { useState } from 'react';
-import { Title, Checkbox, Box, Flex, PillsInput, Pill, Combobox, CheckIcon, Group, useCombobox, Button, Stack, Space, Center, Text } from '@mantine/core';
+import {
+    Title,
+    Checkbox,
+    Box,
+    Flex,
+    PillsInput,
+    Pill,
+    Combobox,
+    CheckIcon,
+    Group,
+    useCombobox,
+    Button,
+    Stack,
+    Space,
+    Center,
+    Text,
+    Autocomplete
+} from '@mantine/core';
 import '@mantine/dates/styles.css';
 import { DatePickerInput } from '@mantine/dates';
 import {SavedSearchDTO, Tag} from "../../types/SearchDTO";
@@ -118,6 +135,24 @@ function Filter({ list, label, value, onValueChange }: FilterProps) {
         </Combobox>
     );
 }
+interface NameInputProps {
+    names: string[];
+    value: string;
+    setValue: (value: string) => void;
+}
+
+const NameInput: React.FC<NameInputProps> = ({ names, value, setValue }) => {
+    return (
+        <Autocomplete
+            value={value}
+            onChange={setValue}
+            label="Select or type a name"
+            placeholder="Type a name"
+            data={names}
+        />
+    );
+};
+
 
 export default function SearchFilter({ tags, searches }: SearchFilterProps) {
     const [airplaneChecked, setAirplaneChecked] = useState<boolean>(false);
@@ -126,6 +161,7 @@ export default function SearchFilter({ tags, searches }: SearchFilterProps) {
     const [durationChecked, setDurationChecked] = useState<boolean>(false);
     const [priceChecked, setPriceChecked] = useState<boolean>(false);
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
+    const [selectedName, setSelectedName] = useState<string>('')
     const [dates, setDates] = useState<[Date | null, Date | null]>([null, null]);
 
     const resetFilters = () => {
@@ -135,6 +171,7 @@ export default function SearchFilter({ tags, searches }: SearchFilterProps) {
         setDurationChecked(false);
         setPriceChecked(false);
         setSelectedTags([]);
+        setSelectedName('')
         setDates([null, null]);
     };
 
@@ -193,6 +230,11 @@ export default function SearchFilter({ tags, searches }: SearchFilterProps) {
                     }
                 }}
             />
+            <NameInput
+                names={[]}
+                value={selectedName}
+                setValue={setSelectedName}/>
+
             <DatePickerInput
                 type="range"
                 label="Pick dates range"

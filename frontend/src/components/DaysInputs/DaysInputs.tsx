@@ -6,10 +6,13 @@ interface DaysInputsProps {
     onChange: (value: number) => void; // Callback function with total hours
 }
 export function DaysInputs({ value, onChange }: DaysInputsProps) {
+    const [daysValue, setDaysValue] = useState(Math.floor(value / 24));
+    const [hoursValue, setHoursValue] = useState(value % 24);
 
-    // Independent state for days and hours
-    const [daysValue, setDaysValue] = useState(0);
-    const [hoursValue, setHoursValue] = useState(0);
+    useEffect(() => {
+        setDaysValue(Math.floor(value / 24));
+        setHoursValue(value % 24);
+    }, [value]);
 
     // Update total hours whenever days or hours change
     const handleDaysChange = (val: string | number) => {

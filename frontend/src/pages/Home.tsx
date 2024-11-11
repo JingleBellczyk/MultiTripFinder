@@ -5,6 +5,7 @@ import logoSvg from "../assets/icons/mtfLogo.png";
 import { useNavigate } from 'react-router-dom';
 import styles from './Home.module.css';
 import {User} from "../constants/constants";
+import {Footer} from "../components/Footer/Footer";
 
 type LoginProps = {
     isAuthenticated: boolean;
@@ -83,6 +84,7 @@ const Home: React.FC<LoginProps> = ({ isAuthenticated, token, user }) => {
                     <img src={logoSvg} alt="MultiTripFinder Logo" className={styles.logoImage} />
                 </Group>
             </Container>
+            <Footer></Footer>
         </MantineProvider>
     );
 };

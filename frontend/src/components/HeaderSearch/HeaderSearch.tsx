@@ -1,22 +1,19 @@
 import '@mantine/core/styles.css';
-import React, { useMemo } from 'react';
-import { Container, Group, Burger } from '@mantine/core';
-import { Link, useLocation } from 'react-router-dom';
-import { useDisclosure } from '@mantine/hooks';
+
+import {Container, Group, Burger} from '@mantine/core';
+import {Link, useLocation} from 'react-router-dom';
+import {useDisclosure} from '@mantine/hooks';
 import classes from './HeaderSearch.module.css';
-import { Logo } from '../Logo/Logo';
+import {Logo} from '../Logo/Logo';
 import Login from "../Login/Login";
 import useAuth from "../../hooks/useAuth";
-import { AUTHENTICATED_LINKS, UNAUTHENTICATED_LINKS, ADMIN_LINKS } from "../../constants/constants";
+import {AUTHENTICATED_LINKS, UNAUTHENTICATED_LINKS, ADMIN_LINKS} from "../../constants/constants";
+import React, {useMemo} from "react";
 
-export const HeaderSearch: React.FC = React.memo(() => {
-    const { isAuthenticated, token, user } = useAuth();
-    const [opened, { toggle }] = useDisclosure(false);
-    const location = useLocation();
-
-    const loginComponent = useMemo(() => (
-        <Login isAuthenticated={isAuthenticated} token={token} user={user}/>
-    ), [isAuthenticated, token, user]);
+export function HeaderSearch() {
+    const { isAuthenticated, token, user, loading } = useAuth();
+    const [opened, {toggle}] = useDisclosure(false);
+    const location = useLocation()
 
     const items = useMemo(() => {
         let linksToDisplay = isAuthenticated ? AUTHENTICATED_LINKS : UNAUTHENTICATED_LINKS;
@@ -39,22 +36,16 @@ export const HeaderSearch: React.FC = React.memo(() => {
 
     return (
         <header className={classes.header}>
-            <Container size="lg" className={classes.inner}>
-                <Logo />
-                <Group gap={5} align="center" visibleFrom="md">
+            <Container size="xl" className={classes.inner}>
+                <Logo size={13}></Logo>
+                <Group gap={5} visibleFrom="md">
                     {items}
                 </Group>
                 <div className={classes.login}>
-                    {loginComponent}
+                    <Login isAuthenticated={isAuthenticated} token={token} user={user}/>
                 </div>
-                <Burger
-                    opened={opened}
-                    onClick={toggle}
-                    hiddenFrom="xs"
-                    size="sm"
-                    className={classes.burger}
-                />
+                <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm"/>
             </Container>
         </header>
     );
-});
+}

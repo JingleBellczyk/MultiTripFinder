@@ -2,7 +2,7 @@ import styles from './SearchTable.module.css';
 import { Table, CloseButton, Badge, Title, Text, Divider, Pagination, Center, TextInput, ActionIcon} from '@mantine/core';
 import {IconCheck, IconPencil, IconSearch, IconTrash } from '@tabler/icons-react';
 import CustomTags from '../Tags/CustomTags';
-import {PlaceTime, SavedSearchDTO, SearchDTOPost, Tag} from "../../types/SearchDTO";
+import {PlaceLocation, PlaceTime, SavedSearchDTO, Tag} from "../../types/SearchDTO";
 import { useState } from "react";
 
 const iconSize = 24;
@@ -43,8 +43,8 @@ function TransportBadge({ transport }: TransportBadgeProps) {
 
 type ShowPlacesProps = {
     places: PlaceTime[];
-    start: string;
-    end: string;
+    start: PlaceLocation;
+    end: PlaceLocation;
 };
 
 
@@ -61,18 +61,18 @@ function ShowPlaces({ places, start, end }: ShowPlacesProps) {
         setShowDetails(!showDetails);
     };
 
-    const formattedPlaces = [start, ...places.map(p => p.place), end].filter(Boolean).join("->  ");
+    const formattedPlaces = [start.city, ...places.map(p => p.city), end.city].filter(Boolean).join("->  ");
 
     return (
         <div onClick={toggleDetails} style={{ cursor: 'pointer' }}>
             {!showDetails && <Text key="places" size="md">{formattedPlaces}</Text>}
             {showDetails && (
                 <div>
-                    <Text key="start" size="md">{start}</Text>
+                    <Text key="start" size="md">{start.country}, {start.city}</Text>
                     {places.map((place, index) => (
-                        <Text key={index} size="md">{place.place} {hoursToDaysAndHours(place.hoursToSpend)}</Text>
+                        <Text key={index} size="md">{place.country}, {place.city} {hoursToDaysAndHours(place.hoursToSpend)}</Text>
                     ))}
-                    <Text key={"end"} size="md">{end}</Text>
+                    <Text key={"end"} size="md">{end.country}, {end.city}</Text>
                 </div>
             )}
         </div>
@@ -152,37 +152,13 @@ type SearchTableProps = {
 export default function SearchTable({ searches, tags, setTags, setIsModalOpen }: SearchTableProps) {
     const [searchData, setSearchData] = useState(searches);
 
-    const createSearchDTO = (searchIndex: number) => {
-        const search = searchData[searchIndex];
-
-        // Construct goalPlacesTime array dynamically
-        const goalPlacesTime = [
-            { place: search.start, hoursToSpend: 0 },
-            ...search.placesTime,
-            { place: search.end, hoursToSpend: 0 }
-        ];
-
-        // Construct the DTO object
-        const dto: SearchDTOPost = {
-            places: goalPlacesTime,
-            passengersNumber: search.passengers,
-            maxHoursToSpend: search.maxTotalTime,
-            startDate: search.startDate,
-            preferredTransport: search.transport,
-            preferredCriteria: search.preferredCriteria
-        };
-
-        // Log or pass the DTO to further functions
-        console.log(dto); // Or set it in state or use as needed
-    };
-
     const deleteSearch = (index: number) => {
         const updatedSearchData = searchData.filter((_, i) => i !== index);
         setSearchData(updatedSearchData);
     };
     function SearchIcon({ index }: { index: number }) {
         const handleClick = () => {
-            createSearchDTO(index);
+            //createSearchDTO(index);
         };
 
         return (
@@ -277,7 +253,7 @@ export default function SearchTable({ searches, tags, setTags, setIsModalOpen }:
             <td className={styles.tableHead}>
                 <ShowDetails
                     criteria={search.preferredCriteria}
-                    passengerNum={search.passengers}
+                    passengerNum={search.passengersNumber}
                     maxTotalTime={search.maxTotalTime}
                     name={search.name}
                     startDate={search.startDate}

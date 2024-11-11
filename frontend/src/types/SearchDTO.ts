@@ -1,39 +1,55 @@
+export interface SearchDTOPost {
+    placesToVisit: PlaceTimePost[];
+    startPlace: PlaceLocationPost;
+    endPlace: PlaceLocationPost;
+    passengerCount: number;
+    maxTripDuration: number;
+    tripStartDate: Date | null;
+    preferredTransport: string | null;
+    optimizationCriteria: string;
+}
+
+export interface PlaceLocation {
+    name: string;
+    country: string,
+    city: string;
+}
+export interface PlaceLocationPost {
+    country: string;
+    city: string;
+}
+
+export interface PlaceTime extends PlaceLocation {
+    hoursToSpend: number;
+}
+export interface PlaceTimePost extends PlaceLocationPost {
+    stayDuration: number;
+    entryOrder: number;
+}
+
 export interface SearchDTO {
     placesTime: PlaceTime[];
-    start: string;
-    end: string;
+    start: PlaceLocation;
+    end: PlaceLocation;
     maxTotalTime: number;
     transport: string | null;
     startDate: Date | null;
-    discounts: Record<string, number>;
+    passengersNumber: number;
     preferredCriteria: string;
 }
 
 export interface SavedSearchDTO {
     placesTime: PlaceTime[];
-    start: string;
-    end: string;
+    start: PlaceLocation;
+    end: PlaceLocation;
     maxTotalTime: number;
-    passengers: number;
     transport: string | null;
     startDate: Date;
     saveDate: Date;
-    preferredCriteria: string;
-    tags: Tag[]|null;
-    name: string | null;
-
-}
-export interface SearchDTOPost {
-    places: PlaceTime[];
     passengersNumber: number;
-    maxHoursToSpend: number;
-    startDate: Date | null;
-    preferredTransport: string | null;
     preferredCriteria: string;
-}
-export interface PlaceTime {
-    place: string;
-    hoursToSpend: number;
+    name: string | null;
+    tags: Tag[];
 }
 
 export interface Tag {

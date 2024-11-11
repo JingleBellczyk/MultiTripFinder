@@ -2,8 +2,10 @@ export const MEANS_OF_TRANSPORT: string[] = ['','Bus', 'Train', 'Plane']
 export type MeanOfTransport = typeof MEANS_OF_TRANSPORT[number];
 export const DISCOUNTS: string[] = ['Adult']
 export const MINIMIZED_CRITERION: string[] = ['Price', 'Duration']
+export const MIN_PASSENGERS_NUMBER: number = 1
 export const MAX_PASSENGERS_NUMBER: number = 20
-// export const DISCOUNTS: string[] = ['Adult', 'Child', 'Student']
+export const MAX_TOTAL_DAYS_NUMBER: number = 365
+export const MIN_TOTAL_DAYS_NUMBER: number = 1
 export const MAX_TAG_LENGTH: number = 20
 
 export const SERVER = "http://localhost:8080";

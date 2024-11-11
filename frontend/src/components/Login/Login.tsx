@@ -32,7 +32,7 @@ const Login: React.FC<LoginProps> = ({ isAuthenticated, token, user }) => {
             {isAuthenticated && user ? (
                 <>
                     <Group align="center" gap={20}>
-                        <Text c="white" fw={500} size="md" >{user.given_name}</Text>
+                        <Text c="white" fw={500} size="xl" >{user.given_name}</Text>
                         <div>
                             {user.picture && (
                                 <Avatar

@@ -1,11 +1,15 @@
 package org.dyploma.algorithm.amadeus;
 
-import org.dyploma.algorithm.amadeus.AmadeusApiClient;
+import org.dyploma.algorithm.amadeus.dto.AmadeusRequest;
 import org.dyploma.algorithm.amadeus.dto.AmadeusResponse;
+import org.dyploma.algorithm.amadeus.dto.TravelSegment;
 import org.dyploma.exception.AmadeusErrorException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,46 +20,72 @@ public class AmadeusRequestTest {
     private AmadeusApiClient amadeusApiClient;
 
     @Test
-    void sendNormalAmadeusRequest(){
+    void sendNormalAmadeusRequest() {
 
-        String origin = "WRO";
-        String destination = "LON";
-        String date = "2024-11-25";
-        String time = "10:00:00";
+        List<TravelSegment> travelSegments = Arrays.asList(
+                new TravelSegment("1", "NYC", "BOS", "2024-11-21", "08:00")
+        );
+
+        List<AmadeusRequest.OriginDestination> originDestinations = amadeusApiClient.createOriginDestinations(travelSegments);
+
         int maxFlightOffers = 3;
 
-        AmadeusResponse response = amadeusApiClient.sendAmadeusRequest(origin, destination, date, time, maxFlightOffers);
+        AmadeusResponse response = amadeusApiClient.sendAmadeusRequest(originDestinations, maxFlightOffers);
 
         System.out.println(response);
     }
 
     @Test
-    void sendAmadeusRequestPriceTime(){
+    void sendNormalAmadeusRequest2Transfers() {
 
-        String origin = "WRO";
-        String destination = "LON";
-        String date = "2024-11-25";
-        String time = "10:00:00";
+        List<TravelSegment> travelSegments = Arrays.asList(
+                new TravelSegment("1", "NYC", "BOS", "2024-11-21", "08:00"),
+                new TravelSegment("2", "LON", "AMS", "2024-12-02", "12:00")
+        );
+
+        List<AmadeusRequest.OriginDestination> originDestinations = amadeusApiClient.createOriginDestinations(travelSegments);
+
         int maxFlightOffers = 3;
 
+        AmadeusResponse response = amadeusApiClient.sendAmadeusRequest(originDestinations, maxFlightOffers);
+
+        System.out.println(response);
+    }
+
+    @Test
+    void sendAmadeusRequestPriceTime() {
+
+        List<TravelSegment> travelSegments = Arrays.asList(
+                new TravelSegment("1", "NYC", "BOS", "2024-11-21", "08:00"),
+                new TravelSegment("2", "LON", "AMS", "2024-12-02", "12:00")
+        );
+
+        List<AmadeusRequest.OriginDestination> originDestinations = amadeusApiClient.createOriginDestinations(travelSegments);
+
+        int maxFlightOffers = 3;
         int maxPrice = 10;
         int maxFlightTime = 200;
 
-        AmadeusResponse response = amadeusApiClient.sendAmadeusRequest(origin, destination, date, time, maxFlightOffers, maxPrice, maxFlightTime);
+        AmadeusResponse response = amadeusApiClient.sendAmadeusRequest(originDestinations, maxFlightOffers, maxPrice, maxFlightTime);
 
         System.out.println(response);
     }
 
     @Test
     void sendAmadeusRequestPastDate() {
-        String origin = "WRO";
-        String destination = "LON";
-        String date = "2024-10-25";
-        String time = "10:00:00";
+        List<TravelSegment> travelSegments = Arrays.asList(
+                new TravelSegment("1", "NYC", "BOS", "2024-10-21", "08:00"),
+                new TravelSegment("2", "LON", "AMS", "2024-12-02", "12:00")
+        );
+
+        List<AmadeusRequest.OriginDestination> originDestinations = amadeusApiClient.createOriginDestinations(travelSegments);
+        if (originDestinations == null) {
+
+        }
         int maxFlightOffers = 3;
 
         AmadeusErrorException thrownException = assertThrows(AmadeusErrorException.class, () -> {
-            amadeusApiClient.sendAmadeusRequest(origin, destination, date, time, maxFlightOffers);
+            amadeusApiClient.sendAmadeusRequest(originDestinations, maxFlightOffers);
         });
 
         assertEquals(400, thrownException.getStatusCode());
@@ -63,5 +93,17 @@ public class AmadeusRequestTest {
         String responseBody = thrownException.getErrorMessage();
         System.out.println("Response Body: " + responseBody);
         assertTrue(responseBody.contains("Date/Time is in the past"));
+    }
+
+    @Test
+    void sendAmadeusRequestTooManySegments() {
+        List<TravelSegment> travelSegments = Arrays.asList(
+                new TravelSegment("1", "NYC", "BOS", "2024-12-21", "08:00"),
+                new TravelSegment("2", "LON", "AMS", "2024-12-02", "12:00"),
+                new TravelSegment("3", "BOS", "NYC", "2024-12-02", "12:00")
+        );
+
+        List<AmadeusRequest.OriginDestination> originDestinations = amadeusApiClient.createOriginDestinations(travelSegments);
+        assertNull(originDestinations, "Expected null when there are more than 2 segments");
     }
 }
