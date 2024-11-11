@@ -37,6 +37,11 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
+  
+    @ExceptionHandler(AmadeusErrorException.class)
+    public ResponseEntity<String> handleAmadeusError(AmadeusErrorException ex) {
+        return ResponseEntity.status(ex.getStatusCode()).body(ex.getMessage());
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleException(Exception ex) {
