@@ -1,13 +1,18 @@
 package org.dyploma.search.presentation;
 
+import com.openapi.model.PageInfo;
 import org.dyploma.search.domain.Search;
+import org.dyploma.search.domain.SearchFilterRequest;
 import org.dyploma.search.domain.SearchRequest;
 import org.dyploma.search.place.PlaceInSearchMapper;
 import org.dyploma.tag.search_tag.domain.SearchTag;
+import org.dyploma.transport.TransportModeMapper;
 import org.dyploma.trip.domain.Trip;
 import org.dyploma.trip.presentation.TripMapper;
+import org.springframework.data.domain.Page;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.dyploma.search.criteria.CriteriaModeMapper.mapToCriteriaMode;
@@ -21,8 +26,6 @@ public class SearchMapper {
     public static Search mapToSearch(com.openapi.model.Search searchApi) {
         Search search = Search.builder()
                 .name(searchApi.getName().toLowerCase())
-                .startPlace(mapToPlaceInSearch(searchApi.getStartPlace()))
-                .endPlace(mapToPlaceInSearch(searchApi.getEndPlace()))
                 .passengerCount(searchApi.getPassengerCount())
                 .preferredTransport(mapToTransportMode(searchApi.getPreferredTransport()))
                 .optimizationCriteria(mapToCriteriaMode(searchApi.getOptimizationCriteria()))
@@ -40,8 +43,6 @@ public class SearchMapper {
                 .id(search.getId())
                 .name(search.getName())
                 .saveDate(search.getSaveDate().toLocalDate())
-                .startPlace(PlaceInSearchMapper.mapToPlaceInSearchApi(search.getStartPlace()))
-                .endPlace(PlaceInSearchMapper.mapToPlaceInSearchApi(search.getEndPlace()))
                 .placesToVisit(search.getPlacesToVisit().stream()
                         .map(PlaceInSearchMapper::mapToPlaceInSearchApi)
                         .toList())
@@ -60,8 +61,6 @@ public class SearchMapper {
 
     public static SearchRequest mapToSearchRequest(com.openapi.model.SearchRequest searchRequestApi) {
         return SearchRequest.builder()
-                .startPlace(mapToPlaceInSearch(searchRequestApi.getStartPlace()))
-                .endPlace(mapToPlaceInSearch(searchRequestApi.getEndPlace()))
                 .placesToVisit(searchRequestApi.getPlacesToVisit().stream()
                         .map(PlaceInSearchMapper::mapToPlaceInSearch)
                         .toList())
@@ -79,5 +78,30 @@ public class SearchMapper {
                         .map(TripMapper::mapToTripApi)
                         .toList());
         return searchResponse;
+    }
+
+    public static SearchFilterRequest mapToSearchFilterRequest(com.openapi.model.CriteriaMode optimizationCriteria, List<com.openapi.model.TransportMode> preferredTransports, LocalDate saveDate, List<String> tags) {
+        return SearchFilterRequest.builder()
+                .optimizationCriteria(optimizationCriteria != null ? mapToCriteriaMode(optimizationCriteria) : null)
+                .transportModes(preferredTransports != null ? preferredTransports.stream()
+                        .map(TransportModeMapper::mapToTransportMode)
+                        .toList() : null)
+                .saveDate(saveDate != null ? Date.valueOf(saveDate) : null)
+                .tags(tags)
+                .build();
+    }
+
+    public static com.openapi.model.SearchPage mapToSearchPageApi(Page<Search> searchPage) {
+        com.openapi.model.SearchPage searchPageApi = new com.openapi.model.SearchPage();
+        searchPageApi.setContent(searchPage.getContent().stream()
+                .map(SearchMapper::mapToSearchApi)
+                .toList());
+        searchPageApi.setTotalPages(searchPage.getTotalPages());
+        searchPageApi.setTotalElements((int) searchPage.getTotalElements());
+        PageInfo pageInfo = new PageInfo();
+        pageInfo.setNumber(searchPage.getNumber());
+        pageInfo.setSize(searchPage.getSize());
+        searchPageApi.setPage(pageInfo);
+        return searchPageApi;
     }
 }

@@ -18,7 +18,7 @@ public class PlaceInSearch {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "search_id", nullable = false)
     private Search search;
 
