@@ -5,7 +5,7 @@ import org.dyploma.userinfo.dto.UserInfoResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
+
 
 @Service
 class UserInfoServiceImpl implements org.dyploma.userinfo.UserInfoService {
@@ -15,7 +15,7 @@ class UserInfoServiceImpl implements org.dyploma.userinfo.UserInfoService {
     }
 
     @Override
-    public UserInfoResponse getUserInfoById(UUID uuid) {
+    public UserInfoResponse getUserInfoById(Integer Integer) {
         return null;
     }
 
