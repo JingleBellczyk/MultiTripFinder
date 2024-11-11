@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 import com.openapi.api.SearchApi;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:80","http://frontend:80"})
 @RestController
 public class SearchController implements SearchApi {
     private final SearchService searchService;

@@ -15,6 +15,17 @@ services:
       - SPRING_DATASOURCE_PASSWORD=root
     depends_on:
       - tripDb
+  frontend:
+    build:
+      context: frontend
+      #context: .
+      #dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    expose:
+      - "80"
+    depends_on:
+      - backend
   tripDb:
     image: mysql:5.7
     restart: always
