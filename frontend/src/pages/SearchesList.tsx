@@ -9,11 +9,11 @@ import {SavedSearchDTO, Tag} from "../types/SearchDTO";
 
 const search1: SavedSearchDTO = {
     placesTime: [
-        { place: "Kraków", hoursToSpend: 78 },
-        { place: "Zakopane", hoursToSpend: 48 }
+        { place: "Polska, Kraków", hoursToSpend: 78 },
+        { place: "Polska, Zakopane", hoursToSpend: 48 }
     ],
-    start: "Wrocław",
-    end: "Wrocław",
+    start: "Polska, Wrocław",
+    end: "Polska, Wrocław",
     maxTotalTime: 150,
     transport: "train",
     startDate: new Date("2025-12-20"),
@@ -83,6 +83,7 @@ const SearchesList: React.FC = () => {
     const [isFilterVisible, setIsFilterVisible] = useState<boolean>(true);
     const [isFullSearch, setIsFullSearch] = useState<boolean>(false);
     const [allTags, setAllTags] = useState<Tag[]>(exampleTags);
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
 
     const toggleFilter = () => {
@@ -94,7 +95,11 @@ const SearchesList: React.FC = () => {
         <MantineProvider theme={{primaryColor: 'blue'}}>
             <div className={styles.background}>
                 <HeaderSearch/>
-                <Button onClick={toggleFilter} className={styles.fixedButton}>
+                <Button
+                    onClick={toggleFilter}
+                    className={styles.fixedButton}
+                    disabled={isModalOpen}
+                >
                     {isFilterVisible ? 'Hide' : 'Filter'}
                 </Button>
                 <Group className={styles.mainGroup} gap="xl" justify="center">
@@ -114,7 +119,12 @@ const SearchesList: React.FC = () => {
                         )}
                     </Transition>
                     <div className={styles.tableContainer}>
-                        <SearchTable searches={exampleElements}  tags={allTags} setTags={setAllTags}/>
+                        <SearchTable
+                            searches={exampleElements}
+                            tags={allTags}
+                            setTags={setAllTags}
+                            setIsModalOpen={setIsModalOpen}
+                        />
                     </div>
                 </Group>
             </div>

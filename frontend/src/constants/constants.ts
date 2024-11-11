@@ -4,16 +4,25 @@ export const DISCOUNTS: string[] = ['Adult']
 export const MINIMIZED_CRITERION: string[] = ['Price', 'Duration']
 export const MAX_PASSENGERS_NUMBER: number = 20
 // export const DISCOUNTS: string[] = ['Adult', 'Child', 'Student']
+export const MAX_TAG_LENGTH: number = 20
 
+export type User = {
+    id: number;
+    email: string;
+    role: string;
+    given_name: string;
+    picture: string;
+};
 export const AUTHENTICATED_LINKS = [
-    { link: '/account', label: 'My account' },
+    { link: '/', label: 'Home' },
+    { link: '/search', label: 'Search for travels' },
     { link: '/travels', label: 'My Travels' },
-    { link: '/searches', label: 'My Searches' },
-    { link: '/support', label: 'Support' },
+    { link: '/searches', label: 'My Searches' }
 ];
 
 export const UNAUTHENTICATED_LINKS = [
-    { link: '/support', label: 'Support' },
+    { link: '/', label: 'Home' },
+    { link: '/search', label: 'Search for travels' }
 ];
 
 export const ADMIN_LINKS = [

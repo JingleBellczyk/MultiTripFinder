@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Title, Checkbox, Box, Flex, PillsInput, Pill, Combobox, CheckIcon, Group, useCombobox, Button, Stack, Space, Center } from '@mantine/core';
+import { Title, Checkbox, Box, Flex, PillsInput, Pill, Combobox, CheckIcon, Group, useCombobox, Button, Stack, Space, Center, Text } from '@mantine/core';
 import '@mantine/dates/styles.css';
 import { DatePickerInput } from '@mantine/dates';
 import {SavedSearchDTO, Tag} from "../../types/SearchDTO";
@@ -123,6 +123,8 @@ export default function SearchFilter({ tags, searches }: SearchFilterProps) {
     const [airplaneChecked, setAirplaneChecked] = useState<boolean>(false);
     const [busChecked, setBusChecked] = useState<boolean>(false);
     const [trainChecked, setTrainChecked] = useState<boolean>(false);
+    const [durationChecked, setDurationChecked] = useState<boolean>(false);
+    const [priceChecked, setPriceChecked] = useState<boolean>(false);
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
     const [dates, setDates] = useState<[Date | null, Date | null]>([null, null]);
 
@@ -130,6 +132,8 @@ export default function SearchFilter({ tags, searches }: SearchFilterProps) {
         setAirplaneChecked(false);
         setBusChecked(false);
         setTrainChecked(false);
+        setDurationChecked(false);
+        setPriceChecked(false);
         setSelectedTags([]);
         setDates([null, null]);
     };
@@ -150,6 +154,7 @@ export default function SearchFilter({ tags, searches }: SearchFilterProps) {
                     Filter
                 </Title>
             </Center>
+            <Text fw={500} size="sm">Transport</Text>
             <CustomCheckBox
                 label="Airplane"
                 checked={airplaneChecked}
@@ -164,6 +169,17 @@ export default function SearchFilter({ tags, searches }: SearchFilterProps) {
                 label="Train"
                 checked={trainChecked}
                 onChange={(event) => setTrainChecked(event.currentTarget.checked)}
+            />
+            <Text fw={500} size="sm">Optimalization Criteria</Text>
+            <CustomCheckBox
+                label="Duration"
+                checked={durationChecked}
+                onChange={(event) => setDurationChecked(event.currentTarget.checked)}
+            />
+            <CustomCheckBox
+                label="Price"
+                checked={priceChecked}
+                onChange={(event) => setPriceChecked(event.currentTarget.checked)}
             />
             <Filter
                 list={tagNames}

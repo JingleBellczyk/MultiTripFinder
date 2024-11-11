@@ -1,0 +1,37 @@
+.container {
+    margin-top: 20px;
+}
+
+.mainContent {
+    margin-bottom: 40px;
+}
+
+.headerGroup {
+    margin-bottom: 40px;
+}
+
+.welcomeText {
+    font-size: 1.5rem;
+    color: #000;
+}
+
+.descriptionText {
+    font-size: 1rem;
+    color: #808080;
+    line-height: 1.6;
+}
+
+.buttonContainer {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.logoImage {
+    max-width: 250px;
+    margin: 20px auto;
+}
+
+.divider {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}

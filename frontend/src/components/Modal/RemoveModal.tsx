@@ -1,19 +1,33 @@
-import { useDisclosure } from '@mantine/hooks';
 import { Modal, Button, ActionIcon } from '@mantine/core';
 import { IconX } from '@tabler/icons-react';
 import { Tag } from "../../types/SearchDTO";
+import { useState } from "react";
+import styles from './ButtonModal.module.css';
 
-interface ButtonModalProps {
+type ButtonModalProps = {
     tagToDelete: Tag;
-    onDeleteConfirm: (tagToRemove: Tag) => void;
-}
+    onDeleteConfirm: (tag: Tag, isRemove?: boolean) => void;
+    setIsModalOpen: (open: boolean) => void;
+    onModalOpen: () => void;
+};
 
-function ButtonModal({ tagToDelete, onDeleteConfirm }: ButtonModalProps) {
-    const [opened, { open, close }] = useDisclosure(false);
+function RemoveModal({ tagToDelete, onDeleteConfirm, setIsModalOpen, onModalOpen }: ButtonModalProps) {
+    const [opened, setOpened] = useState(false);
+
+    const handleOpen = () => {
+        onModalOpen();
+        setIsModalOpen(true);
+        setOpened(true);
+    };
+
+    const handleClose = () => {
+        setOpened(false);
+        setIsModalOpen(false);
+    };
 
     const handleConfirm = () => {
-        onDeleteConfirm(tagToDelete)
-        close(); // Close the modal after confirmation
+        onDeleteConfirm(tagToDelete);
+        handleClose();
     };
 
     return (
@@ -21,24 +35,24 @@ function ButtonModal({ tagToDelete, onDeleteConfirm }: ButtonModalProps) {
             <ActionIcon
                 onClick={(e) => {
                     e.stopPropagation();
-                    open();
+                    handleOpen();
                 }}
                 color="red"
                 variant="outline"
+                size="sm"
             >
                 <IconX size={16} />
             </ActionIcon>
-
             <Modal
                 opened={opened}
-                onClose={close}
+                onClose={handleClose}
                 size="auto"
                 title={`Do you want to delete the tag "${tagToDelete?.name}"?`}
                 withCloseButton={false}
             >
                 <p>This will delete the tag in all searches.</p>
-                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '16px' }}>
-                    <Button onClick={close} variant="outline">
+                <div className={styles.modalButtonsContainer}>
+                    <Button onClick={handleClose} variant="outline">
                         No
                     </Button>
                     <Button onClick={handleConfirm} color="red">
@@ -50,4 +64,4 @@ function ButtonModal({ tagToDelete, onDeleteConfirm }: ButtonModalProps) {
     );
 }
 
-export default ButtonModal;
+export default RemoveModal;

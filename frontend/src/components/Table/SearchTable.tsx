@@ -61,7 +61,7 @@ function ShowPlaces({ places, start, end }: ShowPlacesProps) {
         setShowDetails(!showDetails);
     };
 
-    const formattedPlaces = [start, ...places.map(p => p.place), end].filter(Boolean).join(",  ");
+    const formattedPlaces = [start, ...places.map(p => p.place), end].filter(Boolean).join("->  ");
 
     return (
         <div onClick={toggleDetails} style={{ cursor: 'pointer' }}>
@@ -146,9 +146,10 @@ type SearchTableProps = {
     searches: SavedSearchDTO[];
     tags: Tag[];
     setTags: React.Dispatch<React.SetStateAction<Tag[]>>;
+    setIsModalOpen: (open: boolean) => void;
 };
 
-export default function SearchTable({ searches, tags, setTags }: SearchTableProps) {
+export default function SearchTable({ searches, tags, setTags, setIsModalOpen }: SearchTableProps) {
     const [searchData, setSearchData] = useState(searches);
 
     const createSearchDTO = (searchIndex: number) => {
@@ -221,13 +222,9 @@ export default function SearchTable({ searches, tags, setTags }: SearchTableProp
 
     const removeTagFromSearch = (searchIndex: number, tagName: string) => {
         const updatedSearches = [...searchData];
-
-        // Ensure tags array exists and remove the specified tag by name
         updatedSearches[searchIndex].tags = updatedSearches[searchIndex].tags?.filter((tag) => tag.name !== tagName) || [];
-
         setSearchData(updatedSearches);
     };
-
 
     const handleGlobalTagRemove = (tagToRemove: Tag) => {
         // Usuwamy tag z globalnej listy tagów
@@ -240,6 +237,31 @@ export default function SearchTable({ searches, tags, setTags }: SearchTableProp
         }));
 
         // Aktualizujemy stan wyszukiwań
+        setSearchData(updatedSearches);
+    };
+
+    const handleGlobalEditTag = (oldTagName: string, newTagName: string) => {
+        // Check if the new tag name already exists in the global tags list
+        const tagExistsInAllTags = tags.some((tag) => tag.name === newTagName);
+
+        // If the new tag doesn't exist, update the global tags list
+        if (!tagExistsInAllTags) {
+            setTags((prevTags) =>
+                prevTags.map((tag) =>
+                    tag.name === oldTagName ? { ...tag, name: newTagName } : tag
+                )
+            );
+        }
+
+        // Update the tags in all searches where the old tag name exists
+        const updatedSearches = searchData.map((search) => ({
+            ...search,
+            tags: search.tags?.map((tag) =>
+                tag.name === oldTagName ? { name: newTagName } : tag
+            ) || [],
+        }));
+
+        // Update the search data state
         setSearchData(updatedSearches);
     };
 
@@ -262,8 +284,16 @@ export default function SearchTable({ searches, tags, setTags }: SearchTableProp
             <td className={styles.transportColumn}>
                 <TransportBadge transport={search.transport} />
             </td>
-            <td className={styles.tableHead}>
-                <CustomTags myTags={search.tags || []}  allTags={tags} onTagRemoveFromGlobalList={handleGlobalTagRemove} onTagRemoveFromSearch={removeTagFromSearch} onAddTag={addTagToSearch} index={index}/>
+            <td className={styles.tagsColumn}>
+                <CustomTags
+                    myTags={search.tags || []}
+                    allTags={tags}
+                    onTagRemoveFromGlobalList={handleGlobalTagRemove}
+                    onTagEditGlobalList={handleGlobalEditTag}
+                    onTagRemoveFromSearch={removeTagFromSearch}
+                    onAddTag={addTagToSearch}
+                    setIsModalOpen={setIsModalOpen}
+                    index={index}/>
             </td>
             <td className={styles.smallHead}>
                 <Text size="md">{search.saveDate.toLocaleDateString()}</Text>
@@ -290,7 +320,7 @@ export default function SearchTable({ searches, tags, setTags }: SearchTableProp
                     <th><Text size="lg">Places</Text></th>
                     <th className={styles.tableHead}><Text size="lg">Details</Text></th>
                     <th className={styles.transportColumn}><Text size="lg">Transport</Text></th>
-                    <th className={styles.tableHead}><Center><Text size="lg">Tags</Text></Center></th>
+                    <th className={styles.tagColumn}><Center><Text size="lg">Tags</Text></Center></th>
                     <th className={styles.smallHead}><Text size="lg">Date of Search</Text></th>
                     <th className={styles.smallHead}></th>
                     <th className={styles.smallHead}></th>

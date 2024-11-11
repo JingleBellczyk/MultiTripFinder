@@ -1,24 +1,38 @@
-import {SearchPage} from "./pages/SearchPage"
-import SearchesList from "./pages/SearchesList"
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import AuthGuard from "./components/Login/AuthGuard";
+import Home from './pages/Home';
+import { SearchPage } from './pages/SearchPage';
+import SearchesList from './pages/SearchesList';
+import AuthGuard from './components/Login/AuthGuard';
+import useAuth from "./hooks/useAuth";
 
 function App() {
+    console.log("App rendered");
+    const { isAuthenticated, token, user, loading} = useAuth();
     return (
-        <div>
-            <Router>
-                <Routes>
-                    {/*<Route path="/" element={<HomePage />} />  /!* Default *!/*/}
-                    <Route path="/" element={<SearchPage />} /> {/* Search page */}
-                    <Route path="/searches" element={
-                        // <AuthGuard>
-                            <SearchesList/>
+        <Router>
+            <Routes>
+                <Route
+                    path="/"
+                    element={
+                            <Home isAuthenticated={isAuthenticated} token={token} user={user}/>
+                    }
+                />
+                <Route
+                    path="/search"
+                    element={
+                        <SearchPage />
+                    }
+                />
+                <Route
+                    path="/searches"
+                    element={
+                        // <AuthGuard isAuthenticated={isAuthenticated} loading={loading}>
+                            <SearchesList />
                         // </AuthGuard>
-                    }  />
-                    {/*<Route path="/about" element={<AboutPage />} /> /!* About us *!/*/}
-                </Routes>
-            </Router>
-        </div>
+                    }
+                />
+            </Routes>
+        </Router>
     );
 }
 export default App;

@@ -1,0 +1,15 @@
+/* ButtonModal.module.css */
+.modalContainer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10000;
+}
+
+.modalButtonsContainer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 4px;
+    margin-top: 8px;
+}

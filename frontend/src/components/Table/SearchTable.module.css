@@ -11,14 +11,18 @@
 }
 
 .tableHead {
-    width: 260px;
+    width: 250px;
+}
+
+.tagColumn {
+    width: 310px;
 }
 
 .transportColumn {
     width: 120px;
 }
 .smallHead {
-    width: 50px;
+    width: 30px;
 }
 
 .table th, .table td {

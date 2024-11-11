@@ -1,26 +1,27 @@
 import { Badge, ActionIcon, Flex, Center, TextInput, Box } from '@mantine/core';
-import { IconX, IconPlus, IconPencil } from '@tabler/icons-react';
+import {IconX, IconPlus, IconCheck} from '@tabler/icons-react';
 import { useState, useEffect } from 'react';
 import { Tag } from "../../types/SearchDTO";
 import TagInput from "../Tags/TagInput";
-import ButtonModal from "../Modal/ButtonModal";
 import styles from './CustomTags.module.css';
+import {MAX_TAG_LENGTH} from "../../constants/constants";
 
 const iconSize = 16;
 const stroke = 1.3;
-const maxTagLength = 20;
 const maxTags = 3;
 
 interface CustomTagsProps {
     myTags: Tag[];
     allTags: Tag[];
     onTagRemoveFromGlobalList: (tag: Tag) => void;
+    onTagEditGlobalList: (oldTagName: string, newTagName: string) => void;
     onTagRemoveFromSearch: (index: number, tagName: string) => void;
     onAddTag: (index: number, newName: string) => void;
+    setIsModalOpen: (open: boolean) => void
     index: number;
 }
 
-export default function CustomTags({ myTags, allTags, onTagRemoveFromGlobalList, onTagRemoveFromSearch, onAddTag, index }: CustomTagsProps) {
+export default function CustomTags({ myTags, allTags, onTagRemoveFromGlobalList, onTagEditGlobalList, onTagRemoveFromSearch, onAddTag, index, setIsModalOpen }: CustomTagsProps) {
     const [tags, setTags] = useState<Tag[]>(myTags);
     const [showTagInput, setShowTagInput] = useState<boolean>(false);
     const [editValue, setEditValue] = useState<string>('');
@@ -48,7 +49,7 @@ export default function CustomTags({ myTags, allTags, onTagRemoveFromGlobalList,
             const updatedName = editValue.toUpperCase().trim();
 
             // Check for duplicates and length limit
-            if (updatedName.length <= maxTagLength && updatedName !== editingTag && !tags.some((tag) => tag.name === updatedName)) {
+            if (updatedName.length <= MAX_TAG_LENGTH && updatedName !== editingTag && !tags.some((tag) => tag.name === updatedName)) {
                 const updatedTags = tags.map((tag) =>
                     tag.name === editingTag ? { ...tag, name: updatedName } : tag
                 );
@@ -56,7 +57,6 @@ export default function CustomTags({ myTags, allTags, onTagRemoveFromGlobalList,
                 onAddTag(index, updatedName);
                 setTags(updatedTags);
                 setEditingTag(null);
-
 
             }
         }
@@ -70,13 +70,15 @@ export default function CustomTags({ myTags, allTags, onTagRemoveFromGlobalList,
                         label="Press Enter to submit a tag"
                         list={allTags}
                         onRemoveFromAllTags={onTagRemoveFromGlobalList}
+                        onEditTagInList={onTagEditGlobalList}
                         onAddTag={onAddTag}
                         value={tags}
                         index={index}
                         onRemoveTagFromSearch={onTagRemoveFromSearch}
+                        setIsModalOpen={setIsModalOpen}
                     />
-                    <ActionIcon variant="light" onClick={() => setShowTagInput(false)}>
-                        <IconX size={iconSize} stroke={stroke} />
+                    <ActionIcon size="sm" variant="light" onClick={() => setShowTagInput(false)}>
+                        <IconCheck size={iconSize} stroke={stroke} />
                     </ActionIcon>
                 </Box>
             )}
@@ -90,7 +92,7 @@ export default function CustomTags({ myTags, allTags, onTagRemoveFromGlobalList,
                                 {editingTag === tag.name ? (
                                     <TextInput
                                         value={editValue}
-                                        onChange={(e) => setEditValue(e.target.value)}
+                                        onChange={(e) => setEditValue(e.target.value.toUpperCase())}
                                         onBlur={() => {
                                             saveEdit();
                                             setEditingTag(null);
@@ -102,7 +104,7 @@ export default function CustomTags({ myTags, allTags, onTagRemoveFromGlobalList,
                                             }
                                         }}
                                         autoFocus
-                                        maxLength={maxTagLength}
+                                        maxLength={MAX_TAG_LENGTH}
                                     />
                                 ) : (
                                     <Badge
@@ -127,7 +129,7 @@ export default function CustomTags({ myTags, allTags, onTagRemoveFromGlobalList,
 
                 {tags.length < maxTags && !showTagInput && !editingTag &&(
                     <div className={styles.plusButton}>
-                        <ActionIcon variant="light" onClick={() => setShowTagInput(true)}>
+                        <ActionIcon size="sm" variant="light" onClick={() => setShowTagInput(true)}>
                             <IconPlus size={iconSize} stroke={stroke} />
                         </ActionIcon>
                     </div>
