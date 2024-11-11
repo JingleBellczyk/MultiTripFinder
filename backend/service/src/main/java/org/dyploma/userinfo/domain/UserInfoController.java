@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ServerWebExchange;
 
 import java.util.List;
-import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/userinfo")
 public class UserInfoController implements UserApi {
