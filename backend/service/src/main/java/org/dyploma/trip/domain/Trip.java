@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.dyploma.tag.Tag;
+import org.dyploma.tag.trip_tag.domain.TripTag;
 import org.dyploma.trip.transfer.Transfer;
 import org.dyploma.trip.place.PlaceInTrip;
 
@@ -21,7 +21,21 @@ import java.util.List;
 public class Trip {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
+
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Transfer> transfers;
+
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PlaceInTrip> places;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "trip_trip_tag",
+            joinColumns = @JoinColumn(name = "trip_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private List<TripTag> tags;
 
     private String name;
     private Date startDate;
@@ -32,17 +46,13 @@ public class Trip {
     private int totalTransferTime;
     private int duration;
 
-    @OneToMany(mappedBy = "trip")
-    private List<Transfer> transfers;
+    public void addTransfer(Transfer transfer) {
+        transfers.add(transfer);
+        transfer.setTrip(this);
+    }
 
-    @OneToMany(mappedBy = "trip")
-    private List<PlaceInTrip> places;
-
-    @ManyToMany
-    @JoinTable(
-            name = "trip_tag",
-            joinColumns = @JoinColumn(name = "trip_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id")
-    )
-    private List<Tag> tags;
+    public void addPlace(PlaceInTrip place) {
+        places.add(place);
+        place.setTrip(this);
+    }
 }

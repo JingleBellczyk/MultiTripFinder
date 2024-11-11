@@ -1,7 +1,7 @@
 package org.dyploma.search.domain;
 
 import jakarta.persistence.criteria.Join;
-import org.dyploma.tag.Tag;
+import org.dyploma.tag.search_tag.domain.SearchTag;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDate;
@@ -14,7 +14,7 @@ public class SearchSpecification {
             if (tagNames == null || tagNames.isEmpty()) {
                 return null;
             }
-            Join<Search, Tag> tags = root.join("tags");
+            Join<Search, SearchTag> tags = root.join("tags");
             return tags.get("name").in(tagNames);
         };
     }

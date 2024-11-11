@@ -1,4 +1,4 @@
-package org.dyploma.criteria;
+package org.dyploma.search.criteria;
 
 public enum CriteriaMode {
     PRICE,

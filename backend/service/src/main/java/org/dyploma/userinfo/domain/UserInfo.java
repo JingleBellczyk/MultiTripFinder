@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.Instant;
-import java.util.UUID;
+
 
 @Entity
 @Data
@@ -17,7 +17,7 @@ import java.util.UUID;
 @Table(name = "user_info")
 public class UserInfo {
     @Id
-    private UUID uuid;
+    private Integer Integer;
     private String firstName;
     private String lastName;
     @Email
@@ -25,7 +25,7 @@ public class UserInfo {
 
     @Builder
     public UserInfo(
-            UUID uuid,
+            Integer Integer,
             Long version,
             Instant createdDate,
             Instant lastModifiedDate,

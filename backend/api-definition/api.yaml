@@ -6,13 +6,9 @@ info:
 servers:
   - url: 'http://localhost:8080/api'
 
-tags:
-  - name: 'User'
 paths:
   /user:
     get:
-      tags:
-        - 'User'
       summary: 'Receives users info'
       operationId: 'list users'
       parameters:
@@ -22,8 +18,6 @@ paths:
         200:
           $ref: '#/components/responses/userInfoPageResponse'
     post:
-      tags:
-        - 'User'
       summary: 'Creates a new user'
       operationId: 'create user'
       requestBody:
@@ -35,8 +29,6 @@ paths:
           $ref: '#/components/responses/validationException'
   /user/{userId}:
     get:
-      tags:
-        - 'User'
       summary: 'Returns a user info found by its id'
       operationId: 'find user'
       parameters:
@@ -47,8 +39,6 @@ paths:
         404:
           $ref: '#/components/responses/notFoundException'
     delete:
-      tags:
-        - 'User'
       summary: 'Deletes a user by its id'
       operationId: 'delete user'
       parameters:
@@ -78,8 +68,8 @@ paths:
         - $ref: '#/components/parameters/userId'
         - $ref: '#/components/parameters/page'
         - $ref: '#/components/parameters/size'
-        - $ref: '#/components/parameters/transports'
-        - $ref: '#/components/parameters/date'
+        - $ref: '#/components/parameters/transportModes'
+        - $ref: '#/components/parameters/saveDate'
         - $ref: '#/components/parameters/tags'
       responses:
         200:
@@ -90,7 +80,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/userId'
       requestBody:
-        $ref: '#/components/requestBodies/searchStoring'
+        $ref: '#/components/requestBodies/search'
       responses:
         200:
           $ref: '#/components/responses/search'
@@ -98,13 +88,25 @@ paths:
           $ref: '#/components/responses/validationException'
         409:
           $ref: '#/components/responses/conflictException'
-  /searchList/{userId}{searchId}:
+  /searchList/{userId}/name/{searchName}:
+    get:
+      summary: 'Returns user search found by search name'
+      operationId: 'find user search by name'
+      parameters:
+        - $ref: '#/components/parameters/userId'
+        - $ref: '#/components/parameters/searchName'
+      responses:
+        200:
+          $ref: '#/components/responses/search'
+        404:
+          $ref: '#/components/responses/notFoundException'
+  /searchList/{userId}/{searchId}:
     get:
       summary: 'Returns user search found by search id'
       operationId: 'find user search'
       parameters:
-        - $ref: '#/components/parameters/searchId'
         - $ref: '#/components/parameters/userId'
+        - $ref: '#/components/parameters/searchId'
       responses:
         200:
           $ref: '#/components/responses/search'
@@ -114,8 +116,8 @@ paths:
       summary: 'Updates user search'
       operationId: 'update search'
       parameters:
-        - $ref: '#/components/parameters/searchId'
         - $ref: '#/components/parameters/userId'
+        - $ref: '#/components/parameters/searchId'
       requestBody:
         $ref: '#/components/requestBodies/searchUpdating'
       responses:
@@ -127,14 +129,97 @@ paths:
       summary: 'Deletes user search'
       operationId: 'delete search'
       parameters:
-        - $ref: '#/components/parameters/searchId'
         - $ref: '#/components/parameters/userId'
+        - $ref: '#/components/parameters/searchId'
       responses:
         200:
           $ref: '#/components/responses/emptySuccessfulResponse'
         404:
           $ref: '#/components/responses/notFoundException'
 
+  /tripList/{userId}:
+    get:
+      summary: 'Receives user trip list (paged)'
+      operationId: 'list user trip'
+      parameters:
+        - $ref: '#/components/parameters/userId'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/size'
+        - $ref: '#/components/parameters/transportModes'
+        - $ref: '#/components/parameters/saveDate'
+        - $ref: '#/components/parameters/tags'
+      responses:
+        200:
+          $ref: '#/components/responses/tripPage'
+    post:
+      summary: 'Saves user trip'
+      operationId: 'save trip'
+      parameters:
+        - $ref: '#/components/parameters/userId'
+      requestBody:
+        $ref: '#/components/requestBodies/trip'
+      responses:
+        200:
+          $ref: '#/components/responses/trip'
+        422:
+          $ref: '#/components/responses/validationException'
+        409:
+          $ref: '#/components/responses/conflictException'
+  /tripList/{userId}/id/{tripId}:
+    get:
+      summary: 'Returns user trip found by trip id'
+      operationId: 'find user trip'
+      parameters:
+        - $ref: '#/components/parameters/userId'
+        - $ref: '#/components/parameters/tripId'
+      responses:
+        200:
+          $ref: '#/components/responses/trip'
+        404:
+          $ref: '#/components/responses/notFoundException'
+    put:
+      summary: 'Updates user trip'
+      operationId: 'update trip'
+      parameters:
+        - $ref: '#/components/parameters/userId'
+        - $ref: '#/components/parameters/tripId'
+      requestBody:
+        $ref: '#/components/requestBodies/tripUpdating'
+      responses:
+        200:
+          $ref: '#/components/responses/trip'
+        404:
+          $ref: '#/components/responses/notFoundException'
+    delete:
+      summary: 'Deletes user trip'
+      operationId: 'delete trip'
+      parameters:
+        - $ref: '#/components/parameters/userId'
+        - $ref: '#/components/parameters/tripId'
+      responses:
+        200:
+          $ref: '#/components/responses/emptySuccessfulResponse'
+        404:
+          $ref: '#/components/responses/notFoundException'
+  /tripList/{userId}/name/{tripName}:
+    get:
+      summary: 'Returns trip search found by trip name'
+      operationId: 'find user trip by name'
+      parameters:
+        - $ref: '#/components/parameters/userId'
+        - $ref: '#/components/parameters/tripName'
+      responses:
+        200:
+          $ref: '#/components/responses/trip'
+        404:
+          $ref: '#/components/responses/notFoundException'
+  /searchTag:
+    get:
+      summary: 'Receives all tags'
+      operationId: 'list tags'
+      responses:
+        200:
+          $ref: '#/components/responses/searchResponse'
 
 components:
   parameters:
@@ -143,9 +228,27 @@ components:
       in: path
       required: true
       schema:
-        type: string
+        type: integer
     searchId:
       name: searchId
+      in: path
+      required: true
+      schema:
+        type: integer
+    searchName:
+      name: searchName
+      in: path
+      required: true
+      schema:
+        type: string
+    tripId:
+      name: tripId
+      in: path
+      required: true
+      schema:
+        type: integer
+    tripName:
+      name: tripName
       in: path
       required: true
       schema:
@@ -165,32 +268,34 @@ components:
       required: false
       schema:
         type: integer
-        default: 10
-    transports:
+        default: 5
+    transportModes:
       name: transports
-      description: 'Transports to filter transport search list'
+      description: 'transport modes to filter search and trip list'
       in: query
       required: false
       schema:
         type: array
         items:
           $ref: '#/components/schemas/transportMode'
-    date:
+    saveDate:
       name: date
-      description: 'Date to filter search list'
+      description: 'save date to filter search and trip list'
       in: query
       required: false
       schema:
         type: string
+        format: date
     tags:
       name: tags
-      description: 'Tags to filter search list'
+      description: 'Tags to filter search and trip list'
       in: query
       required: false
       schema:
         type: array
         items:
           type: string
+          minLength: 1
 
   requestBodies:
     userCreation:
@@ -199,24 +304,36 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/userCreation'
+    search:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/search'
     searchRequest:
       required: true
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/searchRequest'
-    searchStoring:
-      required: true
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/search'
     searchUpdating:
       required: true
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/searchUpdating'
+    tripUpdating:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/tripUpdating'
+    trip:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/trip'
 
   responses:
     userInfoPageResponse:
@@ -232,7 +349,7 @@ components:
           schema:
             $ref: '#/components/schemas/userInfo'
     searchPage:
-      description: 'Page of search history'
+      description: 'Page of user searches'
       content:
         application/json:
           schema:
@@ -243,8 +360,20 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/search'
+    tripPage:
+      description: 'Page of user trips'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/tripPage'
+    trip:
+      description: 'user saved trip'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/trip'
     searchResponse:
-      description: 'Search response'
+      description: 'Search result'
       content:
         application/json:
           schema:
@@ -259,6 +388,89 @@ components:
       description: 'Conflict Exception'
 
   schemas:
+    transfer:
+      type: object
+      required:
+          - startDateTime
+          - endDateTime
+          - carrier
+          - transportMode
+          - duration
+          - transferOrder
+          - startAddress
+          - endAddress
+      properties:
+        startDateTime:
+          type: string
+          format: date-time
+        endDateTime:
+          type: string
+          format: date-time
+        carrier:
+          type: string
+          minLength: 1
+        transportMode:
+          $ref: '#/components/schemas/transportMode'
+        cost:
+          type: number
+          minimum: 0
+        duration:
+          description: 'Duration in minutes'
+          type: integer
+          minimum: 0
+        transferOrder:
+          type: integer
+          minimum: 1
+        startAddress:
+          type: string
+          minLength: 1
+        endAddress:
+          type: string
+          minLength: 1
+
+    placeInSearch:
+      type: object
+      required:
+        - country
+        - city
+      properties:
+        country:
+          type: string
+          minLength: 1
+        city:
+          type: string
+          minLength: 1
+        stayDuration:
+          type: integer
+          minimum: 0
+        entryOrder:
+          type: integer
+          minimum: 1
+
+    placeInTrip:
+      type: object
+      required:
+        - country
+        - city
+        - isTransfer
+        - stayDuration
+        - visitOrder
+      properties:
+        country:
+          type: string
+          minLength: 1
+        city:
+          type: string
+          minLength: 1
+        isTransfer:
+          type: boolean
+        stayDuration:
+          type: integer
+          minimum: 0
+        visitOrder:
+          type: integer
+          minimum: 1
+
     searchRequest:
       type: object
       properties:
@@ -272,10 +484,13 @@ components:
           $ref: '#/components/schemas/placeInSearch'
         passengerCount:
           type: integer
+          minimum: 1
         maxTripDuration:
           type: integer
+          minimum: 0
         tripStartDate:
           type: string
+          format: date
         preferredTransport:
           $ref: '#/components/schemas/transportMode'
         optimizationCriteria:
@@ -288,92 +503,31 @@ components:
         - optimizationCriteria
         - maxTripDuration
 
-    searchResponse:
-      type: object
-      properties:
-        trips:
-          type: array
-          items:
-            $ref: '#/components/schemas/searchResponseElement'
-
-    searchResponseElement:
-      type: object
-      properties:
-        startTime:
-          type: string
-        endTime:
-          type: string
-        totalDuration:
-          type: integer
-        totalTransferDuration:
-          type: integer
-        totalPrice:
-          type: number
-        passengersNumber:
-          type: integer
-        transfers:
-          type: array
-          items:
-            $ref: '#/components/schemas/transfer'
-
-    transfer:
-      type: object
-      properties:
-        startDateTime:
-          type: string
-        endDateTime:
-          type: string
-        carrier:
-          type: string
-        transportMode:
-          $ref: '#/components/schemas/transportMode'
-        cost:
-          type: number
-        duration:
-          description: 'Duration in minutes'
-          type: integer
-        transferOrder:
-          type: integer
-        startAddress:
-          type: string
-        endAddress:
-          type: string
-
-    criteriaMode:
-      type: string
-      enum:
-        - PRICE
-        - DURATION
-    placeInSearch:
-      type: object
-      properties:
-        country:
-          type: string
-        city:
-          type: string
-        stayDuration:
-          type: integer
-        entryOrder:
-          type: integer
-      required:
-        - country
-        - city
-        - stayDuration
-        - entryOrder
-
     search:
       type: object
+      required:
+        - startPlace
+        - endPlace
+        - name
+        - tags
+        - passengerCount
+        - tripStartDate
+        - optimizationCriteria
+        - maxTripDuration
       properties:
         id:
-          type: string
+          type: integer
         name:
           type: string
-        searchDate:
+          minLength: 1
+        saveDate:
           type: string
+          format: date
         tags:
           type: array
           items:
             type: string
+            minLength: 1
         placesToVisit:
           type: array
           items:
@@ -384,14 +538,78 @@ components:
           $ref: '#/components/schemas/placeInSearch'
         passengerCount:
           type: integer
+          minimum: 1
         maxTripDuration:
           type: integer
+          minimum: 0
         tripStartDate:
           type: string
+          format: date
         preferredTransport:
           $ref: '#/components/schemas/transportMode'
         optimizationCriteria:
           $ref: '#/components/schemas/criteriaMode'
+
+    trip:
+      type: object
+      required:
+        - startDate
+        - endDate
+        - name
+        - tags
+        - passengerCount
+        - totalTransferTime
+        - duration
+        - transfers
+        - places
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          minLength: 1
+        saveDate:
+          type: string
+          format: date
+        tags:
+          type: array
+          items:
+            type: string
+            minLength: 1
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        passengerCount:
+          type: integer
+          minimum: 1
+        totalCost:
+          type: number
+          minimum: 0
+        totalTransferTime:
+          type: integer
+          minimum: 0
+        duration:
+          type: integer
+          minimum: 0
+        transfers:
+          type: array
+          items:
+            $ref: '#/components/schemas/transfer'
+          minItems: 1
+        places:
+          type: array
+          items:
+            $ref: '#/components/schemas/placeInTrip'
+          minItems: 2
+
+    criteriaMode:
+      type: string
+      enum:
+        - PRICE
+        - DURATION
     transportMode:
       type: string
       enum:
@@ -405,15 +623,41 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/search'
+    tripPageElements:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/trip'
     searchUpdating:
       type: object
+      required:
+        - name
+        - tags
       properties:
         name:
           type: string
+          minLength: 1
         tags:
           type: array
           items:
             type: string
+            minLength: 1
+    tripUpdating:
+      type: object
+      required:
+        - name
+        - tags
+      properties:
+        name:
+          type: string
+          minLength: 1
+        tags:
+          type: array
+          items:
+            type: string
+            minLength: 1
     userCreation:
       type: object
       required:
@@ -442,6 +686,18 @@ components:
       allOf:
         - $ref: '#/components/schemas/paged'
         - $ref: '#/components/schemas/searchPageElements'
+    tripPage:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/paged'
+        - $ref: '#/components/schemas/tripPageElements'
+    searchResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/trip'
     paged:
       type: object
       properties:

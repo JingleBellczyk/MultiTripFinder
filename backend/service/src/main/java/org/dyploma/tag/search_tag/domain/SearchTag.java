@@ -1,4 +1,4 @@
-package org.dyploma.tag;
+package org.dyploma.tag.search_tag.domain;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.dyploma.search.domain.Search;
-import org.dyploma.trip.domain.Trip;
 
 import java.util.List;
 
@@ -15,19 +14,15 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "tag")
-public class Tag {
+@Table(name = "search_tag")
+public class SearchTag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @Column(unique = true, nullable = false)
     private String name;
 
     @ManyToMany(mappedBy = "tags")
-    private List<Trip> trips;
-
-    @ManyToMany(mappedBy = "tags")
     private List<Search> searches;
-
 }

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import org.dyploma.transport.TransportMode;
 import org.dyploma.trip.domain.Trip;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -19,16 +19,16 @@ import java.sql.Timestamp;
 public class Transfer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "trip_id")
+    @JoinColumn(name = "trip_id", nullable = false)
     private Trip trip;
 
     private TransportMode transportMode;
     private String carrier;
-    private Timestamp startDateTime;
-    private Timestamp endDateTime;
+    private LocalDateTime startDateTime;
+    private LocalDateTime endDateTime;
     private int duration;
     private double cost;
     private String startAddress;
