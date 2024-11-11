@@ -26,9 +26,9 @@ function App() {
                 <Route
                     path="/searches"
                     element={
-                        // <AuthGuard isAuthenticated={isAuthenticated} loading={loading}>
+                        <AuthGuard isAuthenticated={isAuthenticated} loading={loading}>
                             <SearchesList />
-                        // </AuthGuard>
+                        </AuthGuard>
                     }
                 />
             </Routes>
