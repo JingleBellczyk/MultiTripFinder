@@ -2,11 +2,13 @@ package org.dyploma.algorithm.amadeus;
 
 import org.dyploma.algorithm.amadeus.dto.AmadeusRequest;
 import org.dyploma.algorithm.amadeus.dto.AmadeusResponse;
+import org.dyploma.algorithm.amadeus.dto.TravelSegment;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,28 +27,17 @@ public class AmadeusApiClient {
     }
 
 
-    public AmadeusResponse sendAmadeusRequest(String originLocationCode, String destinationLocationCode,
-                                              String departureDate, String departureTime, int maxFlightOffers) {
+    public AmadeusResponse sendAmadeusRequest(List<AmadeusRequest.OriginDestination> originDestinations, int maxFlightOffers) {
 
-        return sendAmadeusRequest(originLocationCode, destinationLocationCode, departureDate, departureTime,
+        return sendAmadeusRequest(originDestinations,
                 maxFlightOffers, null, null);
     }
 
-    public AmadeusResponse sendAmadeusRequest(String originLocationCode, String destinationLocationCode,
-                                              String departureDate, String departureTime, int maxFlightOffers,
-                                              Integer maxPrice, Integer maxFlightTime) {
+    public AmadeusResponse sendAmadeusRequest(List<AmadeusRequest.OriginDestination> originDestinations,
+                                              int maxFlightOffers, Integer maxPrice, Integer maxFlightTime) {
 
         AmadeusRequest requestBody = AmadeusRequest.builder()
-                .originDestinations(List.of(
-                        AmadeusRequest.OriginDestination.builder()
-                                .originLocationCode(originLocationCode)
-                                .destinationLocationCode(destinationLocationCode)
-                                .departureDateTimeRange(
-                                        AmadeusRequest.OriginDestination.DepartureDateTimeRange.builder()
-                                                .date(departureDate)
-                                                .time(departureTime)
-                                                .build())
-                                .build()))
+                .originDestinations(originDestinations)
                 .searchCriteria(
                         AmadeusRequest.SearchCriteria.builder()
                                 .maxFlightOffers(maxFlightOffers)
@@ -58,6 +49,7 @@ public class AmadeusApiClient {
                                 .build())
                 .build();
 
+        // Wysyłamy zapytanie POST
         return sendPostRequest(requestBody);
     }
 
@@ -78,5 +70,26 @@ public class AmadeusApiClient {
         );
 
         return response.getBody();
+    }
+
+    public List<AmadeusRequest.OriginDestination> createOriginDestinations(List<TravelSegment> segments) {
+        List<AmadeusRequest.OriginDestination> originDestinations = new ArrayList<>();
+
+        for (TravelSegment segment : segments) {
+            originDestinations.add(
+                    AmadeusRequest.OriginDestination.builder()
+                            .id(segment.getId())
+                            .originLocationCode(segment.getOrigin())
+                            .destinationLocationCode(segment.getDestination())
+                            .departureDateTimeRange(
+                                    AmadeusRequest.OriginDestination.DepartureDateTimeRange.builder()
+                                            .date(segment.getDepartureDate())
+                                            .time(segment.getDepartureTime() + ":00") // Ensure HH:MM:SS format
+                                            .build())
+                            .build()
+            );
+        }
+
+        return originDestinations;
     }
 }
