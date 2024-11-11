@@ -73,6 +73,10 @@ public class AmadeusApiClient {
     }
 
     public List<AmadeusRequest.OriginDestination> createOriginDestinations(List<TravelSegment> segments) {
+        if(segments.size() > 2){
+            return null;
+        }
+
         List<AmadeusRequest.OriginDestination> originDestinations = new ArrayList<>();
 
         for (TravelSegment segment : segments) {

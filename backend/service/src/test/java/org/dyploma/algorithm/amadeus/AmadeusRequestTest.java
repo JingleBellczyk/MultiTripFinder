@@ -20,10 +20,10 @@ public class AmadeusRequestTest {
     private AmadeusApiClient amadeusApiClient;
 
     @Test
-    void sendNormalAmadeusRequest(){
+    void sendNormalAmadeusRequest() {
 
         List<TravelSegment> travelSegments = Arrays.asList(
-                new TravelSegment("1","NYC", "BOS", "2024-11-21", "08:00")
+                new TravelSegment("1", "NYC", "BOS", "2024-11-21", "08:00")
         );
 
         List<AmadeusRequest.OriginDestination> originDestinations = amadeusApiClient.createOriginDestinations(travelSegments);
@@ -36,10 +36,10 @@ public class AmadeusRequestTest {
     }
 
     @Test
-    void sendNormalAmadeusRequest2Transfers(){
+    void sendNormalAmadeusRequest2Transfers() {
 
         List<TravelSegment> travelSegments = Arrays.asList(
-                new TravelSegment("1","NYC", "BOS", "2024-11-21", "08:00"),
+                new TravelSegment("1", "NYC", "BOS", "2024-11-21", "08:00"),
                 new TravelSegment("2", "LON", "AMS", "2024-12-02", "12:00")
         );
 
@@ -53,11 +53,11 @@ public class AmadeusRequestTest {
     }
 
     @Test
-    void sendAmadeusRequestPriceTime(){
+    void sendAmadeusRequestPriceTime() {
 
         List<TravelSegment> travelSegments = Arrays.asList(
-                new TravelSegment("1","NYC", "BOS", "2024-11-21", "08:00"),
-                new TravelSegment("2","LON", "AMS", "2024-12-02", "12:00")
+                new TravelSegment("1", "NYC", "BOS", "2024-11-21", "08:00"),
+                new TravelSegment("2", "LON", "AMS", "2024-12-02", "12:00")
         );
 
         List<AmadeusRequest.OriginDestination> originDestinations = amadeusApiClient.createOriginDestinations(travelSegments);
@@ -74,11 +74,14 @@ public class AmadeusRequestTest {
     @Test
     void sendAmadeusRequestPastDate() {
         List<TravelSegment> travelSegments = Arrays.asList(
-                new TravelSegment("1","NYC", "BOS", "2024-10-21", "08:00"),
-                new TravelSegment("2","LON", "AMS", "2024-12-02", "12:00")
+                new TravelSegment("1", "NYC", "BOS", "2024-10-21", "08:00"),
+                new TravelSegment("2", "LON", "AMS", "2024-12-02", "12:00")
         );
 
         List<AmadeusRequest.OriginDestination> originDestinations = amadeusApiClient.createOriginDestinations(travelSegments);
+        if (originDestinations == null) {
+
+        }
         int maxFlightOffers = 3;
 
         AmadeusErrorException thrownException = assertThrows(AmadeusErrorException.class, () -> {
@@ -90,5 +93,17 @@ public class AmadeusRequestTest {
         String responseBody = thrownException.getErrorMessage();
         System.out.println("Response Body: " + responseBody);
         assertTrue(responseBody.contains("Date/Time is in the past"));
+    }
+
+    @Test
+    void sendAmadeusRequestTooManySegments() {
+        List<TravelSegment> travelSegments = Arrays.asList(
+                new TravelSegment("1", "NYC", "BOS", "2024-12-21", "08:00"),
+                new TravelSegment("2", "LON", "AMS", "2024-12-02", "12:00"),
+                new TravelSegment("3", "BOS", "NYC", "2024-12-02", "12:00")
+        );
+
+        List<AmadeusRequest.OriginDestination> originDestinations = amadeusApiClient.createOriginDestinations(travelSegments);
+        assertNull(originDestinations, "Expected null when there are more than 2 segments");
     }
 }
