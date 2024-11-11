@@ -27,7 +27,7 @@ function App() {
                     path="/searches"
                     element={
                         <AuthGuard isAuthenticated={isAuthenticated} loading={loading}>
-                            <SearchesList />
+                            <SearchesList user={user}/>
                         </AuthGuard>
                     }
                 />

@@ -8,8 +8,8 @@ import { useState } from "react";
 const iconSize = 24;
 const stroke = 1.3;
 
-function DeleteIcon() {
-    return <CloseButton icon={<IconTrash size={iconSize} stroke={stroke} />} />;
+function DeleteIcon({ onClick }: { onClick: () => void }) {
+    return <CloseButton onClick={onClick} icon={<IconTrash size={iconSize} stroke={stroke} />} />;
 }
 
 type TransportBadgeProps = {
@@ -100,7 +100,7 @@ type ShowDetailsProps = {
 function ShowDetails({ criteria, passengerNum, maxTotalTime, name, startDate, onNameChange }: ShowDetailsProps) {
     const [isEditing, setIsEditing] = useState(false);
     const [currentName, setCurrentName] = useState(name || '');
-
+    
     const handleEditClick = () => setIsEditing(true);
     const handleSaveClick = () => {
         setIsEditing(false);
@@ -176,7 +176,10 @@ export default function SearchTable({ searches, tags, setTags, setIsModalOpen }:
         console.log(dto); // Or set it in state or use as needed
     };
 
-// Update the SearchIcon component to call createSearchDTO on click
+    const deleteSearch = (index: number) => {
+        const updatedSearchData = searchData.filter((_, i) => i !== index);
+        setSearchData(updatedSearchData);
+    };
     function SearchIcon({ index }: { index: number }) {
         const handleClick = () => {
             createSearchDTO(index);
@@ -302,7 +305,7 @@ export default function SearchTable({ searches, tags, setTags, setIsModalOpen }:
                 <SearchIcon index={index}/>
             </td>
             <td className={styles.smallHead}>
-                <DeleteIcon />
+                <DeleteIcon onClick={() => {deleteSearch(index)}}/>
             </td>
         </tr>
     ));
@@ -314,23 +317,33 @@ export default function SearchTable({ searches, tags, setTags, setIsModalOpen }:
                 <Text color="gray">Keep track of your searches.</Text>
             </div>
             <Divider />
-            <Table highlightOnHover className={styles.table}>
-                <thead>
-                <tr>
-                    <th><Text size="lg">Places</Text></th>
-                    <th className={styles.tableHead}><Text size="lg">Details</Text></th>
-                    <th className={styles.transportColumn}><Text size="lg">Transport</Text></th>
-                    <th className={styles.tagColumn}><Center><Text size="lg">Tags</Text></Center></th>
-                    <th className={styles.smallHead}><Text size="lg">Date of Search</Text></th>
-                    <th className={styles.smallHead}></th>
-                    <th className={styles.smallHead}></th>
-                </tr>
-                </thead>
-                <tbody>
-                {rows}
-                </tbody>
-            </Table>
-            <ShowPages numOfElements={searches.length} />
+            <div>
+                {searchData.length === 0 ? (
+                    <Center>
+                        <Text size="xl">No saved searches available.</Text>
+                    </Center>
+                ) : (
+                    <>
+                        <Table highlightOnHover className={styles.table}>
+                            <thead>
+                            <tr>
+                                <th><Text size="lg">Places</Text></th>
+                                <th className={styles.tableHead}><Text size="lg">Details</Text></th>
+                                <th className={styles.transportColumn}><Text size="lg">Transport</Text></th>
+                                <th className={styles.tagColumn}><Center><Text size="lg">Tags</Text></Center></th>
+                                <th className={styles.smallHead}><Text size="lg">Date of Search</Text></th>
+                                <th className={styles.smallHead}></th>
+                                <th className={styles.smallHead}></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {rows}
+                            </tbody>
+                        </Table>
+                        <ShowPages numOfElements={searchData.length} />
+                    </>
+                )}
+            </div>
         </div>
     );
 }

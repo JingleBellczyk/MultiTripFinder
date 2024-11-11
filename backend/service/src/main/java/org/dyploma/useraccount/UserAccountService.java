@@ -17,7 +17,7 @@ public class UserAccountService {
                 .orElseGet(() -> {
                     UserAccount newUser = new UserAccount();
                     newUser.setEmail(email);
-                    newUser.setRole("USER");
+                    newUser.setRole('U');
                     return userAccountRepository.save(newUser);
                 });
     }

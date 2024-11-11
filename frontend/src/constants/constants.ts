@@ -6,6 +6,8 @@ export const MAX_PASSENGERS_NUMBER: number = 20
 // export const DISCOUNTS: string[] = ['Adult', 'Child', 'Student']
 export const MAX_TAG_LENGTH: number = 20
 
+export const SERVER = "http://localhost:8080";
+
 export type User = {
     id: number;
     email: string;

@@ -17,7 +17,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
-/*
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -34,7 +33,7 @@ public class SecurityConfig {
                             .requestMatchers(HttpMethod.OPTIONS,"/auth/**").authenticated()
                             .requestMatchers(HttpMethod.POST,"/auth/**").authenticated()
                             .requestMatchers(HttpMethod.GET,"/auth/**").authenticated()
-                            .anyRequest().denyAll();
+                            .anyRequest().authenticated();
                 })
                 .oauth2Login(oauth2 ->
                         oauth2.defaultSuccessUrl("http://localhost:3000/", true)
@@ -80,20 +79,19 @@ public class SecurityConfig {
         return JwtDecoders.fromIssuerLocation("https://accounts.google.com");
     }
 }
-*/
 
-@Configuration
-@EnableWebSecurity
-public class SecurityConfig {
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF if needed, especially for stateless APIs
-                .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll() // Allow all requests without authorization
-                );
-
-        return http.build();
-    }
-}
+//@Configuration
+//@EnableWebSecurity
+//public class SecurityConfig {
+//
+//    @Bean
+//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//        http
+//                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF if needed, especially for stateless APIs
+//                .authorizeHttpRequests(auth -> auth
+//                        .anyRequest().permitAll() // Allow all requests without authorization
+//                );
+//
+//        return http.build();
+//    }
+//}

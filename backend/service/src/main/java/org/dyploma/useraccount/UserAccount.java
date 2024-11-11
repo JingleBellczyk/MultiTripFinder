@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Entity
-@Table(name = "useraccount")
+@Table(name = "user_account")
 public class UserAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,7 +15,7 @@ public class UserAccount {
     private String email;
 
     @Column(nullable = false)
-    private String role;
+    private Character role;
 
     public void setId(Integer id) {
         this.id = id;
@@ -25,7 +25,7 @@ public class UserAccount {
         this.email = email;
     }
 
-    public void setRole(String role) {
+    public void setRole(Character role) {
         this.role = role;
     }
 }

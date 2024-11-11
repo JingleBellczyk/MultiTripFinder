@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { User } from "../constants/constants";
+import {SERVER, User } from "../constants/constants";
 
-const SERVER = "http://localhost:8080";
+
 
 const fetchUser = async (
     setUser: React.Dispatch<React.SetStateAction<User | null>>,

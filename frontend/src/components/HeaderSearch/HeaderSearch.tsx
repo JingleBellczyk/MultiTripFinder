@@ -21,7 +21,7 @@ export const HeaderSearch: React.FC = React.memo(() => {
     const items = useMemo(() => {
         let linksToDisplay = isAuthenticated ? AUTHENTICATED_LINKS : UNAUTHENTICATED_LINKS;
 
-        if (isAuthenticated && user?.role === "ADMIN") {
+        if (isAuthenticated && user?.role === "A") {
             linksToDisplay = [...AUTHENTICATED_LINKS, ...ADMIN_LINKS];
         }
 

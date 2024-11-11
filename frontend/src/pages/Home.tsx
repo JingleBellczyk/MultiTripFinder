@@ -17,7 +17,7 @@ const Home: React.FC<LoginProps> = ({ isAuthenticated, token, user }) => {
 
     const mainContent = useMemo(() => {
         if (isAuthenticated) {
-            if (user?.role ==="ADMIN") {
+            if (user?.role ==="A") {
                 return (
                     <SimpleGrid cols={1}>
                         <Text className={styles.welcomeText}>Welcome, Admin!</Text>
