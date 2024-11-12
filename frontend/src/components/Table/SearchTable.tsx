@@ -2,8 +2,9 @@ import styles from './SearchTable.module.css';
 import { Table, CloseButton, Badge, Title, Text, Divider, Pagination, Center, TextInput, ActionIcon} from '@mantine/core';
 import {IconCheck, IconPencil, IconSearch, IconTrash } from '@tabler/icons-react';
 import CustomTags from '../Tags/CustomTags';
-import {PlaceLocation, PlaceTime, SavedSearchDTO, Tag} from "../../types/SearchDTO";
+import {PlaceLocation, PlaceTime, SavedSearchDTO, SearchDTO, Tag} from "../../types/SearchDTO";
 import { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 
 const iconSize = 24;
 const stroke = 1.3;
@@ -19,9 +20,9 @@ type TransportBadgeProps = {
 function TransportBadge({ transport }: TransportBadgeProps) {
     const getBadgeColor = (element: string | null) => {
         switch (element) {
-            case 'train':
+            case 'Train':
                 return 'red';
-            case 'airplane':
+            case 'Plane':
                 return 'indigo';
             default:
                 return 'green';
@@ -156,9 +157,27 @@ export default function SearchTable({ searches, tags, setTags, setIsModalOpen }:
         const updatedSearchData = searchData.filter((_, i) => i !== index);
         setSearchData(updatedSearchData);
     };
+
+    const createSearchDTO = (index: number): SearchDTO => {
+        const search = searchData[index];
+        return {
+            placesTime: search.placesTime,
+            start: search.start,
+            end: search.end,
+            maxTotalTime: search.maxTotalTime,
+            transport: search.transport,
+            startDate: search.startDate,
+            passengersNumber: search.passengersNumber,
+            preferredCriteria: search.preferredCriteria
+        };
+    };
+
     function SearchIcon({ index }: { index: number }) {
+        const navigate = useNavigate();
+
         const handleClick = () => {
-            //createSearchDTO(index);
+            const data = createSearchDTO(index);
+            navigate('/search', { state: data });
         };
 
         return (

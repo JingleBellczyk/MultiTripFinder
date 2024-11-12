@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import { Button, Group, Transition, MantineProvider } from '@mantine/core';
-import SearchFilter from '../components/Filter/SearchFilter';
-import SearchTable from '../components/Table/SearchTable';
-import { HeaderSearch } from "../components/HeaderSearch/HeaderSearch";
+import SearchFilter from '../../components/Filter/SearchFilter';
+import SearchTable from '../../components/Table/SearchTable';
+import { HeaderSearch } from "../../components/HeaderSearch/HeaderSearch";
 import styles from './SearchesList.module.css';
-import {SavedSearchDTO, Tag} from "../types/SearchDTO";
-import {SERVER, User} from "../constants/constants";
-import {Footer} from "../components/Footer/Footer";
-import {EXAMPLE_SAVED_SEARCH_1, EXAMPLE_SAVED_SEARCH_2, EXAMPLE_TAGS} from "../constants/searchPostDto";
+import {SavedSearchDTO, Tag} from "../../types/SearchDTO";
+import {SERVER, User} from "../../constants/constants";
+import {Footer} from "../../components/Footer/Footer";
+import {EXAMPLE_SAVED_SEARCH_1, EXAMPLE_SAVED_SEARCH_2, EXAMPLE_TAGS} from "../../constants/searchPostDto";
 
 const exampleElements: SavedSearchDTO[] = [EXAMPLE_SAVED_SEARCH_1, EXAMPLE_SAVED_SEARCH_2];
 
