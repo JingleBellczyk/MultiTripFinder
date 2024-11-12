@@ -17,7 +17,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
-/*
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -27,15 +26,15 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .authorizeHttpRequests(auth -> {
-                    auth
-                            .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                            .requestMatchers(HttpMethod.GET, "/**").permitAll()
-                            .requestMatchers(HttpMethod.OPTIONS,"/auth/**").authenticated()
-                            .requestMatchers(HttpMethod.POST,"/auth/**").authenticated()
-                            .requestMatchers(HttpMethod.GET,"/auth/**").authenticated()
-                            .anyRequest().denyAll();
-                })
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/search*", "/trip*", "/user*").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/search*", "/trip*", "/user*").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/search*", "/trip*", "/user*").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/search*", "/trip*").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/search", "/auth*").permitAll()
+                        .anyRequest().denyAll()
+                )
                 .oauth2Login(oauth2 ->
                         oauth2.defaultSuccessUrl("http://localhost:3000/", true)
                 )
@@ -80,9 +79,8 @@ public class SecurityConfig {
         return JwtDecoders.fromIssuerLocation("https://accounts.google.com");
     }
 }
-*/
 
-@Configuration
+/*@Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
@@ -96,4 +94,4 @@ public class SecurityConfig {
 
         return http.build();
     }
-}
+}*/

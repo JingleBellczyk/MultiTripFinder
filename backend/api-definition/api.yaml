@@ -165,7 +165,19 @@ paths:
           $ref: '#/components/responses/validationException'
         409:
           $ref: '#/components/responses/conflictException'
-  /tripList/{userId}/id/{tripId}:
+  /tripList/{userId}/name/{tripName}:
+    get:
+      summary: 'Returns user trip found by trip name'
+      operationId: 'find user trip by name'
+      parameters:
+        - $ref: '#/components/parameters/userId'
+        - $ref: '#/components/parameters/tripName'
+      responses:
+        200:
+          $ref: '#/components/responses/trip'
+        404:
+          $ref: '#/components/responses/notFoundException'
+  /tripList/{userId}/{tripId}:
     get:
       summary: 'Returns user trip found by trip id'
       operationId: 'find user trip'
@@ -199,18 +211,6 @@ paths:
       responses:
         200:
           $ref: '#/components/responses/emptySuccessfulResponse'
-        404:
-          $ref: '#/components/responses/notFoundException'
-  /tripList/{userId}/name/{tripName}:
-    get:
-      summary: 'Returns trip search found by trip name'
-      operationId: 'find user trip by name'
-      parameters:
-        - $ref: '#/components/parameters/userId'
-        - $ref: '#/components/parameters/tripName'
-      responses:
-        200:
-          $ref: '#/components/responses/trip'
         404:
           $ref: '#/components/responses/notFoundException'
   /searchTag/{userId}:
