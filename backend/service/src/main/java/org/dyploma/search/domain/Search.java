@@ -28,15 +28,8 @@ public class Search {
     private String name;
     private Date saveDate;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "start_place_id", referencedColumnName = "id")
-    private PlaceInSearch startPlace;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "end_place_id", referencedColumnName = "id")
-    private PlaceInSearch endPlace;
-
     @OneToMany(mappedBy = "search", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("entryOrder ASC")
     private List<PlaceInSearch> placesToVisit;
 
     @ManyToMany

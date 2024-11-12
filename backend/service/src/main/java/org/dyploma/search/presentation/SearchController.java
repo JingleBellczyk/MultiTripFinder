@@ -5,6 +5,7 @@ import com.openapi.model.*;
 import org.dyploma.search.domain.SearchService;
 import org.dyploma.search.place.PlaceInSearchMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,7 +34,7 @@ public class SearchController implements SearchApi, SearchListApi {
     @Override
     public ResponseEntity<Void> deleteSearch(Integer userId, Integer searchId) {
         searchService.deleteUserSearch(searchId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 
     @Override
@@ -61,8 +62,8 @@ public class SearchController implements SearchApi, SearchListApi {
     }
 
     @Override
-    public ResponseEntity<SearchPage> listUserSearch(Integer userId, Integer page, Integer size, List<TransportMode> transportModes, LocalDate saveDate, List<String> tags) {
-        return ResponseEntity.ok(new SearchPage());
+    public ResponseEntity<SearchPage> listUserSearch(Integer userId, Integer page, Integer size, CriteriaMode optimizationCriteria, List<TransportMode> preferredTransports, LocalDate saveDate, List<String> searchTags) {
+        return ResponseEntity.ok(SearchMapper.mapToSearchPageApi(searchService.getUserSearches(userId, SearchMapper.mapToSearchFilterRequest(optimizationCriteria, preferredTransports, saveDate, searchTags), Pageable.ofSize(size).withPage(page))));
     }
 
     @Override

@@ -13,6 +13,7 @@ import org.dyploma.trip.transfer.Transfer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -41,12 +42,11 @@ public class SearchServiceImpl implements SearchService {
     public List<Trip> search(SearchRequest search) {
         searchValidator.validateSearchRequest(search);
         List<Trip> trips = new ArrayList<>();
-        int overallCities = search.getPlacesToVisit().size() + 2;
         for (int i = 0; i < 5; i++) {
             List<Transfer> transfers = new ArrayList<>();
             List<PlaceInTrip> places = new ArrayList<>();
-            for (int j = 0; j < overallCities; j++) {
-                if (j < overallCities - 1) {
+            for (int j = 0; j < search.getPlacesToVisit().size(); j++) {
+                if (j < search.getPlacesToVisit().size() - 1) {
                     Transfer transfer = Transfer.builder()
                             .transportMode(TransportMode.BUS)
                             .carrier("Carrier")
@@ -60,16 +60,7 @@ public class SearchServiceImpl implements SearchService {
                             .build();
                     transfers.add(transfer);
                 }
-                PlaceInTrip placeInTrip;
-                if (j == 0) {
-                    placeInTrip = generatePlaceInTrip(search.getStartPlace());
-                }
-                else if (j == overallCities - 1) {
-                    placeInTrip = generatePlaceInTrip(search.getEndPlace());
-                }
-                else {
-                    placeInTrip = generatePlaceInTrip(search.getPlacesToVisit().get(j - 1));
-                }
+                PlaceInTrip placeInTrip = generatePlaceInTrip(search.getPlacesToVisit().get(j));
                 places.add(placeInTrip);
             }
             Trip trip = Trip.builder()
@@ -103,18 +94,12 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public Search getUserSearchByName(Integer userId, String name) {
-        Search search = searchRepository.findByNameWithPlaces(name)
-                .orElseThrow(() -> new NotFoundException("Search not found"));
-        searchRepository.findWithTags(List.of(search));
-        return search;
+        return searchRepository.findByName(name).orElseThrow(() -> new NotFoundException("Search not found"));
     }
 
     @Override
     public Search createUserSearch(Integer userId, Search search, List<PlaceInSearch> places, List<String> tagNames) {
         searchValidator.validateSearch(search);
-        for (PlaceInSearch placeInSearch : places) {
-            search.addPlaceToVisit(placeInSearch);
-        }
         setTagsToSearch(search, tagNames);
         search.setSaveDate(Date.valueOf(LocalDate.now()));
         return searchRepository.save(search);
@@ -140,8 +125,12 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public Page<Search> getUserSearches(Integer userId, Pageable pageable) {
-        return searchRepository.findAll(pageable);
+    public Page<Search> getUserSearches(Integer userId, SearchFilterRequest filterRequest, Pageable pageable) {
+        Specification<Search> spec = Specification.where(SearchSpecification.withOptimizationCriteria(filterRequest.getOptimizationCriteria()))
+                .and(SearchSpecification.withTransportModes(filterRequest.getTransportModes()))
+                .and(SearchSpecification.withTags(filterRequest.getTags()))
+                .and(SearchSpecification.withSaveDate(filterRequest.getSaveDate()));
+        return searchRepository.findAll(spec, pageable);
     }
 
     private void setTagsToSearch(Search search, List<String> tagNames) {
@@ -157,20 +146,17 @@ public class SearchServiceImpl implements SearchService {
         Map<String, SearchTag> existingTagMap = existingTags.stream()
                 .collect(Collectors.toMap(SearchTag::getName, tag -> tag));
 
-        // Filter out tags that don't exist in the database
         List<SearchTag> tagsToAssociate = new ArrayList<>(existingTags);
         List<SearchTag> newTags = tagNamesProcessed.stream()
                 .filter(tagName -> !existingTagMap.containsKey(tagName))
                 .map(tagName -> SearchTag.builder().name(tagName).build())
                 .collect(Collectors.toList());
 
-        // Save new tags in bulk
         if (!newTags.isEmpty()) {
             searchTagRepository.saveAll(newTags);
-            tagsToAssociate.addAll(newTags); // Add new tags to the final list
+            tagsToAssociate.addAll(newTags);
         }
 
-        // Associate all tags with the search
         search.setTags(tagsToAssociate);
     }
 }

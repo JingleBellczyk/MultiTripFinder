@@ -68,9 +68,10 @@ paths:
         - $ref: '#/components/parameters/userId'
         - $ref: '#/components/parameters/page'
         - $ref: '#/components/parameters/size'
-        - $ref: '#/components/parameters/transportModes'
+        - $ref: '#/components/parameters/optimizationCriteria'
+        - $ref: '#/components/parameters/preferredTransports'
         - $ref: '#/components/parameters/saveDate'
-        - $ref: '#/components/parameters/tags'
+        - $ref: '#/components/parameters/searchTags'
       responses:
         200:
           $ref: '#/components/responses/searchPage'
@@ -145,9 +146,8 @@ paths:
         - $ref: '#/components/parameters/userId'
         - $ref: '#/components/parameters/page'
         - $ref: '#/components/parameters/size'
-        - $ref: '#/components/parameters/transportModes'
         - $ref: '#/components/parameters/saveDate'
-        - $ref: '#/components/parameters/tags'
+        - $ref: '#/components/parameters/tripTags'
       responses:
         200:
           $ref: '#/components/responses/tripPage'
@@ -213,13 +213,74 @@ paths:
           $ref: '#/components/responses/trip'
         404:
           $ref: '#/components/responses/notFoundException'
-  /searchTag:
+  /searchTag/{userId}:
     get:
-      summary: 'Receives all tags'
-      operationId: 'list tags'
+      summary: 'Receives user search tags'
+      operationId: 'list user search tags'
+      parameters:
+        - $ref: '#/components/parameters/userId'
       responses:
         200:
-          $ref: '#/components/responses/searchResponse'
+          $ref: '#/components/responses/searchTags'
+  /searchTag/{userId}/{searchTagId}:
+    put:
+      summary: 'Updates user search tag'
+      operationId: 'update user search tag'
+      parameters:
+        - $ref: '#/components/parameters/userId'
+        - $ref: '#/components/parameters/searchTagId'
+      requestBody:
+        $ref: '#/components/requestBodies/searchTagUpdating'
+      responses:
+        200:
+          $ref: '#/components/responses/searchTag'
+        404:
+          $ref: '#/components/responses/notFoundException'
+    delete:
+      summary: 'Deletes user search tag'
+      operationId: 'delete user search tag'
+      parameters:
+        - $ref: '#/components/parameters/userId'
+        - $ref: '#/components/parameters/searchTagId'
+      responses:
+        200:
+          $ref: '#/components/responses/emptySuccessfulResponse'
+        404:
+          $ref: '#/components/responses/notFoundException'
+  /tripTag/{userId}:
+    get:
+      summary: 'Receives user trip tags'
+      operationId: 'list user trip tags'
+      parameters:
+        - $ref: '#/components/parameters/userId'
+      responses:
+        200:
+          $ref: '#/components/responses/tripTags'
+  /tripTag/{userId}/{tripTagId}:
+    put:
+      summary: 'Updates user trip tag'
+      operationId: 'update user trip tag'
+      parameters:
+        - $ref: '#/components/parameters/userId'
+        - $ref: '#/components/parameters/tripTagId'
+      requestBody:
+        $ref: '#/components/requestBodies/tripTagUpdating'
+      responses:
+        200:
+          $ref: '#/components/responses/tripTag'
+        404:
+          $ref: '#/components/responses/notFoundException'
+    delete:
+      summary: 'Deletes user trip tag'
+      operationId: 'delete user trip tag'
+      parameters:
+        - $ref: '#/components/parameters/userId'
+        - $ref: '#/components/parameters/tripTagId'
+      responses:
+        200:
+          $ref: '#/components/responses/emptySuccessfulResponse'
+        404:
+          $ref: '#/components/responses/notFoundException'
 
 components:
   parameters:
@@ -269,9 +330,16 @@ components:
       schema:
         type: integer
         default: 5
-    transportModes:
-      name: transports
-      description: 'transport modes to filter search and trip list'
+    optimizationCriteria:
+      name: optimizationCriteria
+      description: 'optimization criteria to filter search list'
+      in: query
+      required: false
+      schema:
+        $ref: '#/components/schemas/criteriaMode'
+    preferredTransports:
+      name: preferredTransports
+      description: 'preferred transports to filter search list'
       in: query
       required: false
       schema:
@@ -279,16 +347,16 @@ components:
         items:
           $ref: '#/components/schemas/transportMode'
     saveDate:
-      name: date
+      name: saveDate
       description: 'save date to filter search and trip list'
       in: query
       required: false
       schema:
         type: string
         format: date
-    tags:
-      name: tags
-      description: 'Tags to filter search and trip list'
+    searchTags:
+      name: searchTags
+      description: 'Tags to filter search list'
       in: query
       required: false
       schema:
@@ -296,6 +364,29 @@ components:
         items:
           type: string
           minLength: 1
+    tripTags:
+      name: tripTags
+      description: 'Tags to filter trip list'
+      in: query
+      required: false
+      schema:
+        type: array
+        items:
+          type: string
+          minLength: 1
+    searchTagId:
+      name: searchTagId
+      in: path
+      required: true
+      schema:
+        type: integer
+    tripTagId:
+      name: tripTagId
+      in: path
+      required: true
+      schema:
+        type: integer
+
 
   requestBodies:
     userCreation:
@@ -334,6 +425,18 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/trip'
+    searchTagUpdating:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/tagUpdating'
+    tripTagUpdating:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/tagUpdating'
 
   responses:
     userInfoPageResponse:
@@ -378,6 +481,34 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/searchResponse'
+    searchTags:
+      description: 'User search tags'
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/searchTag'
+    searchTag:
+      description: 'User search tag'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/searchTag'
+    tripTags:
+      description: 'User trip tags'
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/tripTag'
+    tripTag:
+      description: 'User trip tag'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/tripTag'
     emptySuccessfulResponse:
       description: 'Operation succeeded'
     notFoundException:
@@ -478,10 +609,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/placeInSearch'
-        startPlace:
-          $ref: '#/components/schemas/placeInSearch'
-        endPlace:
-          $ref: '#/components/schemas/placeInSearch'
         passengerCount:
           type: integer
           minimum: 1
@@ -496,8 +623,6 @@ components:
         optimizationCriteria:
           $ref: '#/components/schemas/criteriaMode'
       required:
-        - startPlace
-        - endPlace
         - passengerCount
         - tripStartDate
         - optimizationCriteria
@@ -506,8 +631,6 @@ components:
     search:
       type: object
       required:
-        - startPlace
-        - endPlace
         - name
         - tags
         - passengerCount
@@ -532,10 +655,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/placeInSearch'
-        startPlace:
-          $ref: '#/components/schemas/placeInSearch'
-        endPlace:
-          $ref: '#/components/schemas/placeInSearch'
         passengerCount:
           type: integer
           minimum: 1
@@ -698,23 +817,36 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/trip'
+    searchTag:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+    tripTag:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+    tagUpdating:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
     paged:
       type: object
       properties:
         page:
           $ref: '#/components/schemas/pageInfo'
-        sort:
-          $ref: '#/components/schemas/sort'
         totalElements:
           type: integer
         totalPages:
           type: integer
-        first:
-          type: boolean
-        last:
-          type: boolean
-        empty:
-          type: boolean
     pageInfo:
       type: object
       properties:
@@ -722,14 +854,6 @@ components:
           type: integer
         size:
           type: integer
-        offset:
-          type: integer
-        paged:
-          type: boolean
-    sort:
-      type: array
-      items:
-        type: string
     userInfoPageElements:
       type: object
       properties:
