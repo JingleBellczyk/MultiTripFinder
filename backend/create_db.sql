@@ -19,7 +19,7 @@ CREATE TABLE Trip (
     total_cost REAL NOT NULL,
     total_transfer_time INT NOT NULL,
     duration INT NOT NULL
-    # FOREIGN KEY (user_account_id) REFERENCES UserAccount(id)
+    # FOREIGN KEY (user_account_id) REFERENCES User_Account(id)
 );
 
 CREATE TABLE Transfer (
@@ -60,18 +60,14 @@ CREATE TABLE Search_Place (
 CREATE TABLE Search (
     id INT PRIMARY KEY AUTO_INCREMENT,
     # user_account_id INT NOT NULL,
-    start_place_id INT NOT NULL,
-    end_place_id INT NOT NULL,
     name VARCHAR(100),
     save_date DATE NOT NULL,
     passenger_count INT NOT NULL,
     preferred_transport INT,
     optimization_criteria INT NOT NULL,
     trip_start_date DATE NOT NULL,
-    max_trip_duration INT NOT NULL,
-	#FOREIGN KEY (user_account_id) REFERENCES UserAccount(id),
-    FOREIGN KEY (start_place_id) REFERENCES Search_Place(id),
-    FOREIGN KEY (end_place_id) REFERENCES Search_Place(id)
+    max_trip_duration INT NOT NULL
+	#FOREIGN KEY (user_account_id) REFERENCES User_Account(id),
 );
 
 CREATE TABLE Airports (
@@ -82,23 +78,29 @@ CREATE TABLE Airports (
     country VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE Tag (
+CREATE TABLE Search_Tag (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(255) UNIQUE NOT NULL
+    name VARCHAR(255) NOT NULL UNIQUE
 );
 
-CREATE TABLE Search_Tag (
+CREATE TABLE Trip_Tag (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL UNIQUE
+);
+
+
+CREATE TABLE Search_Search_Tag (
     search_id INT NOT NULL,
     tag_id INT NOT NULL,
     PRIMARY KEY (search_id, tag_id),
     FOREIGN KEY (search_id) REFERENCES Search(id),
-    FOREIGN KEY (tag_id) REFERENCES Tag(id)
+    FOREIGN KEY (tag_id) REFERENCES Search_Tag(id)
 );
 
-CREATE TABLE Trip_Tag (
+CREATE TABLE Trip_Trip_Tag (
     trip_id INT NOT NULL,
     tag_id INT NOT NULL,
     PRIMARY KEY (trip_id, tag_id),
     FOREIGN KEY (trip_id) REFERENCES Trip(id),
-    FOREIGN KEY (tag_id) REFERENCES Tag(id)
+    FOREIGN KEY (tag_id) REFERENCES Trip_Tag(id)
 );

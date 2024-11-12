@@ -24,7 +24,7 @@ public class SearchValidator {
     }
 
     public void validateSearch(Search search) {
-        validatePlaces(search.getStartPlace(), search.getEndPlace(), search.getPlacesToVisit());
+        validatePlaces(search.getPlacesToVisit());
         validateDuration(search.getMaxTripDuration(), search.getPlacesToVisit());
         validateTripStartDate(search.getTripStartDate());
         validatePlacesOrder(search.getPlacesToVisit());
@@ -32,7 +32,7 @@ public class SearchValidator {
     }
 
     public void validateSearchRequest(SearchRequest searchRequest) {
-        validatePlaces(searchRequest.getStartPlace(), searchRequest.getEndPlace(), searchRequest.getPlacesToVisit());
+        validatePlaces(searchRequest.getPlacesToVisit());
         validateDuration(searchRequest.getMaxTripDuration(), searchRequest.getPlacesToVisit());
         validateTripStartDate(searchRequest.getTripStartDate());
         validatePlacesOrder(searchRequest.getPlacesToVisit());
@@ -44,11 +44,14 @@ public class SearchValidator {
         }
     }
 
-    private void validatePlaces(PlaceInSearch startPlace, PlaceInSearch endPlace, List<PlaceInSearch> places) {
-        if (places.stream().anyMatch(place -> (place.getCity().equals(startPlace.getCity()) && place.getCountry().equals(startPlace.getCountry())) || (place.getCity().equals(endPlace.getCity()) && place.getCountry().equals(endPlace.getCountry())))) {
+    private void validatePlaces(List<PlaceInSearch> places) {
+        PlaceInSearch startPlace = places.get(0);
+        PlaceInSearch endPlace = places.get(places.size() - 1);
+        List<PlaceInSearch> placesToVisit = places.subList(1, places.size() - 1);
+        if (placesToVisit.stream().anyMatch(place -> (place.getCity().equals(startPlace.getCity()) && place.getCountry().equals(startPlace.getCountry())) || (place.getCity().equals(endPlace.getCity()) && place.getCountry().equals(endPlace.getCountry())))) {
             throw new ValidationException("Start and end place should not be in places to visit");
         }
-        if (places.stream().map(place -> place.getCity() + place.getCountry()).distinct().count() != places.size()) {
+        if (placesToVisit.stream().map(place -> place.getCity() + place.getCountry()).distinct().count() != placesToVisit.size()) {
             throw new ValidationException("Places to visit should not contain duplicates");
         }
     }
