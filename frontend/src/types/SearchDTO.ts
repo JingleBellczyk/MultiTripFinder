@@ -37,3 +37,21 @@ export interface SearchDTO {
     passengersNumber: number;
     preferredCriteria: string;
 }
+
+export interface SavedSearchDTO {
+    placesTime: PlaceTime[];
+    start: PlaceLocation;
+    end: PlaceLocation;
+    maxTotalTime: number;
+    transport: string | null;
+    startDate: Date;
+    saveDate: Date;
+    passengersNumber: number;
+    preferredCriteria: string;
+    name: string | null;
+    tags: Tag[];
+}
+
+export interface Tag {
+    name: string;
+}

@@ -6,27 +6,33 @@ import {useDisclosure} from '@mantine/hooks';
 import classes from './HeaderSearch.module.css';
 import {Logo} from '../Logo/Logo';
 import Login from "../Login/Login";
-import useAuth from "../Login/useAuth";
+import useAuth from "../../hooks/useAuth";
 import {AUTHENTICATED_LINKS, UNAUTHENTICATED_LINKS, ADMIN_LINKS} from "../../constants/constants";
+import React, {useMemo} from "react";
 
 export function HeaderSearch() {
-    const { isAuthenticated, token, loading } = useAuth();
+    const { isAuthenticated, token, user, loading } = useAuth();
     const [opened, {toggle}] = useDisclosure(false);
     const location = useLocation()
 
-    const linksToDisplay = isAuthenticated
-        ? AUTHENTICATED_LINKS : UNAUTHENTICATED_LINKS;
+    const items = useMemo(() => {
+        let linksToDisplay = isAuthenticated ? AUTHENTICATED_LINKS : UNAUTHENTICATED_LINKS;
 
-    const items = linksToDisplay.map((link) => (
-        <Link
-            key={link.label}
-            to={link.link}
-            className={classes.link}
-            data-active={location.pathname === link.link || undefined}
-        >
-            {link.label}
-        </Link>
-    ));
+        if (isAuthenticated && user?.role === "A") {
+            linksToDisplay = [...AUTHENTICATED_LINKS, ...ADMIN_LINKS];
+        }
+
+        return linksToDisplay.map((link) => (
+            <Link
+                key={link.label}
+                to={link.link}
+                className={classes.link}
+                data-active={location.pathname === link.link || undefined}
+            >
+                {link.label}
+            </Link>
+        ));
+    }, [isAuthenticated, user?.role, location.pathname]);
 
     return (
         <header className={classes.header}>
@@ -36,7 +42,7 @@ export function HeaderSearch() {
                     {items}
                 </Group>
                 <div className={classes.login}>
-                    <Login isAuthenticated={isAuthenticated} token={token}/>
+                    <Login isAuthenticated={isAuthenticated} token={token} user={user}/>
                 </div>
                 <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm"/>
             </Container>

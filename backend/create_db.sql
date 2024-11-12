@@ -19,7 +19,7 @@ CREATE TABLE Trip (
     total_cost REAL NOT NULL,
     total_transfer_time INT NOT NULL,
     duration INT NOT NULL
-    # FOREIGN KEY (user_account_id) REFERENCES UserAccount(id)
+    # FOREIGN KEY (user_account_id) REFERENCES User_Account(id)
 );
 
 CREATE TABLE Transfer (
@@ -67,7 +67,7 @@ CREATE TABLE Search (
     optimization_criteria INT NOT NULL,
     trip_start_date DATE NOT NULL,
     max_trip_duration INT NOT NULL
-	#FOREIGN KEY (user_account_id) REFERENCES UserAccount(id),
+	#FOREIGN KEY (user_account_id) REFERENCES User_Account(id),
 );
 
 CREATE TABLE Airports (

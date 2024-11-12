@@ -1,0 +1,41 @@
+.background {
+    background-color: #3D405B;
+    min-height: 100vh;
+    color: white;
+}
+
+/* Button styling to toggle filter visibility */
+.fixedButton {
+    position: fixed;
+    top: 15%;
+    z-index: 1000;
+}
+
+/* Main group container styles */
+.mainGroup {
+    display: flex;
+    justify-content: center;
+    flex-wrap: nowrap;
+    width: 100%;
+    align-items: flex-start;
+    padding: 30px;
+}
+
+/* Styles for the filter container (SearchFilter component) */
+.filterContainer {
+    position: sticky;
+    top: 20%;
+    max-width: 25%;
+    width: 25%;
+    min-width: 12%;
+    box-sizing: border-box;
+    height: fit-content;
+}
+
+/* Styles for the search table container (SearchTable component) */
+.tableContainer {
+    max-width: 100%;
+    width: 100%;
+    min-width: 75%;
+    height: fit-content;
+}

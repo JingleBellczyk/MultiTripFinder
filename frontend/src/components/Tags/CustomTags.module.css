@@ -1,0 +1,36 @@
+/* CustomTags.module.css */
+
+/* Flex container to align elements in a row */
+.inputWrapper {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Badge wrapper style */
+.badgeWrapper {
+    padding: 3px;
+    width: 100%;
+}
+
+/* Container for the plus icon */
+.plusButton {
+    padding: 5px;
+}
+
+/* Flex layout for the badge group */
+.badgeFlex {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Container for the badge component */
+.badgeContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}

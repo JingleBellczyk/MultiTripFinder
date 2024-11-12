@@ -1,4 +1,4 @@
-import {PlaceLocation, SearchDTO, SearchDTOPost} from '../types/SearchDTO'; // Adjust the path as necessary
+import {PlaceLocation, SavedSearchDTO, SearchDTO, SearchDTOPost, Tag} from '../types/SearchDTO'; // Adjust the path as necessary
 
 export const EXAMPLE_SEARCH_POST_DTO: SearchDTOPost = {
     placesToVisit: [
@@ -61,3 +61,53 @@ export const EMPTY_SEARCH_DTO: SearchDTO = {
     passengersNumber: 1,
     preferredCriteria: 'PRICE'
 };
+
+
+export const EXAMPLE_SAVED_SEARCH_1: SavedSearchDTO = {
+    placesTime: [
+        { name: "Warszawa", city: "Warszawa", country: "Poland", hoursToSpend: 78 },
+        { name: "Zakopane", city: "Zakopane", country: "Poland", hoursToSpend: 48 }
+    ],
+    start: {name: "Wroclaw", city: "Wroclaw", country: "Poland"},
+    end: {name: "Wroclaw", city: "Wroclaw", country: "Poland"},
+    maxTotalTime: 150,
+    transport: "train",
+    startDate: new Date("2025-12-20"),
+    saveDate: new Date("2024-11-01"),
+    preferredCriteria: "DURATION",
+    tags: [
+        { name: "TRIPS"},
+        { name: "MOUNTAINS" }
+    ],
+    name: "Mountain trip",
+    passengersNumber: 3
+};
+
+export const EXAMPLE_SAVED_SEARCH_2: SavedSearchDTO = {
+    placesTime: [
+        { name: "Madrid", city: "Madrid", country: "Spain", hoursToSpend: 80 },
+        { name: "Barcelona", city: "Barcelona", country: "Spain", hoursToSpend: 90 },
+        { name: "Seville", city: "Seville", country: "Spain", hoursToSpend: 70 }
+    ],
+    start: { name: "Lisbon", city: "Lisbon", country: "Portugal" },
+    end: { name: "Helsinki", city: "Helsinki", country: "Finland" },
+    maxTotalTime: 300,
+    transport: "bus",
+    startDate: new Date("2025-07-05"),
+    saveDate: new Date("2024-11-12"),
+    preferredCriteria: "PRICE",
+    tags: [
+        { name: "ROAD TRIP" },
+        { name: "SUMMER 2025" }
+    ],
+    name: null,
+    passengersNumber: 6
+};
+
+export const EXAMPLE_TAGS: Tag[] = [
+    { name: "ROAD TRIP"},
+    { name: "SUMMER 2025"},
+    { name: "TRIPS"},
+    { name: "MOUNTAINS"}
+]
+

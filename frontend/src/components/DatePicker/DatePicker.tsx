@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import dayjs from 'dayjs';
 import { DateInput, DateInputProps } from '@mantine/dates';
 import classes from './DatePicker.module.css';

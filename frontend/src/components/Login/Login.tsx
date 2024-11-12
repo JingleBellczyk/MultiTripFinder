@@ -1,7 +1,8 @@
 import '@mantine/core/styles.css';
 import {Button, Group, Text, Avatar} from '@mantine/core';
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import axios from "axios";
+import {User} from "../../constants/constants";
 
 const SERVER = "http://localhost:8080"
 const CLIENT = "http:///localhost:3000"
@@ -9,28 +10,13 @@ const CLIENT = "http:///localhost:3000"
 type LoginProps = {
     isAuthenticated: boolean;
     token: string | null;
+    user: User | null;
 };
-const Login: React.FC<LoginProps> = ({ isAuthenticated, token }) => {
-    const [user, setUser] = useState<{ given_name: string , picture: string} | null>(null);
+const Login: React.FC<LoginProps> = ({ isAuthenticated, token, user }) => {
     const googleLogin = () => {
         window.location.href = `${SERVER}/oauth2/authorization/google`;
     };
 
-    useEffect(() => {
-        console.log("useEffect triggered - isAuthenticated:", isAuthenticated, "token:", token); // Debugging log
-        if (isAuthenticated && token) {
-            const fetchUser = async () => {
-                try {
-                    const response = await axios.get(`${SERVER}/auth/user-info`, {withCredentials: true});
-                    setUser(response.data);
-                    console.log("User data fetched:", response.data);
-                } catch (error) {
-                    console.error("User not authenticated:", error);
-                }
-            };
-            fetchUser()
-        }
-    }, [isAuthenticated, token]);
     const handleLogout = async () => {
         try {
             await axios.post(`${SERVER}/logout`, {}, { withCredentials: true });
@@ -45,7 +31,7 @@ const Login: React.FC<LoginProps> = ({ isAuthenticated, token }) => {
         <div>
             {isAuthenticated && user ? (
                 <>
-                    <Group align="center" gap={5}>
+                    <Group align="center" gap={20}>
                         <Text c="white" fw={500} size="xl" >{user.given_name}</Text>
                         <div>
                             {user.picture && (
