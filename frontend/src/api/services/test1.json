@@ -1,0 +1,211 @@
+{
+  "meta": {
+    "count": 1
+  },
+  "data": [
+    {
+      "type": "flight-offer",
+      "id": "1",
+      "source": "GDS",
+      "instantTicketingRequired": false,
+      "nonHomogeneous": false,
+      "oneWay": false,
+      "isUpsellOffer": false,
+      "lastTicketingDate": "2024-11-25",
+      "lastTicketingDateTime": "2024-11-25",
+      "numberOfBookableSeats": 9,
+      "itineraries": [
+        {
+          "duration": "PT3H55M",
+          "segments": [
+            {
+              "departure": {
+                "iataCode": "WRO",
+                "at": "2024-11-25T14:05:00"
+              },
+              "arrival": {
+                "iataCode": "FRA",
+                "terminal": "1",
+                "at": "2024-11-25T15:30:00"
+              },
+              "carrierCode": "LH",
+              "number": "1373",
+              "aircraft": {
+                "code": "E90"
+              },
+              "operating": {
+                "carrierCode": "CL"
+              },
+              "duration": "PT1H25M",
+              "id": "1",
+              "numberOfStops": 0,
+              "blacklistedInEU": false
+            },
+            {
+              "departure": {
+                "iataCode": "FRA",
+                "terminal": "1",
+                "at": "2024-11-25T16:30:00"
+              },
+              "arrival": {
+                "iataCode": "LGW",
+                "terminal": "N",
+                "at": "2024-11-25T17:00:00"
+              },
+              "carrierCode": "LH",
+              "number": "1522",
+              "aircraft": {
+                "code": "320"
+              },
+              "operating": {
+                "carrierCode": "LH"
+              },
+              "duration": "PT1H30M",
+              "id": "2",
+              "numberOfStops": 0,
+              "blacklistedInEU": false
+            }
+          ]
+        },
+        {
+          "duration": "PT2H50M",
+          "segments": [
+            {
+              "departure": {
+                "iataCode": "LHR",
+                "terminal": "2",
+                "at": "2024-11-30T13:15:00"
+              },
+              "arrival": {
+                "iataCode": "LIS",
+                "terminal": "1",
+                "at": "2024-11-30T16:05:00"
+              },
+              "carrierCode": "6X",
+              "number": "7590",
+              "aircraft": {
+                "code": "738"
+              },
+              "operating": {
+                "carrierCode": "6X"
+              },
+              "duration": "PT2H50M",
+              "id": "3",
+              "numberOfStops": 0,
+              "blacklistedInEU": false
+            }
+          ]
+        }
+      ],
+      "price": {
+        "currency": "EUR",
+        "total": "979.16",
+        "base": "812.00",
+        "fees": [
+          {
+            "amount": "0.00",
+            "type": "SUPPLIER"
+          },
+          {
+            "amount": "0.00",
+            "type": "TICKETING"
+          }
+        ],
+        "grandTotal": "979.16",
+        "additionalServices": [
+          {
+            "amount": "1.00",
+            "type": "CHECKED_BAGS"
+          }
+        ]
+      },
+      "pricingOptions": {
+        "fareType": [
+          "PUBLISHED"
+        ],
+        "includedCheckedBagsOnly": true
+      },
+      "validatingAirlineCodes": [
+        "6X"
+      ],
+      "travelerPricings": [
+        {
+          "travelerId": "1",
+          "fareOption": "STANDARD",
+          "travelerType": "ADULT",
+          "price": {
+            "currency": "EUR",
+            "total": "979.16",
+            "base": "812.00"
+          },
+          "fareDetailsBySegment": [
+            {
+              "segmentId": "1",
+              "cabin": "ECONOMY",
+              "fareBasis": "YFF77WW",
+              "class": "Y",
+              "includedCheckedBags": {
+                "quantity": 1
+              }
+            },
+            {
+              "segmentId": "2",
+              "cabin": "ECONOMY",
+              "fareBasis": "YFF77WW",
+              "class": "Y",
+              "includedCheckedBags": {
+                "quantity": 1
+              }
+            },
+            {
+              "segmentId": "3",
+              "cabin": "ECONOMY",
+              "fareBasis": "YFF77WW",
+              "class": "M",
+              "includedCheckedBags": {
+                "quantity": 1
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "dictionaries": {
+    "locations": {
+      "FRA": {
+        "cityCode": "FRA",
+        "countryCode": "DE"
+      },
+      "WRO": {
+        "cityCode": "WRO",
+        "countryCode": "PL"
+      },
+      "LHR": {
+        "cityCode": "LON",
+        "countryCode": "GB"
+      },
+      "LIS": {
+        "cityCode": "LIS",
+        "countryCode": "PT"
+      },
+      "LGW": {
+        "cityCode": "LON",
+        "countryCode": "GB"
+      }
+    },
+    "aircraft": {
+      "320": "AIRBUS A320",
+      "738": "BOEING 737-800",
+      "E90": "EMBRAER 190"
+    },
+    "currencies": {
+      "EUR": "EURO"
+    },
+    "carriers": {
+      "6X": "AMADEUS SIX",
+      "CL": "LUFTHANSA CITYLINE",
+      "LH": "LUFTHANSA"
+    }
+  }
+}

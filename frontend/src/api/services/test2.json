@@ -1,0 +1,264 @@
+{
+  "meta": {
+    "count": 1
+  },
+  "data": [
+    {
+      "type": "flight-offer",
+      "id": "1",
+      "source": "GDS",
+      "instantTicketingRequired": false,
+      "nonHomogeneous": false,
+      "oneWay": false,
+      "isUpsellOffer": false,
+      "lastTicketingDate": "2024-11-15",
+      "lastTicketingDateTime": "2024-11-15",
+      "numberOfBookableSeats": 9,
+      "itineraries": [
+        {
+          "duration": "PT6H",
+          "segments": [
+            {
+              "departure": {
+                "iataCode": "WRO",
+                "at": "2024-11-25T12:20:00"
+              },
+              "arrival": {
+                "iataCode": "WAW",
+                "at": "2024-11-25T13:15:00"
+              },
+              "carrierCode": "LO",
+              "number": "3854",
+              "aircraft": {
+                "code": "E75"
+              },
+              "operating": {
+                "carrierCode": "LO"
+              },
+              "duration": "PT55M",
+              "id": "1",
+              "numberOfStops": 0,
+              "blacklistedInEU": false
+            },
+            {
+              "departure": {
+                "iataCode": "WAW",
+                "at": "2024-11-25T15:30:00"
+              },
+              "arrival": {
+                "iataCode": "LHR",
+                "terminal": "2",
+                "at": "2024-11-25T17:20:00"
+              },
+              "carrierCode": "LO",
+              "number": "279",
+              "aircraft": {
+                "code": "7M8"
+              },
+              "operating": {
+                "carrierCode": "LO"
+              },
+              "duration": "PT2H50M",
+              "id": "2",
+              "numberOfStops": 0,
+              "blacklistedInEU": false
+            }
+          ]
+        }
+      ],
+      "price": {
+        "currency": "EUR",
+        "total": "143.49",
+        "base": "90.00",
+        "fees": [
+          {
+            "amount": "0.00",
+            "type": "SUPPLIER"
+          },
+          {
+            "amount": "0.00",
+            "type": "TICKETING"
+          }
+        ],
+        "grandTotal": "143.49",
+        "additionalServices": [
+          {
+            "amount": "31.00",
+            "type": "CHECKED_BAGS"
+          }
+        ]
+      },
+      "pricingOptions": {
+        "fareType": [
+          "PUBLISHED"
+        ],
+        "includedCheckedBagsOnly": false
+      },
+      "validatingAirlineCodes": [
+        "LO"
+      ],
+      "travelerPricings": [
+        {
+          "travelerId": "1",
+          "fareOption": "STANDARD",
+          "travelerType": "ADULT",
+          "price": {
+            "currency": "EUR",
+            "total": "143.49",
+            "base": "90.00"
+          },
+          "fareDetailsBySegment": [
+            {
+              "segmentId": "1",
+              "cabin": "ECONOMY",
+              "fareBasis": "W1SAV10",
+              "brandedFare": "ECOSAVER",
+              "brandedFareLabel": "ECONOMY SAVER",
+              "class": "W",
+              "includedCheckedBags": {
+                "quantity": 0
+              },
+              "amenities": [
+                {
+                  "description": "LAPTOP OR HANDBAG UP TO 85LCM",
+                  "isChargeable": false,
+                  "amenityType": "BAGGAGE",
+                  "amenityProvider": {
+                    "name": "BrandedFare"
+                  }
+                },
+                {
+                  "description": "1 ST CHECKED BAG UP TO 23KG",
+                  "isChargeable": true,
+                  "amenityType": "BAGGAGE",
+                  "amenityProvider": {
+                    "name": "BrandedFare"
+                  }
+                },
+                {
+                  "description": "PRE RESERVED SEAT ASSIGNMENT",
+                  "isChargeable": true,
+                  "amenityType": "PRE_RESERVED_SEAT",
+                  "amenityProvider": {
+                    "name": "BrandedFare"
+                  }
+                },
+                {
+                  "description": "MILEAGE ACCRUAL",
+                  "isChargeable": false,
+                  "amenityType": "BRANDED_FARES",
+                  "amenityProvider": {
+                    "name": "BrandedFare"
+                  }
+                },
+                {
+                  "description": "CHANGE ANYTIME",
+                  "isChargeable": true,
+                  "amenityType": "BRANDED_FARES",
+                  "amenityProvider": {
+                    "name": "BrandedFare"
+                  }
+                },
+                {
+                  "description": "UPGRADE ECO TO BUSINESS",
+                  "isChargeable": true,
+                  "amenityType": "UPGRADES",
+                  "amenityProvider": {
+                    "name": "BrandedFare"
+                  }
+                }
+              ]
+            },
+            {
+              "segmentId": "2",
+              "cabin": "ECONOMY",
+              "fareBasis": "W1SAV10",
+              "brandedFare": "ECOSAVER",
+              "brandedFareLabel": "ECONOMY SAVER",
+              "class": "W",
+              "includedCheckedBags": {
+                "quantity": 0
+              },
+              "amenities": [
+                {
+                  "description": "LAPTOP OR HANDBAG UP TO 85LCM",
+                  "isChargeable": false,
+                  "amenityType": "BAGGAGE",
+                  "amenityProvider": {
+                    "name": "BrandedFare"
+                  }
+                },
+                {
+                  "description": "1 ST CHECKED BAG UP TO 23KG",
+                  "isChargeable": true,
+                  "amenityType": "BAGGAGE",
+                  "amenityProvider": {
+                    "name": "BrandedFare"
+                  }
+                },
+                {
+                  "description": "PRE RESERVED SEAT ASSIGNMENT",
+                  "isChargeable": true,
+                  "amenityType": "PRE_RESERVED_SEAT",
+                  "amenityProvider": {
+                    "name": "BrandedFare"
+                  }
+                },
+                {
+                  "description": "MILEAGE ACCRUAL",
+                  "isChargeable": false,
+                  "amenityType": "BRANDED_FARES",
+                  "amenityProvider": {
+                    "name": "BrandedFare"
+                  }
+                },
+                {
+                  "description": "CHANGE ANYTIME",
+                  "isChargeable": true,
+                  "amenityType": "BRANDED_FARES",
+                  "amenityProvider": {
+                    "name": "BrandedFare"
+                  }
+                },
+                {
+                  "description": "UPGRADE ECO TO BUSINESS",
+                  "isChargeable": true,
+                  "amenityType": "UPGRADES",
+                  "amenityProvider": {
+                    "name": "BrandedFare"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "dictionaries": {
+    "locations": {
+      "WRO": {
+        "cityCode": "WRO",
+        "countryCode": "PL"
+      },
+      "LHR": {
+        "cityCode": "LON",
+        "countryCode": "GB"
+      },
+      "WAW": {
+        "cityCode": "WAW",
+        "countryCode": "PL"
+      }
+    },
+    "aircraft": {
+      "E75": "EMBRAER 175",
+      "7M8": "BOEING 737 MAX 8"
+    },
+    "currencies": {
+      "EUR": "EURO"
+    },
+    "carriers": {
+      "LO": "LOT POLISH AIRLINES"
+    }
+  }
+}
