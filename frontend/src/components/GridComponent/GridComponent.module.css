@@ -5,4 +5,5 @@
     border: 1px solid #ddd;
     font-size: var(--mantine-font-size-xl);
     font-weight: 500;
+    border-radius: 10px;
 }

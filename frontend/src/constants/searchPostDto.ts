@@ -1,4 +1,4 @@
-import {PlaceLocation, SavedSearchDTO, SearchDTO, SearchDTOPost, Tag} from '../types/SearchDTO'; // Adjust the path as necessary
+import {PlaceLocation,SavedSearchDTO, SearchDTO, SearchDTOPost,Tag, SearchDTOSave} from '../types/SearchDTO'; // Adjust the path as necessary
 
 export const EXAMPLE_SEARCH_POST_DTO: SearchDTOPost = {
     placesToVisit: [
@@ -61,8 +61,6 @@ export const EMPTY_SEARCH_DTO: SearchDTO = {
     passengersNumber: 1,
     preferredCriteria: 'PRICE'
 };
-
-
 export const EXAMPLE_SAVED_SEARCH_1: SavedSearchDTO = {
     placesTime: [
         { name: "Warszawa", city: "Warszawa", country: "Poland", hoursToSpend: 78 },
@@ -111,3 +109,23 @@ export const EXAMPLE_TAGS: Tag[] = [
     { name: "MOUNTAINS"}
 ]
 
+export const INITIAL_SEARCH_DTO_SAVE: SearchDTOSave = {
+    id: null,
+    name: null,
+    saveDate: null,
+    tags: [],
+    placesToVisit: [],
+    startPlace: {
+        country: "",
+        city: "",
+    },
+    endPlace: {
+        country: "",
+        city: "",
+    },
+    passengerCount: 0,
+    maxTripDuration: 0,
+    tripStartDate: null,
+    preferredTransport: null,
+    optimizationCriteria: ""
+};

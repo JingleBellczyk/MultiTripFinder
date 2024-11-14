@@ -1,0 +1,41 @@
+.pinkButton {
+    width: 100px;
+    background-color: var(--primary-color);
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    font-size: var(--mantine-font-size-lg);
+}
+
+.pinkButton:hover {
+    background-color: var(--hover-color);
+}
+.buttonGroup {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+}
+.saveButton {
+    background-color: #f0f0f0;
+    color: #555555;
+    font-size: 18px;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: -10px;
+}
+
+.saveButton:hover {
+    background-color: #e0e0e0;
+}
+.modalTitle {
+    display: flex;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    width: 100%;
+    text-align: center;
+}
