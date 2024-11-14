@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.dyploma.search.domain.Search;
+import org.dyploma.useraccount.UserAccount;
 
 import java.util.List;
 
@@ -14,7 +15,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "search_tag")
+@Table(name = "search_tag", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"name", "user_account_id"})
+})
 public class SearchTag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,4 +28,8 @@ public class SearchTag {
 
     @ManyToMany(mappedBy = "tags")
     private List<Search> searches;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_account_id", nullable = false)
+    private UserAccount userAccount;
 }

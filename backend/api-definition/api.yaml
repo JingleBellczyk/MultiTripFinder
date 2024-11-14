@@ -9,33 +9,33 @@ servers:
 paths:
   /user:
     get:
-      summary: 'Receives users info'
+      summary: 'Receives users'
       operationId: 'list users'
       parameters:
         - $ref: '#/components/parameters/page'
         - $ref: '#/components/parameters/size'
       responses:
         200:
-          $ref: '#/components/responses/userInfoPageResponse'
+          $ref: '#/components/responses/userPage'
     post:
       summary: 'Creates a new user'
       operationId: 'create user'
       requestBody:
-        $ref: '#/components/requestBodies/userCreation'
+        $ref: '#/components/requestBodies/user'
       responses:
         200:
-          $ref: '#/components/responses/userInfoResponse'
+          $ref: '#/components/responses/user'
         400:
           $ref: '#/components/responses/validationException'
   /user/{userId}:
     get:
-      summary: 'Returns a user info found by its id'
+      summary: 'Returns a user found by its id'
       operationId: 'find user'
       parameters:
         - $ref: '#/components/parameters/userId'
       responses:
         200:
-          $ref: '#/components/responses/userInfoResponse'
+          $ref: '#/components/responses/user'
         404:
           $ref: '#/components/responses/notFoundException'
     delete:
@@ -346,6 +346,7 @@ components:
         type: array
         items:
           $ref: '#/components/schemas/transportMode'
+
     saveDate:
       name: saveDate
       description: 'save date to filter search and trip list'
@@ -389,12 +390,12 @@ components:
 
 
   requestBodies:
-    userCreation:
+    user:
       required: true
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/userCreation'
+            $ref: '#/components/schemas/user'
     search:
       required: true
       content:
@@ -439,18 +440,18 @@ components:
             $ref: '#/components/schemas/tagUpdating'
 
   responses:
-    userInfoPageResponse:
-      description: 'Page of users matching specified filtering and paging criteria'
+    user:
+      description: 'Saved user'
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/userInfoPage'
-    userInfoResponse:
-      description: 'Created user'
+            $ref: '#/components/schemas/user'
+    userPage:
+      description: 'Page of users'
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/userInfo'
+            $ref: '#/components/schemas/userPage'
     searchPage:
       description: 'Page of user searches'
       content:
@@ -777,29 +778,21 @@ components:
           items:
             type: string
             minLength: 1
-    userCreation:
+    user:
       type: object
       required:
         - email
       properties:
-        email:
-          type: string
-    userInfo:
-      type: object
-      properties:
         id:
-          type: string
-        firstName:
-          type: string
-        lastName:
-          type: string
+          type: integer
         email:
           type: string
-    userInfoPage:
+          format: email
+    userPage:
       type: object
       allOf:
         - $ref: '#/components/schemas/paged'
-        - $ref: '#/components/schemas/userInfoPageElements'
+        - $ref: '#/components/schemas/userPageElements'
     searchPage:
       type: object
       allOf:
@@ -819,23 +812,27 @@ components:
             $ref: '#/components/schemas/trip'
     searchTag:
       type: object
+      required:
+        - name
       properties:
         id:
           type: integer
         name:
           type: string
-    tripTag:
-      type: object
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
+          minLength: 1
     tagUpdating:
       type: object
       required:
         - name
       properties:
+        name:
+          type: string
+          minLength: 1
+    tripTag:
+      type: object
+      properties:
+        id:
+          type: integer
         name:
           type: string
     paged:
@@ -854,10 +851,10 @@ components:
           type: integer
         size:
           type: integer
-    userInfoPageElements:
+    userPageElements:
       type: object
       properties:
         content:
           type: array
           items:
-            $ref: '#/components/schemas/userInfo'
+            $ref: '#/components/schemas/user'

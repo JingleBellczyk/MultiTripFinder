@@ -1,9 +1,19 @@
 package org.dyploma.useraccount;
 
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.dyploma.search.domain.Search;
+import org.dyploma.tag.search_tag.domain.SearchTag;
 
-@Getter
+import java.util.List;
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "user_account")
 public class UserAccount {
@@ -17,15 +27,9 @@ public class UserAccount {
     @Column(nullable = false)
     private Character role;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    @OneToMany(mappedBy = "userAccount", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Search> searches;
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setRole(Character role) {
-        this.role = role;
-    }
+    @OneToMany(mappedBy = "userAccount", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<SearchTag> searchTags;
 }

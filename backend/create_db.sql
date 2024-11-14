@@ -10,7 +10,7 @@ CREATE TABLE User_Account (
 
 CREATE TABLE Trip (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    # user_account_id INT NOT NULL,
+    user_account_id INT NOT NULL,
     name VARCHAR(100),
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
@@ -18,8 +18,8 @@ CREATE TABLE Trip (
     passenger_count INT NOT NULL,
     total_cost REAL NOT NULL,
     total_transfer_time INT NOT NULL,
-    duration INT NOT NULL
-    # FOREIGN KEY (user_account_id) REFERENCES User_Account(id)
+    duration INT NOT NULL,
+    FOREIGN KEY (user_account_id) REFERENCES User_Account(id)
 );
 
 CREATE TABLE Transfer (
@@ -59,15 +59,15 @@ CREATE TABLE Search_Place (
 
 CREATE TABLE Search (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    # user_account_id INT NOT NULL,
+    user_account_id INT NOT NULL,
     name VARCHAR(100),
     save_date DATE NOT NULL,
     passenger_count INT NOT NULL,
     preferred_transport INT,
     optimization_criteria INT NOT NULL,
     trip_start_date DATE NOT NULL,
-    max_trip_duration INT NOT NULL
-	#FOREIGN KEY (user_account_id) REFERENCES User_Account(id),
+    max_trip_duration INT NOT NULL,
+	FOREIGN KEY (user_account_id) REFERENCES User_Account(id)
 );
 
 CREATE TABLE Airports (
@@ -80,12 +80,17 @@ CREATE TABLE Airports (
 
 CREATE TABLE Search_Tag (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(255) NOT NULL UNIQUE
+    user_account_id INT NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    FOREIGN KEY (user_account_id) REFERENCES User_Account(id),
+    CONSTRAINT unique_name_user_account UNIQUE (name, user_account_id)
 );
 
 CREATE TABLE Trip_Tag (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    name VARCHAR(255) NOT NULL UNIQUE
+    user_account_id INT NOT NULL,
+    name VARCHAR(255) NOT NULL UNIQUE,
+    FOREIGN KEY (user_account_id) REFERENCES User_Account(id)
 );
 
 

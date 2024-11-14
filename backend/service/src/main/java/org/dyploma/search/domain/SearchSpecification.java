@@ -5,6 +5,7 @@ import jakarta.persistence.criteria.Join;
 import org.dyploma.search.criteria.CriteriaMode;
 import org.dyploma.tag.search_tag.domain.SearchTag;
 import org.dyploma.transport.TransportMode;
+import org.dyploma.useraccount.UserAccount;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.sql.Date;
@@ -12,6 +13,11 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class SearchSpecification {
+
+    public static Specification<Search> belongsToUserAccount(UserAccount userAccount) {
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("userAccount"), userAccount);
+    }
+
     public static Specification<Search> withOptimizationCriteria(CriteriaMode criteria) {
         return (root, query, criteriaBuilder) ->
                 criteria != null ? criteriaBuilder.equal(root.get("optimizationCriteria"), criteria) : null;

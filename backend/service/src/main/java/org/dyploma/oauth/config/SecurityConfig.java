@@ -8,6 +8,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtDecoders;
 import org.springframework.security.web.SecurityFilterChain;
@@ -17,9 +18,15 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
-@Configuration
+/*@Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    private final OAuth2TokenExpirationFilter oAuth2TokenExpirationFilter;
+
+    public SecurityConfig(OAuth2TokenExpirationFilter oAuth2TokenExpirationFilter) {
+        this.oAuth2TokenExpirationFilter = oAuth2TokenExpirationFilter;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -55,7 +62,8 @@ public class SecurityConfig {
                                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                                     response.getWriter().write("Access Denied!");
                                 })
-                );
+                )
+                .addFilterBefore(oAuth2TokenExpirationFilter, OAuth2LoginAuthenticationFilter.class);
         return http.build();
     }
 
@@ -78,9 +86,9 @@ public class SecurityConfig {
     public JwtDecoder jwtDecoder() {
         return JwtDecoders.fromIssuerLocation("https://accounts.google.com");
     }
-}
+}*/
 
-/*@Configuration
+@Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
@@ -94,4 +102,4 @@ public class SecurityConfig {
 
         return http.build();
     }
-}*/
+}

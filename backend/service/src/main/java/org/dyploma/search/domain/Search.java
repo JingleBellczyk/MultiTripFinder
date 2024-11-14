@@ -9,6 +9,7 @@ import org.dyploma.search.criteria.CriteriaMode;
 import org.dyploma.search.place.PlaceInSearch;
 import org.dyploma.tag.search_tag.domain.SearchTag;
 import org.dyploma.transport.TransportMode;
+import org.dyploma.useraccount.UserAccount;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -27,6 +28,10 @@ public class Search {
     private Integer id;
     private String name;
     private Date saveDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_account_id", nullable = false)
+    private UserAccount userAccount;
 
     @OneToMany(mappedBy = "search", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("entryOrder ASC")

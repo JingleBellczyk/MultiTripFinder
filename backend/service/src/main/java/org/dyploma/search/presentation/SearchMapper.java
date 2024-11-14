@@ -17,7 +17,6 @@ import java.util.List;
 
 import static org.dyploma.search.criteria.CriteriaModeMapper.mapToCriteriaMode;
 import static org.dyploma.search.criteria.CriteriaModeMapper.mapToCriteriaModeApi;
-import static org.dyploma.search.place.PlaceInSearchMapper.mapToPlaceInSearch;
 import static org.dyploma.transport.TransportModeMapper.mapToTransportMode;
 import static org.dyploma.transport.TransportModeMapper.mapToTransportModeApi;
 
@@ -27,7 +26,7 @@ public class SearchMapper {
         Search search = Search.builder()
                 .name(searchApi.getName().toLowerCase())
                 .passengerCount(searchApi.getPassengerCount())
-                .preferredTransport(mapToTransportMode(searchApi.getPreferredTransport()))
+                .preferredTransport(searchApi.getPreferredTransport() != null ? mapToTransportMode(searchApi.getPreferredTransport()) : null)
                 .optimizationCriteria(mapToCriteriaMode(searchApi.getOptimizationCriteria()))
                 .tripStartDate(Date.valueOf(searchApi.getTripStartDate()))
                 .maxTripDuration(searchApi.getMaxTripDuration())
@@ -47,7 +46,7 @@ public class SearchMapper {
                         .map(PlaceInSearchMapper::mapToPlaceInSearchApi)
                         .toList())
                 .passengerCount(search.getPassengerCount())
-                .preferredTransport(mapToTransportModeApi(search.getPreferredTransport()))
+                .preferredTransport(search.getPreferredTransport() != null ? mapToTransportModeApi(search.getPreferredTransport()) : null)
                 .optimizationCriteria(mapToCriteriaModeApi(search.getOptimizationCriteria()))
                 .tripStartDate(search.getTripStartDate().toLocalDate())
                 .maxTripDuration(search.getMaxTripDuration());

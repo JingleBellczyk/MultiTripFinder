@@ -33,7 +33,7 @@ public class SearchController implements SearchApi, SearchListApi {
 
     @Override
     public ResponseEntity<Void> deleteSearch(Integer userId, Integer searchId) {
-        searchService.deleteUserSearch(searchId);
+        searchService.deleteUserSearch(userId, searchId);
         return ResponseEntity.ok().build();
     }
 
