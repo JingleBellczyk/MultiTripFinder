@@ -1,5 +1,6 @@
 package org.dyploma.search.domain;
 
+import org.dyploma.exception.ConflictException;
 import org.dyploma.exception.NotFoundException;
 import org.dyploma.exception.ValidationException;
 import org.dyploma.search.place.PlaceInSearch;
@@ -10,6 +11,8 @@ import org.dyploma.transport.TransportMode;
 import org.dyploma.trip.domain.Trip;
 import org.dyploma.trip.place.PlaceInTrip;
 import org.dyploma.trip.transfer.Transfer;
+import org.dyploma.useraccount.UserAccount;
+import org.dyploma.useraccount.UserAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,13 +32,15 @@ import java.util.stream.Collectors;
 public class SearchServiceImpl implements SearchService {
     private final SearchRepository searchRepository;
     private final SearchTagRepository searchTagRepository;
+    private final UserAccountService userAccountService;
     private final SearchValidator searchValidator;
 
     @Autowired
-    public SearchServiceImpl(SearchRepository searchRepository, SearchValidator searchValidator, SearchTagRepository searchTagRepository) {
+    public SearchServiceImpl(SearchRepository searchRepository, SearchValidator searchValidator, SearchTagRepository searchTagRepository, UserAccountService userAccountService) {
         this.searchRepository = searchRepository;
         this.searchTagRepository = searchTagRepository;
         this.searchValidator = searchValidator;
+        this.userAccountService = userAccountService;
     }
 
     @Override
@@ -78,7 +83,7 @@ public class SearchServiceImpl implements SearchService {
         return trips;
     }
 
-    private PlaceInTrip generatePlaceInTrip (PlaceInSearch placeInSearch) {
+    private PlaceInTrip generatePlaceInTrip(PlaceInSearch placeInSearch) {
         return PlaceInTrip.builder()
                 .country(placeInSearch.getCountry())
                 .city(placeInSearch.getCity())
@@ -89,25 +94,32 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public Search getUserSearchById(Integer userId, Integer searchId) {
-        return searchRepository.findById(searchId).orElseThrow(() -> new NotFoundException("Search not found"));
+        UserAccount userAccount = userAccountService.getUserById(userId);
+        return searchRepository.findByIdAndUserAccount(searchId, userAccount).orElseThrow(() -> new NotFoundException("Search not found"));
     }
 
     @Override
     public Search getUserSearchByName(Integer userId, String name) {
-        return searchRepository.findByName(name).orElseThrow(() -> new NotFoundException("Search not found"));
+        UserAccount userAccount = userAccountService.getUserById(userId);
+        return searchRepository.findByNameAndUserAccount(name, userAccount).orElseThrow(() -> new NotFoundException("Search not found"));
     }
 
     @Override
     public Search createUserSearch(Integer userId, Search search, List<PlaceInSearch> places, List<String> tagNames) {
         searchValidator.validateSearch(search);
-        setTagsToSearch(search, tagNames);
+        UserAccount userAccount = userAccountService.getUserById(userId);
+        if (searchRepository.existsByNameAndUserAccount(search.getName(), userAccount)) {
+            throw new ConflictException("Search with this name already exists");
+        }
+        search.setUserAccount(userAccount);
+        setTagsToSearch(userAccount, search, tagNames);
         search.setSaveDate(Date.valueOf(LocalDate.now()));
         return searchRepository.save(search);
     }
 
     @Override
-    public void deleteUserSearch(Integer searchId) {
-        if (!searchRepository.existsById(searchId)) {
+    public void deleteUserSearch(Integer userId, Integer searchId) {
+        if (!searchRepository.existsByIdAndUserAccount(searchId, userAccountService.getUserById(userId))) {
             throw new NotFoundException("Search not found");
         }
         searchRepository.deleteById(searchId);
@@ -115,33 +127,41 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public Search updateUserSearch(Integer userId, Integer searchId, String name, List<String> tags) {
-        Search search = getUserSearchById(userId, searchId);
-        if (!name.equals(search.getName()) && searchRepository.existsByName(name)) {
-            throw new ValidationException("Search with this name already exists");
+        UserAccount userAccount = userAccountService.getUserById(userId);
+        Search search = searchRepository.findByIdAndUserAccount(searchId, userAccount).orElseThrow(() -> new NotFoundException("Search not found"));
+        if (!name.equals(search.getName()) && searchRepository.existsByNameAndUserAccount(name, userAccount)) {
+            throw new ConflictException("Search with this name already exists");
         }
         search.setName(name);
-        setTagsToSearch(search, tags);
+        setTagsToSearch(userAccount, search, tags);
         return searchRepository.save(search);
     }
 
     @Override
     public Page<Search> getUserSearches(Integer userId, SearchFilterRequest filterRequest, Pageable pageable) {
-        Specification<Search> spec = Specification.where(SearchSpecification.withOptimizationCriteria(filterRequest.getOptimizationCriteria()))
+        UserAccount userAccount = userAccountService.getUserById(userId);
+        Specification<Search> spec = Specification.where(SearchSpecification.belongsToUserAccount(userAccount))
+                .and(SearchSpecification.withOptimizationCriteria(filterRequest.getOptimizationCriteria()))
                 .and(SearchSpecification.withTransportModes(filterRequest.getTransportModes()))
                 .and(SearchSpecification.withTags(filterRequest.getTags()))
                 .and(SearchSpecification.withSaveDate(filterRequest.getSaveDate()));
         return searchRepository.findAll(spec, pageable);
     }
 
-    private void setTagsToSearch(Search search, List<String> tagNames) {
+    private void setTagsToSearch(UserAccount userAccount, Search search, List<String> tagNames) {
         List<String> tagNamesProcessed = tagNames.stream()
                 .map(String::trim)
+                .peek(tag -> {
+                    if (tag.isBlank()) {
+                        throw new ValidationException("Tag names must not be blank");
+                    }
+                })
                 .map(String::toLowerCase)
-                .filter(tag -> !tag.isBlank())
                 .distinct()
                 .toList();
 
-        List<SearchTag> existingTags = searchTagRepository.findByNameIn(tagNames);
+
+        List<SearchTag> existingTags = searchTagRepository.findByNameInAndUserAccount(tagNamesProcessed, userAccount);
 
         Map<String, SearchTag> existingTagMap = existingTags.stream()
                 .collect(Collectors.toMap(SearchTag::getName, tag -> tag));
@@ -149,14 +169,13 @@ public class SearchServiceImpl implements SearchService {
         List<SearchTag> tagsToAssociate = new ArrayList<>(existingTags);
         List<SearchTag> newTags = tagNamesProcessed.stream()
                 .filter(tagName -> !existingTagMap.containsKey(tagName))
-                .map(tagName -> SearchTag.builder().name(tagName).build())
+                .map(tagName -> SearchTag.builder().name(tagName).userAccount(userAccount).build())
                 .collect(Collectors.toList());
 
         if (!newTags.isEmpty()) {
             searchTagRepository.saveAll(newTags);
             tagsToAssociate.addAll(newTags);
         }
-
         search.setTags(tagsToAssociate);
     }
 }
