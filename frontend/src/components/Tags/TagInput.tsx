@@ -1,15 +1,15 @@
 import {CheckIcon, Combobox, Container, Group, Pill, PillsInput, useCombobox} from "@mantine/core";
 import React, { useState, useEffect, useRef } from "react";
-import { Tag } from "../../types/SearchDTO";
+import {SavedTag, Tag } from "../../types/SearchDTO";
 import RemoveModal from "../Modal/RemoveModal";
 import EditModal from "../Modal/EditModal";
 import {MAX_TAG_LENGTH} from "../../constants/constants";
 
 type TagInputProps = {
-    list: Tag[];
+    list: SavedTag[];
     label: string;
     value: Tag[];
-    onRemoveFromAllTags: (tagToRemove: Tag, isRemove?: boolean) => void;
+    onRemoveFromAllTags: (tagToRemove: SavedTag, isRemove?: boolean) => void;
     onEditTagInList: (oldTagName: string, newTagName: string) => void;
     onRemoveTagFromSearch: (index: number, tagName: string) => void;
     onAddTag: (index: number, tagName: string) => void;

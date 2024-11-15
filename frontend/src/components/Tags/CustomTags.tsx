@@ -1,7 +1,7 @@
 import { Badge, ActionIcon, Flex, Center, TextInput, Box } from '@mantine/core';
 import {IconX, IconPlus, IconCheck} from '@tabler/icons-react';
 import { useState, useEffect } from 'react';
-import { Tag } from "../../types/SearchDTO";
+import {SavedTag, Tag} from "../../types/SearchDTO";
 import TagInput from "../Tags/TagInput";
 import styles from './CustomTags.module.css';
 import {MAX_TAG_LENGTH} from "../../constants/constants";
@@ -12,8 +12,8 @@ const maxTags = 3;
 
 interface CustomTagsProps {
     myTags: Tag[];
-    allTags: Tag[];
-    onTagRemoveFromGlobalList: (tag: Tag) => void;
+    allTags: SavedTag[];
+    onTagRemoveFromGlobalList: (tag: SavedTag) => void;
     onTagEditGlobalList: (oldTagName: string, newTagName: string) => void;
     onTagRemoveFromSearch: (index: number, tagName: string) => void;
     onAddTag: (index: number, newName: string) => void;

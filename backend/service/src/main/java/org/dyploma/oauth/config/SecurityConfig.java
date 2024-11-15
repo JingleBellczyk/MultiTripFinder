@@ -18,15 +18,15 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
-/*@Configuration
+@Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final OAuth2TokenExpirationFilter oAuth2TokenExpirationFilter;
-
-    public SecurityConfig(OAuth2TokenExpirationFilter oAuth2TokenExpirationFilter) {
-        this.oAuth2TokenExpirationFilter = oAuth2TokenExpirationFilter;
-    }
+//    private final OAuth2TokenExpirationFilter oAuth2TokenExpirationFilter;
+//
+//    public SecurityConfig(OAuth2TokenExpirationFilter oAuth2TokenExpirationFilter) {
+//        this.oAuth2TokenExpirationFilter = oAuth2TokenExpirationFilter;
+//    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -35,11 +35,11 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/search*", "/trip*", "/user*").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/search*", "/trip*", "/user*").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/search*", "/trip*", "/user*").authenticated()
-                        .requestMatchers(HttpMethod.PUT, "/search*", "/trip*").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/search", "/auth*").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/auth/**", "/searchList/**", "/searchTag/**", "/trip*", "/user*").authenticated()
+                        .requestMatchers(HttpMethod.POST,"/searchList/**", "/trip*", "/user*").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/searchList/**", "/searchTag/**", "/trip*", "/user*").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/searchList/**", "/searchTag/**", "/trip*").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/searchList/**", "/auth*").permitAll()
                         .anyRequest().denyAll()
                 )
                 .oauth2Login(oauth2 ->
@@ -62,8 +62,8 @@ public class SecurityConfig {
                                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                                     response.getWriter().write("Access Denied!");
                                 })
-                )
-                .addFilterBefore(oAuth2TokenExpirationFilter, OAuth2LoginAuthenticationFilter.class);
+                );
+                //.addFilterBefore(oAuth2TokenExpirationFilter, OAuth2LoginAuthenticationFilter.class);
         return http.build();
     }
 
@@ -86,20 +86,20 @@ public class SecurityConfig {
     public JwtDecoder jwtDecoder() {
         return JwtDecoders.fromIssuerLocation("https://accounts.google.com");
     }
-}*/
-
-@Configuration
-@EnableWebSecurity
-public class SecurityConfig {
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF if needed, especially for stateless APIs
-                .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll() // Allow all requests without authorization
-                );
-
-        return http.build();
-    }
 }
+
+//@Configuration
+//@EnableWebSecurity
+//public class SecurityConfig {
+//
+//    @Bean
+//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//        http
+//                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF if needed, especially for stateless APIs
+//                .authorizeHttpRequests(auth -> auth
+//                        .anyRequest().permitAll() // Allow all requests without authorization
+//                );
+//
+//        return http.build();
+//    }
+//}
