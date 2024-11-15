@@ -8,24 +8,27 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtDecoders;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
-/*@Configuration
+@Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final OAuth2TokenExpirationFilter oAuth2TokenExpirationFilter;
+    private final UserAccessFilter userAccessFilter;
 
-    public SecurityConfig(OAuth2TokenExpirationFilter oAuth2TokenExpirationFilter) {
-        this.oAuth2TokenExpirationFilter = oAuth2TokenExpirationFilter;
+    public SecurityConfig(UserAccessFilter userAccessFilter) {
+        this.userAccessFilter = userAccessFilter;
     }
 
     @Bean
@@ -33,15 +36,48 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .addFilterAfter(userAccessFilter, OAuth2LoginAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
+                        // Public endpoints
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/search*", "/trip*", "/user*").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/search*", "/trip*", "/user*").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/search*", "/trip*", "/user*").authenticated()
-                        .requestMatchers(HttpMethod.PUT, "/search*", "/trip*").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/search", "/auth*").permitAll()
+                        .requestMatchers("/searchList/**", "/tripList/**", "/user/**", "/searchTag/**").authenticated()
+                        .requestMatchers("/auth/**").authenticated() // Protected auth routes
+                        .requestMatchers(HttpMethod.POST, "/search").permitAll() // Public POST search endpoint
                         .anyRequest().denyAll()
                 )
+                .oauth2Login(oauth2 -> oauth2.defaultSuccessUrl("http://localhost:3000/", true))
+                .oauth2ResourceServer(auth -> auth.jwt(Customizer.withDefaults()))
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                        .deleteCookies("JSESSIONID")
+                )
+                .exceptionHandling(exception -> exception
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                            response.getWriter().write("Access Denied!");
+                        })
+                );
+
+        return http.build();
+    }
+
+   /* @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .addFilterBefore(userAccessFilter, UsernamePasswordAuthenticationFilter.class)
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .authorizeHttpRequests(auth -> {
+                    auth
+                            .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/**").permitAll()
+                            .requestMatchers(HttpMethod.OPTIONS,"/auth/**").authenticated()
+                            .requestMatchers(HttpMethod.POST,"/auth/**").authenticated()
+                            .requestMatchers(HttpMethod.GET,"/auth/**").authenticated()
+                            .anyRequest().denyAll();
+                })
                 .oauth2Login(oauth2 ->
                         oauth2.defaultSuccessUrl("http://localhost:3000/", true)
                 )
@@ -62,10 +98,9 @@ public class SecurityConfig {
                                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                                     response.getWriter().write("Access Denied!");
                                 })
-                )
-                .addFilterBefore(oAuth2TokenExpirationFilter, OAuth2LoginAuthenticationFilter.class);
+                );
         return http.build();
-    }
+    }*/
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
@@ -86,8 +121,9 @@ public class SecurityConfig {
     public JwtDecoder jwtDecoder() {
         return JwtDecoders.fromIssuerLocation("https://accounts.google.com");
     }
-}*/
+}
 
+/*
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -103,3 +139,4 @@ public class SecurityConfig {
         return http.build();
     }
 }
+*/
