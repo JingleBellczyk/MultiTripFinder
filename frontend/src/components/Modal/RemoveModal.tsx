@@ -1,12 +1,12 @@
 import { Modal, Button, ActionIcon } from '@mantine/core';
 import { IconX } from '@tabler/icons-react';
-import { Tag } from "../../types/SearchDTO";
+import {SavedTag, Tag} from "../../types/SearchDTO";
 import { useState } from "react";
 import styles from './ButtonModal.module.css';
 
 type ButtonModalProps = {
-    tagToDelete: Tag;
-    onDeleteConfirm: (tag: Tag, isRemove?: boolean) => void;
+    tagToDelete: SavedTag;
+    onDeleteConfirm: (tag: SavedTag, isRemove?: boolean) => void;
     setIsModalOpen: (open: boolean) => void;
     onModalOpen: () => void;
 };

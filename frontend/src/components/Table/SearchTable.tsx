@@ -2,8 +2,12 @@ import styles from './SearchTable.module.css';
 import { Table, CloseButton, Badge, Title, Text, Divider, Pagination, Center, TextInput, ActionIcon} from '@mantine/core';
 import {IconCheck, IconPencil, IconSearch, IconTrash } from '@tabler/icons-react';
 import CustomTags from '../Tags/CustomTags';
-import {PlaceLocation, PlaceTime, SavedSearchDTO, Tag} from "../../types/SearchDTO";
-import { useState } from "react";
+import {PlaceLocation, PlaceTime, SavedSearch, SavedSearchDTO, SavedTag, SearchDTO, Tag} from "../../types/SearchDTO";
+import {useEffect, useState} from "react";
+import { useNavigate } from 'react-router-dom';
+import {PAGE_SIZE, SERVER, User} from "../../constants/constants";
+import axios from "axios";
+import transformSearches from "../../hooks/transformSearches";
 
 const iconSize = 24;
 const stroke = 1.3;
@@ -19,9 +23,9 @@ type TransportBadgeProps = {
 function TransportBadge({ transport }: TransportBadgeProps) {
     const getBadgeColor = (element: string | null) => {
         switch (element) {
-            case 'train':
+            case 'Train':
                 return 'red';
-            case 'airplane':
+            case 'Plane':
                 return 'indigo';
             default:
                 return 'green';
@@ -79,15 +83,6 @@ function ShowPlaces({ places, start, end }: ShowPlacesProps) {
     );
 }
 
-type ShowPagesProps = {
-    numOfElements: number;
-};
-
-function ShowPages({ numOfElements }: ShowPagesProps) {
-    const pages = Math.ceil(numOfElements / 10);
-    return <Pagination total={pages} />;
-}
-
 type ShowDetailsProps = {
     criteria: string | null;
     passengerNum: number;
@@ -143,22 +138,69 @@ function ShowDetails({ criteria, passengerNum, maxTotalTime, name, startDate, on
 }
 
 type SearchTableProps = {
-    searches: SavedSearchDTO[];
-    tags: Tag[];
-    setTags: React.Dispatch<React.SetStateAction<Tag[]>>;
+    user: User | null;
+    //searches: SavedSearchDTO[];
+    tags: SavedTag[];
+    setTags: React.Dispatch<React.SetStateAction<SavedTag[]>>;
     setIsModalOpen: (open: boolean) => void;
 };
 
-export default function SearchTable({ searches, tags, setTags, setIsModalOpen }: SearchTableProps) {
-    const [searchData, setSearchData] = useState(searches);
+export default function SearchTable({ user, tags, setTags, setIsModalOpen }: SearchTableProps) {
+    const [searchData, setSearchData] = useState<SavedSearch[]>([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
 
-    const deleteSearch = (index: number) => {
-        const updatedSearchData = searchData.filter((_, i) => i !== index);
-        setSearchData(updatedSearchData);
+    const fetchSearches = async () => {
+        try {
+            const response = await axios.get(`${SERVER}/searchList/${user?.id}?size=${PAGE_SIZE}&page=${currentPage - 1}`, { withCredentials: true });
+            setTotalPages(response.data.totalPages);
+            const content = response.data.content;
+            const visibleSearches = transformSearches(content)
+            setSearchData(visibleSearches);
+            console.log(searchData)
+        } catch (error) {
+            console.error('Error fetching searches:', error);
+        }
     };
+
+    useEffect(() => {
+        fetchSearches();
+    }, [user, currentPage]);
+
+
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+    };
+    const deleteSearch = async (id: number) => {
+        try {
+            await axios.delete(`${SERVER}/searchList/${user?.id}/${id}`, {withCredentials: true});
+            fetchSearches();
+        }
+        catch(error) {
+            console.error('Error deleting searches:', error);
+        }
+    };
+
+    const createSearchDTO = (index: number): SearchDTO => {
+        const search = searchData[index];
+        return {
+            placesTime: search.placesTime,
+            start: search.start,
+            end: search.end,
+            maxTotalTime: search.maxTotalTime,
+            transport: search.transport,
+            startDate: search.startDate,
+            passengersNumber: search.passengersNumber,
+            preferredCriteria: search.preferredCriteria
+        };
+    };
+
     function SearchIcon({ index }: { index: number }) {
+        const navigate = useNavigate();
+
         const handleClick = () => {
-            //createSearchDTO(index);
+            const data = createSearchDTO(index);
+            navigate('/search', { state: data });
         };
 
         return (
@@ -171,52 +213,79 @@ export default function SearchTable({ searches, tags, setTags, setIsModalOpen }:
         setSearchData(updatedSearches);
     };
 
-    const addTagToSearch = (searchIndex: number, tagName: string) => {
-        // Create a copy of the current searches and tags data
-        const updatedSearches = [...searchData];
-        const updatedTags = [...tags];
-        tagName = tagName.trim().toUpperCase()
-        // Create a new tag object
-        const newTag = { name: tagName};
-
-        // Check if the tag already exists in the global list of tags
-        const tagExistsInAllTags = updatedTags.some((tag) => tag.name === tagName);
-
-        // If the tag doesn't exist in allTags, add it
-        if (!tagExistsInAllTags) {
-            updatedTags.push(newTag);
-            setTags(updatedTags);
+    const addTagToSearch = async (searchIndex: number, tagName: string) => {
+        try {
+            const tags = [...searchData[searchIndex].tags];
+            const searchId = searchData[searchIndex].id;
+            tagName = tagName.trim().toUpperCase()
+            const newTag = { name: tagName};
+            const allTags = [...tags, newTag];
+            const requestTags = allTags.map(tag => tag.name);
+            const requestBody = {
+                "name": searchData[searchIndex].name,
+                "tags": requestTags
+            }
+            console.log(requestBody)
+            await axios.put(`${SERVER}/searchList/${user?.id}/${searchId}`, requestBody, {withCredentials: true});
+            setSearchData(prevData => {
+                const updatedData = [...prevData];
+                updatedData[searchIndex] = {
+                    ...updatedData[searchIndex],
+                    tags: allTags,
+                };
+                return updatedData;
+            });
         }
+        catch(error){
+            console.error("Error while adding tag to search:", error);
+        }
+    };
 
-        // Check if the tag already exists in the specific search's tags
-        const tagExistsInSearchTags = updatedSearches[searchIndex].tags?.some((tag) => tag.name === tagName);
+    const removeTagFromSearch = async (index: number, tagName: string) => {
+        try {
+            const tags = [...searchData[index].tags];
+            console.log(tags);
+            console.log(tagName);
+            const searchId = searchData[index].id;
+            if (tags.some(tag => tag.name == tagName)) {
+                const newTags = tags.filter(tag => tag.name !== tagName);
+                const requestTags = newTags.map(tag => tag.name);
+                const requestBody = {
+                    "name": searchData[index].name,
+                    "tags": requestTags
+                }
+                console.log(requestBody)
+                await axios.put(`${SERVER}/searchList/${user?.id}/${searchId}`, requestBody, {withCredentials: true});
+                setSearchData(prevData => {
+                    const updatedData = [...prevData];
+                    updatedData[index] = {
+                        ...updatedData[index],
+                        tags: newTags,
+                    };
+                    return updatedData;
+                });
+            }
+        }
+        catch (error){
+            console.error("Error when removing tag from search:", error);
+        }
+    };
 
-        // If the tag doesn't exist in the search's tags, add it
-        if (!tagExistsInSearchTags) {
-            updatedSearches[searchIndex].tags = [...(updatedSearches[searchIndex].tags || []), newTag];
+    const handleGlobalTagRemove = async (tagToRemove: SavedTag) => {
+        try {
+            const {id, name} = tagToRemove;
+            await axios.delete(`${SERVER}/searchTag/${user?.id}/${id}`, {withCredentials: true});
+            setTags((prevTags) => prevTags.filter((tag) => tag.name !== tagToRemove.name));
+            const updatedSearches = searchData.map((search) => ({
+                ...search,
+                tags: search.tags?.filter((tag) => tag.name !== tagToRemove.name) || [],
+            }));
+
             setSearchData(updatedSearches);
         }
-    };
-
-
-    const removeTagFromSearch = (searchIndex: number, tagName: string) => {
-        const updatedSearches = [...searchData];
-        updatedSearches[searchIndex].tags = updatedSearches[searchIndex].tags?.filter((tag) => tag.name !== tagName) || [];
-        setSearchData(updatedSearches);
-    };
-
-    const handleGlobalTagRemove = (tagToRemove: Tag) => {
-        // Usuwamy tag z globalnej listy tagów
-        setTags((prevTags) => prevTags.filter((tag) => tag.name !== tagToRemove.name));
-
-        // Usuwamy tag ze wszystkich zapisanych wyszukiwań
-        const updatedSearches = searchData.map((search) => ({
-            ...search,
-            tags: search.tags?.filter((tag) => tag.name !== tagToRemove.name) || [],
-        }));
-
-        // Aktualizujemy stan wyszukiwań
-        setSearchData(updatedSearches);
+        catch(error) {
+            console.log(error);
+        }
     };
 
     const handleGlobalEditTag = (oldTagName: string, newTagName: string) => {
@@ -281,7 +350,7 @@ export default function SearchTable({ searches, tags, setTags, setIsModalOpen }:
                 <SearchIcon index={index}/>
             </td>
             <td className={styles.smallHead}>
-                <DeleteIcon onClick={() => {deleteSearch(index)}}/>
+                <DeleteIcon onClick={() => {deleteSearch(search.id)}}/>
             </td>
         </tr>
     ));
@@ -316,7 +385,7 @@ export default function SearchTable({ searches, tags, setTags, setIsModalOpen }:
                             {rows}
                             </tbody>
                         </Table>
-                        <ShowPages numOfElements={searchData.length} />
+                        <Pagination total={totalPages} onChange={handlePageChange} />
                     </>
                 )}
             </div>

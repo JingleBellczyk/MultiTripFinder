@@ -1,7 +1,7 @@
 import {Button, Divider, Grid, GridCol, MantineProvider, NativeSelect, NumberInput, Text} from '@mantine/core';
 import {HeaderSearch} from "../../components/HeaderSearch/HeaderSearch";
 import {Footer} from "../../components/Footer/Footer";
-
+import { useLocation } from 'react-router-dom';
 import {DndListHandle} from "../../components/DndListHandle/DndListHandle";
 import {GridComponent} from "../../components/GridComponent/GridComponent";
 import {DatePicker} from "../../components/DatePicker/DatePicker";
@@ -44,6 +44,10 @@ const gridItemsMultiplier: number[] = [
 ];
 
 export function SearchPage() {
+    const location = useLocation();
+    const searchData = location.state as SearchDTO | undefined;
+    console.log(searchData)
+
     const searchDTO: SearchDTO = useMemo(() => {
         return convertSearchDTOPostToSearchDTO(EXAMPLE_SEARCH_POST_DTO);
     }, [EXAMPLE_SEARCH_POST_DTO]);
@@ -54,6 +58,7 @@ export function SearchPage() {
 }
 
 function SearchFunction(paramDto: SearchDTO) {
+
 
     const {
         searchDto,

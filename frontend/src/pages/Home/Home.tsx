@@ -1,11 +1,11 @@
 import { MantineProvider, Text, Container, Button, Group, Divider, SimpleGrid } from "@mantine/core";
-import { HeaderSearch } from "../components/HeaderSearch/HeaderSearch";
+import { HeaderSearch } from "../../components/HeaderSearch/HeaderSearch";
 import React, { useMemo } from "react";
-import logoSvg from "../assets/icons/mtfLogo.png";
+import logoSvg from "../../assets/icons/mtfLogo.png";
 import { useNavigate } from 'react-router-dom';
 import styles from './Home.module.css';
-import {User} from "../constants/constants";
-import {Footer} from "../components/Footer/Footer";
+import {User} from "../../constants/constants";
+import {Footer} from "../../components/Footer/Footer";
 
 type LoginProps = {
     isAuthenticated: boolean;
