@@ -13,7 +13,7 @@ public interface SearchService {
     Search getUserSearchById(Integer userId, Integer searchId);
     Search getUserSearchByName(Integer userId, String name);
     Search createUserSearch(Integer userId, Search search, List<PlaceInSearch> places, List<String> tags);
-    void deleteUserSearch(Integer searchId);
+    void deleteUserSearch(Integer userId, Integer searchId);
     Search updateUserSearch(Integer userId, Integer searchId, String name, List<String> tags);
     Page<Search> getUserSearches(Integer userId, SearchFilterRequest filterRequest, Pageable pageable);
 }

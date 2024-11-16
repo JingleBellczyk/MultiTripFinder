@@ -1,7 +1,7 @@
 package org.dyploma.oauth.controller;
 
 import org.dyploma.useraccount.UserAccount;
-import org.dyploma.useraccount.UserAccountService;
+import org.dyploma.useraccount.UserAccountServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
@@ -15,10 +15,10 @@ import java.util.Map;
 @RestController
 public class OAuth2Controller {
     private final OAuth2AuthorizedClientService clientService;
-    private final UserAccountService userAccountService;
+    private final UserAccountServiceImpl userAccountService;
 
     @Autowired
-    public OAuth2Controller(OAuth2AuthorizedClientService clientService, UserAccountService userAccountService) {
+    public OAuth2Controller(OAuth2AuthorizedClientService clientService, UserAccountServiceImpl userAccountService) {
         this.clientService = clientService;
         this.userAccountService = userAccountService;
     }
@@ -37,7 +37,7 @@ public class OAuth2Controller {
             return ResponseEntity.badRequest().body(Map.of("error", "Email attribute not found in authentication token"));
         }
 
-        UserAccount user = userAccountService.getOrCreateUser(email);
+        UserAccount user = userAccountService.getOrCreateUser(UserAccount.builder().role('U').email(email).build());
 
         Map<String, Object> userInfo = new HashMap<>();
         userInfo.put("id", user.getId());

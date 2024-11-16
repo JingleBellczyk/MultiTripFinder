@@ -1,24 +1,13 @@
 package org.dyploma.useraccount;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-@Service
-public class UserAccountService {
-    private final UserAccountRepository userAccountRepository;
-
-    @Autowired
-    public UserAccountService(UserAccountRepository userAccountRepository) {
-        this.userAccountRepository = userAccountRepository;
-    }
-
-    public UserAccount getOrCreateUser(String email) {
-        return userAccountRepository.findByEmail(email)
-                .orElseGet(() -> {
-                    UserAccount newUser = new UserAccount();
-                    newUser.setEmail(email);
-                    newUser.setRole('U');
-                    return userAccountRepository.save(newUser);
-                });
-    }
+public interface UserAccountService {
+    UserAccount getOrCreateUser(UserAccount userAccount);
+    UserAccount getUserById(Integer userId);
+    Boolean userExistsByEmail(String email);
+    UserAccount getUserByEmail(String email);
+    void deleteUser(Integer userId);
+    Page<UserAccount> listUsers(Pageable pageable);
 }

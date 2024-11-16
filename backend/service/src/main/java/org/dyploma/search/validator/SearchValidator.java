@@ -2,10 +2,8 @@ package org.dyploma.search.validator;
 
 import org.dyploma.exception.ValidationException;
 import org.dyploma.search.domain.Search;
-import org.dyploma.search.domain.SearchRepository;
 import org.dyploma.search.domain.SearchRequest;
 import org.dyploma.search.place.PlaceInSearch;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.Date;
@@ -16,19 +14,12 @@ import static java.time.ZoneOffset.UTC;
 
 @Component
 public class SearchValidator {
-    private final SearchRepository searchRepository;
-
-    @Autowired
-    public SearchValidator(SearchRepository searchRepository) {
-        this.searchRepository = searchRepository;
-    }
 
     public void validateSearch(Search search) {
         validatePlaces(search.getPlacesToVisit());
         validateDuration(search.getMaxTripDuration(), search.getPlacesToVisit());
         validateTripStartDate(search.getTripStartDate());
         validatePlacesOrder(search.getPlacesToVisit());
-        validateName(search.getName());
     }
 
     public void validateSearchRequest(SearchRequest searchRequest) {
@@ -36,12 +27,6 @@ public class SearchValidator {
         validateDuration(searchRequest.getMaxTripDuration(), searchRequest.getPlacesToVisit());
         validateTripStartDate(searchRequest.getTripStartDate());
         validatePlacesOrder(searchRequest.getPlacesToVisit());
-    }
-
-    private void validateName(String name) {
-        if (searchRepository.existsByName(name)) {
-            throw new ValidationException("Search with this name already exists");
-        }
     }
 
     private void validatePlaces(List<PlaceInSearch> places) {
