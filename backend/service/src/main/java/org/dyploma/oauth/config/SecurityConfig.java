@@ -1,6 +1,7 @@
 package org.dyploma.oauth.config;
 
 import jakarta.servlet.http.HttpServletResponse;
+import org.dyploma.oauth.domain.CustomOAuth2UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -26,9 +27,11 @@ import java.util.List;
 public class SecurityConfig {
 
     private final UserAccessFilter userAccessFilter;
+    private final CustomOAuth2UserService customOAuth2UserService;
 
-    public SecurityConfig(UserAccessFilter userAccessFilter) {
+    public SecurityConfig(UserAccessFilter userAccessFilter, CustomOAuth2UserService customOAuth2UserService) {
         this.userAccessFilter = userAccessFilter;
+        this.customOAuth2UserService = customOAuth2UserService;
     }
 
     @Bean
@@ -38,14 +41,17 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .addFilterAfter(userAccessFilter, OAuth2LoginAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
-                        // Public endpoints
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/searchList/**", "/tripList/**", "/user/**", "/searchTag/**").authenticated()
-                        .requestMatchers("/auth/**").authenticated() // Protected auth routes
-                        .requestMatchers(HttpMethod.POST, "/search").permitAll() // Public POST search endpoint
+                        .requestMatchers("/searchList/**", "/tripList/**", "/user/**", "/searchTag/**", "tripTag/**", "/auth/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/search").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/user").hasRole("A")
+                        .requestMatchers(HttpMethod.DELETE, "/user/**").hasRole("A")
                         .anyRequest().denyAll()
                 )
-                .oauth2Login(oauth2 -> oauth2.defaultSuccessUrl("http://localhost:3000/", true))
+                .oauth2Login(oauth2 -> {
+                    oauth2.defaultSuccessUrl("http://localhost:3000/", true);
+                    oauth2.userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService));
+                })
                 .oauth2ResourceServer(auth -> auth.jwt(Customizer.withDefaults()))
                 .logout(logout -> logout
                         .logoutUrl("/logout")
@@ -63,42 +69,14 @@ public class SecurityConfig {
         return http.build();
     }
 
-   /* @Bean
+/*    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .addFilterBefore(userAccessFilter, UsernamePasswordAuthenticationFilter.class)
-                .csrf(AbstractHttpConfigurer::disable)
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .authorizeHttpRequests(auth -> {
-                    auth
-                            .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                            .requestMatchers(HttpMethod.GET, "/**").permitAll()
-                            .requestMatchers(HttpMethod.OPTIONS,"/auth/**").authenticated()
-                            .requestMatchers(HttpMethod.POST,"/auth/**").authenticated()
-                            .requestMatchers(HttpMethod.GET,"/auth/**").authenticated()
-                            .anyRequest().denyAll();
-                })
-                .oauth2Login(oauth2 ->
-                        oauth2.defaultSuccessUrl("http://localhost:3000/", true)
-                )
-                .oauth2ResourceServer(auth ->
-                        auth
-                                .jwt(Customizer.withDefaults())
-                )
-                .logout(logout ->
-                        logout
-                                .logoutUrl("/logout")
-                                .invalidateHttpSession(true)
-                                .clearAuthentication(true)
-                                .deleteCookies("JSESSIONID")
-                )
-                .exceptionHandling(exception ->
-                        exception
-                                .accessDeniedHandler((request, response, accessDeniedException) -> {
-                                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                                    response.getWriter().write("Access Denied!");
-                                })
+                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF if needed, especially for stateless APIs
+                .authorizeHttpRequests(auth -> auth
+                        .anyRequest().permitAll() // Allow all requests without authorization
                 );
+
         return http.build();
     }*/
 
@@ -122,21 +100,3 @@ public class SecurityConfig {
         return JwtDecoders.fromIssuerLocation("https://accounts.google.com");
     }
 }
-
-/*
-@Configuration
-@EnableWebSecurity
-public class SecurityConfig {
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF if needed, especially for stateless APIs
-                .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll() // Allow all requests without authorization
-                );
-
-        return http.build();
-    }
-}
-*/

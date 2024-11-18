@@ -62,8 +62,8 @@ public class SearchController implements SearchApi, SearchListApi {
     }
 
     @Override
-    public ResponseEntity<SearchPage> listUserSearch(Integer userId, Integer page, Integer size, CriteriaMode optimizationCriteria, List<TransportMode> preferredTransports, LocalDate saveDate, List<String> searchTags) {
-        return ResponseEntity.ok(SearchMapper.mapToSearchPageApi(searchService.getUserSearches(userId, SearchMapper.mapToSearchFilterRequest(optimizationCriteria, preferredTransports, saveDate, searchTags), Pageable.ofSize(size).withPage(page))));
+    public ResponseEntity<SearchPage> listUserSearch(Integer userId, Integer page, Integer size, CriteriaMode optimizationCriteria, List<TransportMode> preferredTransports, LocalDate fromDate, LocalDate toDate, List<String> searchTags) {
+        return ResponseEntity.ok(SearchMapper.mapToSearchPageApi(searchService.getUserSearches(userId, SearchMapper.mapToSearchFilterRequest(optimizationCriteria, preferredTransports, fromDate, toDate, searchTags), Pageable.ofSize(size).withPage(page))));
     }
 
     @Override
