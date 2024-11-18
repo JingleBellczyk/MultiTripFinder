@@ -39,67 +39,37 @@ import java.util.Set;
 @EnableWebSecurity
 public class SecurityConfig {
 
-//    private final UserAccessFilter userAccessFilter;
-//    private final CustomOAuth2UserService customOAuth2UserService;
-//
-//    public SecurityConfig(UserAccessFilter userAccessFilter, CustomOAuth2UserService customOAuth2UserService) {
-//        this.userAccessFilter = userAccessFilter;
-//        this.customOAuth2UserService = customOAuth2UserService;
-//    }
-    private final UserAccountRepository userAccountRepository;
+    private final UserAccessFilter userAccessFilter;
+    private final CustomOAuth2UserService customOAuth2UserService;
 
-    @Autowired
-    public SecurityConfig(UserAccountRepository userAccountRepository) {
-        this.userAccountRepository = userAccountRepository;
+    public SecurityConfig(UserAccessFilter userAccessFilter, CustomOAuth2UserService customOAuth2UserService) {
+        this.userAccessFilter = userAccessFilter;
+        this.customOAuth2UserService = customOAuth2UserService;
     }
-
-
-
-    // Modified to take OAuth2AuthenticationToken as a parameter
-    private Collection<GrantedAuthority> mapAuthorities(OAuth2AuthenticationToken authentication) {
-        Set<GrantedAuthority> authorities = new HashSet<>();
-
-        OAuth2User oAuth2User = authentication.getPrincipal();
-        String email = oAuth2User.getAttribute("email");
-
-        UserAccount userAccount = userAccountRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
-
-        Character userRole = userAccount.getRole();
-        if (userRole == 'A') {
-            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-        }
-        else if (userRole == 'U'){
-            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-        }
-
-        return authorities;
-    }
-
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-//                .addFilterAfter(userAccessFilter, OAuth2LoginAuthenticationFilter.class)
+                .addFilterAfter(userAccessFilter, OAuth2LoginAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-//                        .requestMatchers("/searchList/**", "/tripList/**", "/user/**", "/searchTag/**", "tripTag/**", "/auth/**").authenticated()
-//                        .requestMatchers(HttpMethod.POST, "/search").permitAll()
+                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                                .requestMatchers("/searchList/**", "/tripList/**", "/user/**", "/searchTag/**", "tripTag/**", "/auth/**").authenticated()
+                                .requestMatchers(HttpMethod.POST, "/search").permitAll()
 
-                        .requestMatchers(HttpMethod.OPTIONS, "/oauth2/**").permitAll()
+/*                        .requestMatchers(HttpMethod.OPTIONS, "/oauth2/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/auth/**", "/searchList/**", "/searchTag/**", "/tripList/**", "/tripTag/**").authenticated()
                         .requestMatchers(HttpMethod.POST,"/searchList/**", "/searchTag/**", "/tripList/**", "/tripTag/**").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/searchList/**", "/searchTag/**", "/tripList/**", "/tripTag/**","/user").authenticated()
-                        .requestMatchers(HttpMethod.PUT, "/searchList/**", "/searchTag/**", "/tripList/**", "/tripTag/**").authenticated()
-//                        .requestMatchers(HttpMethod.POST, "/user").hasRole("A")
-//                        .requestMatchers(HttpMethod.DELETE, "/user/**").hasRole("A")
-                        .requestMatchers(HttpMethod.GET, "/user").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/user/**").hasAuthority("ROLE_ADMIN")
-                        .anyRequest().denyAll()
+                        .requestMatchers(HttpMethod.PUT, "/searchList/**", "/searchTag/**", "/tripList/**", "/tripTag/**").authenticated()*/
+                                .requestMatchers(HttpMethod.GET, "/user").hasRole("A")
+                                .requestMatchers(HttpMethod.DELETE, "/user/**").hasRole("A")
+/*                        .requestMatchers(HttpMethod.GET, "/user").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/user/**").hasAuthority("ROLE_ADMIN")*/
+                                .anyRequest().denyAll()
                 )
-                .oauth2Login(oauth2 -> oauth2
+/*                .oauth2Login(oauth2 -> oauth2
                         .defaultSuccessUrl("http://localhost:3000/", true)
                         .successHandler((request, response, authentication) -> {
                             OAuth2AuthenticationToken oauth2Authentication = (OAuth2AuthenticationToken) authentication;
@@ -117,11 +87,11 @@ public class SecurityConfig {
 
                             response.sendRedirect("http://localhost:3000/");
                         })
-                )
-//                .oauth2Login(oauth2 -> {
-//                    oauth2.defaultSuccessUrl("http://localhost:3000/", true);
-////                    oauth2.userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService));
-//                })
+                )*/
+                .oauth2Login(oauth2 -> {
+                    oauth2.defaultSuccessUrl("http://localhost:3000/", true);
+                    oauth2.userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService));
+                })
                 .oauth2ResourceServer(auth -> auth.jwt(Customizer.withDefaults()))
                 .logout(logout -> logout
                         .logoutUrl("/logout")
@@ -142,18 +112,46 @@ public class SecurityConfig {
                 );
 
         return http.build();
+
+/*        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+            http
+                    .csrf(AbstractHttpConfigurer::disable) // Disable CSRF if needed, especially for stateless APIs
+                    .authorizeHttpRequests(auth -> auth
+                            .anyRequest().permitAll() // Allow all requests without authorization
+                    );
+
+            return http.build();
+        }*/
+    }
+/*    private final UserAccountRepository userAccountRepository;
+
+    @Autowired
+    public SecurityConfig(UserAccountRepository userAccountRepository) {
+        this.userAccountRepository = userAccountRepository;
     }
 
-/*    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF if needed, especially for stateless APIs
-                .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll() // Allow all requests without authorization
-                );
+    // Modified to take OAuth2AuthenticationToken as a parameter
+    private Collection<GrantedAuthority> mapAuthorities(OAuth2AuthenticationToken authentication) {
+        Set<GrantedAuthority> authorities = new HashSet<>();
 
-        return http.build();
+        OAuth2User oAuth2User = authentication.getPrincipal();
+        String email = oAuth2User.getAttribute("email");
+
+        UserAccount userAccount = userAccountRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+
+        Character userRole = userAccount.getRole();
+        if (userRole == 'A') {
+            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        }
+        else if (userRole == 'U'){
+            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        }
+
+        return authorities;
     }*/
+
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

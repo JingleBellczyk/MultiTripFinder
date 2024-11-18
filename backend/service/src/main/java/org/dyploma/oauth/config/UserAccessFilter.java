@@ -21,12 +21,14 @@ import java.util.List;
 public class UserAccessFilter extends OncePerRequestFilter {
 
     private final UserAccountService userAccountService;
-    private final List<String> restrictedEndpoints;
+    private final List<String> restrictedEndpointsWithUserId;
+    private final String adminOnlyEndpoint;
 
     @Autowired
     public UserAccessFilter(UserAccountService userAccountService) {
         this.userAccountService = userAccountService;
-        restrictedEndpoints = List.of("searchList", "user", "tripList", "searchTag", "tripTag");
+        restrictedEndpointsWithUserId = List.of("searchList", "tripList", "searchTag", "tripTag");
+        adminOnlyEndpoint = "user";
     }
 
     @Override
@@ -34,30 +36,46 @@ public class UserAccessFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String requestURI = request.getRequestURI();
-
         String[] uriSegments = requestURI.split("/");
-        if (uriSegments.length > 2 && restrictedEndpoints.contains(uriSegments[1])) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !(authentication.getPrincipal() instanceof OAuth2User)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("You must be authenticated to access this resource.");
+            return;
+        }
+
+        // Get the authenticated user's details
+        String email = ((OAuth2User) authentication.getPrincipal()).getAttribute("email");
+        UserAccount authenticatedUser = userAccountService.getUserByEmail(email);
+
+        // Check if the request targets an endpoint with userId
+        if (uriSegments.length >= 2 && restrictedEndpointsWithUserId.contains(uriSegments[1])) {
+            if (uriSegments.length < 3) {
+                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                response.getWriter().write("User ID is required in the URI.");
+                return;
+            }
+
             String userId = uriSegments[2];
 
-            if (userId != null) {
-                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-                if (authentication == null || !(authentication.getPrincipal() instanceof OAuth2User)) {
-                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    response.getWriter().write("You must be authenticated to access this resource.");
-                    return;
-                }
-                String email = ((OAuth2User) authentication.getPrincipal()).getAttribute("email");
-
-                UserAccount authenticatedUser = userAccountService.getUserByEmail(email);
-
-                if (!authenticatedUser.getId().equals(Integer.valueOf(userId)) && authenticatedUser.getRole() != 'A') {
-                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                    response.getWriter().write("You do not have permission to access this resource.");
-                    return;
-                }
+            if (!authenticatedUser.getId().equals(Integer.valueOf(userId)) && authenticatedUser.getRole() != 'A') {
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                response.getWriter().write("You do not have permission to access this resource.");
+                return;
             }
-            filterChain.doFilter(request, response);
         }
+
+        // Check if the request targets the admin-only /user endpoint
+        if (uriSegments.length >= 2 && adminOnlyEndpoint.equals(uriSegments[1])) {
+            if (authenticatedUser.getRole() != 'A') {
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                response.getWriter().write("Only admins can access this resource.");
+                return;
+            }
+        }
+
+        // Continue the filter chain
         filterChain.doFilter(request, response);
     }
 }
