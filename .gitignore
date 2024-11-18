@@ -6,3 +6,6 @@
 backend/api-generated/.openapi-generator*
 backend/api-generated/README.md
 backend/api-generated/src
+backend/api-generated/.gitignore
+backend/api-generated/.travis.yml
+backend/api-generator/gradlew

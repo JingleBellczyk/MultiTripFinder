@@ -1,6 +1,7 @@
 package org.dyploma.oauth.config;
 
 import jakarta.servlet.http.HttpServletResponse;
+import org.dyploma.oauth.domain.CustomOAuth2UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -8,24 +9,29 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtDecoders;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
-/*@Configuration
+@Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final OAuth2TokenExpirationFilter oAuth2TokenExpirationFilter;
+    private final UserAccessFilter userAccessFilter;
+    private final CustomOAuth2UserService customOAuth2UserService;
 
-    public SecurityConfig(OAuth2TokenExpirationFilter oAuth2TokenExpirationFilter) {
-        this.oAuth2TokenExpirationFilter = oAuth2TokenExpirationFilter;
+    public SecurityConfig(UserAccessFilter userAccessFilter, CustomOAuth2UserService customOAuth2UserService) {
+        this.userAccessFilter = userAccessFilter;
+        this.customOAuth2UserService = customOAuth2UserService;
     }
 
     @Bean
@@ -33,39 +39,46 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .addFilterAfter(userAccessFilter, OAuth2LoginAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/search*", "/trip*", "/user*").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/search*", "/trip*", "/user*").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/search*", "/trip*", "/user*").authenticated()
-                        .requestMatchers(HttpMethod.PUT, "/search*", "/trip*").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/search", "/auth*").permitAll()
+                        .requestMatchers("/searchList/**", "/tripList/**", "/user/**", "/searchTag/**", "tripTag/**", "/auth/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/search").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/user").hasRole("A")
+                        .requestMatchers(HttpMethod.DELETE, "/user/**").hasRole("A")
                         .anyRequest().denyAll()
                 )
-                .oauth2Login(oauth2 ->
-                        oauth2.defaultSuccessUrl("http://localhost:3000/", true)
+                .oauth2Login(oauth2 -> {
+                    oauth2.defaultSuccessUrl("http://localhost:3000/", true);
+                    oauth2.userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService));
+                })
+                .oauth2ResourceServer(auth -> auth.jwt(Customizer.withDefaults()))
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                        .deleteCookies("JSESSIONID")
                 )
-                .oauth2ResourceServer(auth ->
-                        auth
-                                .jwt(Customizer.withDefaults())
-                )
-                .logout(logout ->
-                        logout
-                                .logoutUrl("/logout")
-                                .invalidateHttpSession(true)
-                                .clearAuthentication(true)
-                                .deleteCookies("JSESSIONID")
-                )
-                .exceptionHandling(exception ->
-                        exception
-                                .accessDeniedHandler((request, response, accessDeniedException) -> {
-                                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                                    response.getWriter().write("Access Denied!");
-                                })
-                )
-                .addFilterBefore(oAuth2TokenExpirationFilter, OAuth2LoginAuthenticationFilter.class);
+                .exceptionHandling(exception -> exception
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                            response.getWriter().write("Access Denied!");
+                        })
+                );
+
         return http.build();
     }
+
+/*    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF if needed, especially for stateless APIs
+                .authorizeHttpRequests(auth -> auth
+                        .anyRequest().permitAll() // Allow all requests without authorization
+                );
+
+        return http.build();
+    }*/
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
@@ -85,21 +98,5 @@ public class SecurityConfig {
     @Bean
     public JwtDecoder jwtDecoder() {
         return JwtDecoders.fromIssuerLocation("https://accounts.google.com");
-    }
-}*/
-
-@Configuration
-@EnableWebSecurity
-public class SecurityConfig {
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF if needed, especially for stateless APIs
-                .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll() // Allow all requests without authorization
-                );
-
-        return http.build();
     }
 }

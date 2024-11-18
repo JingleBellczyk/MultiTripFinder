@@ -70,7 +70,8 @@ paths:
         - $ref: '#/components/parameters/size'
         - $ref: '#/components/parameters/optimizationCriteria'
         - $ref: '#/components/parameters/preferredTransports'
-        - $ref: '#/components/parameters/saveDate'
+        - $ref: '#/components/parameters/fromDate'
+        - $ref: '#/components/parameters/toDate'
         - $ref: '#/components/parameters/searchTags'
       responses:
         200:
@@ -146,7 +147,8 @@ paths:
         - $ref: '#/components/parameters/userId'
         - $ref: '#/components/parameters/page'
         - $ref: '#/components/parameters/size'
-        - $ref: '#/components/parameters/saveDate'
+        - $ref: '#/components/parameters/fromDate'
+        - $ref: '#/components/parameters/toDate'
         - $ref: '#/components/parameters/tripTags'
       responses:
         200:
@@ -347,9 +349,17 @@ components:
         items:
           $ref: '#/components/schemas/transportMode'
 
-    saveDate:
-      name: saveDate
-      description: 'save date to filter search and trip list'
+    fromDate:
+      name: fromDate
+      description: 'from date to filter search and trip list'
+      in: query
+      required: false
+      schema:
+        type: string
+        format: date
+    toDate:
+      name: toDate
+      description: 'to date to filter search and trip list'
       in: query
       required: false
       schema:

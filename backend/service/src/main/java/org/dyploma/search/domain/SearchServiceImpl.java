@@ -144,7 +144,7 @@ public class SearchServiceImpl implements SearchService {
                 .and(SearchSpecification.withOptimizationCriteria(filterRequest.getOptimizationCriteria()))
                 .and(SearchSpecification.withTransportModes(filterRequest.getTransportModes()))
                 .and(SearchSpecification.withTags(filterRequest.getTags()))
-                .and(SearchSpecification.withSaveDate(filterRequest.getSaveDate()));
+                .and(SearchSpecification.withDateRange(filterRequest.getFromDate(), filterRequest.getToDate()));
         return searchRepository.findAll(spec, pageable);
     }
 
