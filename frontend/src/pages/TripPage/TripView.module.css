@@ -1,0 +1,83 @@
+/* General card styling */
+
+.background {
+    background-color: #3D405B;
+    min-height: 100vh;
+    color: white;
+}
+
+.card {
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: var(--mantine-shadow-xs);
+}
+
+.date {
+    font-size: 14px;
+    color: #6c6c6c;
+    margin-bottom: 20px;
+}
+
+/* Grouping for trip details */
+.group {
+    margin-top: 20px;
+}
+
+/* Tags section */
+.tagssection {
+    margin-top: 20px;
+}
+
+.tagbadge {
+    margin-right: 8px;
+}
+
+/* Divider styling */
+.divider {
+    margin: 20px 0;
+}
+
+/* Stack for trip start/end details */
+.tripdetails {
+    margin-bottom: 20px;
+}
+
+/* Places and Transfers Section */
+.placesTransfersSection {
+    margin-top: 20px;
+}
+
+.card-place, .card-transfer {
+    padding: 10px;
+    margin-bottom: 15px;
+    box-shadow: var(--mantine-shadow-md);
+}
+
+.card-place .title {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.card-transfer .title {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* Down arrow styling */
+.arrow {
+    display: block;
+    margin: 10px auto;
+    font-size: 40px;
+    color: #228ae5;
+}
+
+.arrow-large {
+    font-size: 64px;
+}
+
+/* Stack and text styling */
+.stack {
+    margin-top: 20px;
+}

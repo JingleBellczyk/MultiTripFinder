@@ -63,7 +63,7 @@ export interface SavedSearch {
     saveDate: Date;
     passengersNumber: number;
     preferredCriteria: string;
-    name: string | null;
+    name: string;
     tags: Tag[];
 }
 

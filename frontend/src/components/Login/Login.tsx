@@ -2,9 +2,9 @@ import '@mantine/core/styles.css';
 import {Button, Group, Text, Avatar} from '@mantine/core';
 import React from 'react';
 import axios from "axios";
-import {User} from "../../constants/constants";
+import {User} from "../../types/UserDTO";
+import {SERVER} from "../../constants/constants";
 
-const SERVER = "http://localhost:8080"
 const CLIENT = "http:///localhost:3000"
 
 type LoginProps = {

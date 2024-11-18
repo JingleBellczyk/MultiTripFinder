@@ -4,24 +4,24 @@ import { useState, useEffect } from 'react';
 import {SavedTag, Tag} from "../../types/SearchDTO";
 import TagInput from "../Tags/TagInput";
 import styles from './CustomTags.module.css';
-import {MAX_TAG_LENGTH} from "../../constants/constants";
+import {ICON_SIZE, MAX_TAG_LENGTH, SERVER, STROKE} from "../../constants/constants";
+import axios from "axios";
 
-const iconSize = 16;
-const stroke = 1.3;
 const maxTags = 3;
 
 interface CustomTagsProps {
     myTags: Tag[];
     allTags: SavedTag[];
     onTagRemoveFromGlobalList: (tag: SavedTag) => void;
-    onTagEditGlobalList: (oldTagName: string, newTagName: string) => void;
-    onTagRemoveFromSearch: (index: number, tagName: string) => void;
+    onTagEditGlobalList: (tagToEdit: SavedTag, newTagName: string) => Promise<void>;
+    onTagRemove: (index: number, tagName: string) => void;
+    onEditTag: (newTag: string, oldTag: string, index: number) => Promise<void>;
     onAddTag: (index: number, newName: string) => void;
     setIsModalOpen: (open: boolean) => void
     index: number;
 }
 
-export default function CustomTags({ myTags, allTags, onTagRemoveFromGlobalList, onTagEditGlobalList, onTagRemoveFromSearch, onAddTag, index, setIsModalOpen }: CustomTagsProps) {
+export default function CustomTags({ myTags, allTags, onTagRemoveFromGlobalList, onTagEditGlobalList, onTagRemove, onEditTag, onAddTag, index, setIsModalOpen }: CustomTagsProps) {
     const [tags, setTags] = useState<Tag[]>(myTags);
     const [showTagInput, setShowTagInput] = useState<boolean>(false);
     const [editValue, setEditValue] = useState<string>('');
@@ -35,30 +35,12 @@ export default function CustomTags({ myTags, allTags, onTagRemoveFromGlobalList,
         if (tags.length >= maxTags) {
             setShowTagInput(false);
         }
-    }, [tags]);
+    }, [myTags]);
 
     const startEditing = (tagName: string) => {
         if (editingTag !== tagName) {
             setEditingTag(tagName);
             setEditValue(tagName);
-        }
-    };
-
-    const saveEdit = () => {
-        if (editingTag && editValue) {
-            const updatedName = editValue.toUpperCase().trim();
-
-            // Check for duplicates and length limit
-            if (updatedName.length <= MAX_TAG_LENGTH && updatedName !== editingTag && !tags.some((tag) => tag.name === updatedName)) {
-                const updatedTags = tags.map((tag) =>
-                    tag.name === editingTag ? { ...tag, name: updatedName } : tag
-                );
-                onTagRemoveFromSearch(index, editingTag)
-                onAddTag(index, updatedName);
-                setTags(updatedTags);
-                setEditingTag(null);
-
-            }
         }
     };
 
@@ -74,11 +56,11 @@ export default function CustomTags({ myTags, allTags, onTagRemoveFromGlobalList,
                         onAddTag={onAddTag}
                         value={tags}
                         index={index}
-                        onRemoveTagFromSearch={onTagRemoveFromSearch}
+                        onRemoveTag={onTagRemove}
                         setIsModalOpen={setIsModalOpen}
                     />
                     <ActionIcon size="sm" variant="light" onClick={() => setShowTagInput(false)}>
-                        <IconCheck size={iconSize} stroke={stroke} />
+                        <IconCheck size={ICON_SIZE} stroke={STROKE} />
                     </ActionIcon>
                 </Box>
             )}
@@ -92,14 +74,14 @@ export default function CustomTags({ myTags, allTags, onTagRemoveFromGlobalList,
                                 {editingTag === tag.name ? (
                                     <TextInput
                                         value={editValue}
-                                        onChange={(e) => setEditValue(e.target.value.toUpperCase())}
-                                        onBlur={() => {
-                                            saveEdit();
+                                        onChange={(e) => setEditValue(e.target.value)}
+                                        onBlur={async () => {
+                                            await onEditTag(editingTag, editValue, index);
                                             setEditingTag(null);
                                         }}
-                                        onKeyDown={(e) => {
+                                        onKeyDown={async (e) => {
                                             if (e.key === 'Enter') {
-                                                saveEdit();
+                                                await onEditTag(editingTag, editValue, index);
                                                 setEditingTag(null);
                                             }
                                         }}
@@ -114,9 +96,9 @@ export default function CustomTags({ myTags, allTags, onTagRemoveFromGlobalList,
                                         rightSection={
                                             <ActionIcon variant="transparent" onClick={(e) => {
                                                 e.stopPropagation(); // Unikaj wywoływania edycji podczas usuwania
-                                                onTagRemoveFromSearch(index, tag.name);
+                                                onTagRemove(index, tag.name);
                                             }}>
-                                                <IconX size={iconSize} stroke={stroke} />
+                                                <IconX size={ICON_SIZE} stroke={STROKE} />
                                             </ActionIcon>
                                         }
                                     >
@@ -130,7 +112,7 @@ export default function CustomTags({ myTags, allTags, onTagRemoveFromGlobalList,
                 {tags.length < maxTags && !showTagInput && !editingTag &&(
                     <div className={styles.plusButton}>
                         <ActionIcon size="sm" variant="light" onClick={() => setShowTagInput(true)}>
-                            <IconPlus size={iconSize} stroke={stroke} />
+                            <IconPlus size={ICON_SIZE} stroke={STROKE} />
                         </ActionIcon>
                     </div>
                 )}

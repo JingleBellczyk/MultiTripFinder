@@ -1,13 +1,13 @@
 import { Modal, Button, ActionIcon, TextInput } from '@mantine/core';
 import { IconEdit } from '@tabler/icons-react';  // Using the edit icon
-import { Tag } from "../../types/SearchDTO";
+import {SavedTag, Tag} from "../../types/SearchDTO";
 import { useState } from "react";
 import styles from './ButtonModal.module.css';
 import {MAX_TAG_LENGTH} from "../../constants/constants";
 
 type EditTagModalProps = {
-    tagToEdit: Tag;
-    onEditConfirm: (oldTagName: string, newTagName: string) => void;
+    tagToEdit: SavedTag;
+    onEditConfirm: (tagToEdit: SavedTag, newTagName: string) => Promise<void>;
     setIsModalOpen: (open: boolean) => void;
     onModalOpen: () => void;
 };
@@ -28,13 +28,13 @@ function EditTagModal({ tagToEdit, onEditConfirm, setIsModalOpen, onModalOpen }:
     };
 
     const handleConfirm = () => {
-        onEditConfirm(tagToEdit.name, newTagName);
+        onEditConfirm(tagToEdit, newTagName);
         handleClose();
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         // Convert input to uppercase and update state
-        setNewTagName(e.target.value.toUpperCase());
+        setNewTagName(e.target.value);
     };
 
     return (

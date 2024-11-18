@@ -4,8 +4,8 @@ import React, { useMemo } from "react";
 import logoSvg from "../../assets/icons/mtfLogo.png";
 import { useNavigate } from 'react-router-dom';
 import styles from './Home.module.css';
-import {User} from "../../constants/constants";
 import {Footer} from "../../components/Footer/Footer";
+import {User} from "../../types/UserDTO";
 
 type LoginProps = {
     isAuthenticated: boolean;
@@ -69,6 +69,7 @@ const Home: React.FC<LoginProps> = ({ isAuthenticated, token, user }) => {
     return (
         <MantineProvider theme={{ primaryColor: 'blue' }}>
             <HeaderSearch />
+            <div className={styles.background}>
             <Container className={styles.container}>
                 <Divider size={20} color="white" className={styles.divider}></Divider>
                 <Group align="center" className={styles.headerGroup}>
@@ -84,7 +85,8 @@ const Home: React.FC<LoginProps> = ({ isAuthenticated, token, user }) => {
                     <img src={logoSvg} alt="MultiTripFinder Logo" className={styles.logoImage} />
                 </Group>
             </Container>
-            <Footer></Footer>
+            </div>
+            <Footer/>
         </MantineProvider>
     );
 };

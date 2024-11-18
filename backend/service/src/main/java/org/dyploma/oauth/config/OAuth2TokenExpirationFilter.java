@@ -17,7 +17,7 @@ import lombok.NonNull;
 import java.io.IOException;
 import java.time.Instant;
 
-/*
+
 @Component
 public class OAuth2TokenExpirationFilter extends OncePerRequestFilter {
 
@@ -56,4 +56,4 @@ public class OAuth2TokenExpirationFilter extends OncePerRequestFilter {
         chain.doFilter(request, response);
     }
 }
-*/
+

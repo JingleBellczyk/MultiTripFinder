@@ -8,16 +8,12 @@ export const MAX_TOTAL_DAYS_NUMBER: number = 365
 export const MIN_TOTAL_DAYS_NUMBER: number = 1
 export const MAX_TAG_LENGTH: number = 20
 
-export const PAGE_SIZE=2
+export const PAGE_SIZE=4
 export const SERVER = "http://localhost:8080";
 
-export type User = {
-    id: number;
-    email: string;
-    role: string;
-    given_name: string;
-    picture: string;
-};
+export const ICON_SIZE = 24;
+export const STROKE = 1.3;
+
 export const AUTHENTICATED_LINKS = [
     { link: '/', label: 'Home' },
     { link: '/search', label: 'Search for travels' },
