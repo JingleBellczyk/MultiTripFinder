@@ -74,7 +74,7 @@ export function SearchPage() {
         return convertSearchDTOPostToSearchDTO(EXAMPLE_SEARCH_POST_DTO);
     }, [EXAMPLE_SEARCH_POST_DTO]);
 
-    if (searchData!==undefined){
+    if (searchData!==undefined && searchData!==null){
         return SearchFunction(searchData);
     }
     return (
