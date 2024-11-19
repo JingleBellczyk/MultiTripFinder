@@ -90,6 +90,15 @@ paths:
           $ref: '#/components/responses/validationException'
         409:
           $ref: '#/components/responses/conflictException'
+  /searchList/{userId}/names:
+    get:
+      summary: 'Receives user search names'
+      operationId: 'list user search names'
+      parameters:
+        - $ref: '#/components/parameters/userId'
+      responses:
+        200:
+          $ref: '#/components/responses/searchNames'
   /searchList/{userId}/name/{searchName}:
     get:
       summary: 'Returns user search found by search name'
@@ -167,6 +176,15 @@ paths:
           $ref: '#/components/responses/validationException'
         409:
           $ref: '#/components/responses/conflictException'
+  /tripList/{userId}/names:
+    get:
+      summary: 'Receives user trip names'
+      operationId: 'list user trip names'
+      parameters:
+        - $ref: '#/components/parameters/userId'
+      responses:
+        200:
+          $ref: '#/components/responses/tripNames'
   /tripList/{userId}/name/{tripName}:
     get:
       summary: 'Returns user trip found by trip name'
@@ -520,6 +538,22 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/tripTag'
+    searchNames:
+      description: 'User search names'
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: string
+    tripNames:
+      description: 'User trip names'
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: string
     emptySuccessfulResponse:
       description: 'Operation succeeded'
     notFoundException:

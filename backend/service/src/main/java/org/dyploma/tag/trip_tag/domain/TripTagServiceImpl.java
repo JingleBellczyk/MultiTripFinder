@@ -47,7 +47,7 @@ public class TripTagServiceImpl implements TripTagService {
         TripTag tag = tripTagRepository.findByIdAndUserAccount(tripTagId, userAccountService.getUserById(userId))
                 .orElseThrow(() -> new NotFoundException("Tag not found"));
 
-        tag.getTripes().forEach(trip -> trip.getTags().remove(tag));
+        tag.getTrips().forEach(trip -> trip.getTags().remove(tag));
         tripTagRepository.deleteById(tripTagId);
     }
 }

@@ -16,4 +16,5 @@ public interface SearchService {
     void deleteUserSearch(Integer userId, Integer searchId);
     Search updateUserSearch(Integer userId, Integer searchId, String name, List<String> tags);
     Page<Search> getUserSearches(Integer userId, SearchFilterRequest filterRequest, Pageable pageable);
+    List<String> getUserSearchNames(Integer userId);
 }

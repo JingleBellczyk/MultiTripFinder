@@ -17,7 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.List;
 
-/*@Component
+@Component
 public class UserAccessFilter extends OncePerRequestFilter {
 
     private final UserAccountService userAccountService;
@@ -74,4 +74,4 @@ public class UserAccessFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
-}*/
+}

@@ -69,8 +69,13 @@ public class SearchController implements SearchApi, SearchListApi {
                         userId,
                         SearchMapper.mapToSearchFilterRequest(
                                 optimizationCriteria, preferredTransports, fromDate, toDate, searchTags),
-                                PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "saveDate"))))
+                                PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "name"))))
         );
+    }
+
+    @Override
+    public ResponseEntity<List<String>> listUserSearchNames(Integer userId) {
+        return ResponseEntity.ok(searchService.getUserSearchNames(userId));
     }
 
     @Override

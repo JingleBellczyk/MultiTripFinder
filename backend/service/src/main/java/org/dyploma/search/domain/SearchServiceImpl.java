@@ -150,6 +150,12 @@ public class SearchServiceImpl implements SearchService {
         return searchRepository.findAll(spec, pageable);
     }
 
+    @Override
+    public List<String> getUserSearchNames(Integer userId) {
+        UserAccount userAccount = userAccountService.getUserById(userId);
+        return searchRepository.findAllNamesByUserAccount(userAccount);
+    }
+
     private void setTagsToSearch(UserAccount userAccount, Search search, List<String> tagNames) {
         List<String> tagNamesProcessed = tagNames.stream()
                 .map(String::trim)

@@ -38,7 +38,6 @@ import java.util.Set;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
     private final UserAccessFilter userAccessFilter;
     private final CustomOAuth2UserService customOAuth2UserService;
 
@@ -113,7 +112,8 @@ public class SecurityConfig {
 
         return http.build();
     }
-    /*        @Bean
+
+/*            @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
             http
                     .csrf(AbstractHttpConfigurer::disable) // Disable CSRF if needed, especially for stateless APIs
