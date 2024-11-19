@@ -62,6 +62,25 @@ export interface SavedSearchDTO {
     tags: Tag[];
 }
 
+export interface SavedSearch {
+    id: number;
+    placesTime: PlaceTime[];
+    start: PlaceLocation;
+    end: PlaceLocation;
+    maxTotalTime: number;
+    transport: string | null;
+    startDate: Date;
+    saveDate: Date;
+    passengersNumber: number;
+    preferredCriteria: string;
+    name: string | null;
+    tags: Tag[];
+}
+
+export interface SavedTag {
+    id: number;
+    name: string;
+}
 export interface Tag {
     name: string;
 }

@@ -8,6 +8,7 @@ export const MAX_TOTAL_DAYS_NUMBER: number = 365
 export const MIN_TOTAL_DAYS_NUMBER: number = 1
 export const MAX_TAG_LENGTH: number = 20
 
+export const PAGE_SIZE=2
 export const SERVER = "http://localhost:8080";
 
 export type User = {

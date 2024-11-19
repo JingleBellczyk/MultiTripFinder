@@ -14,5 +14,6 @@ public class SearchFilterRequest {
     private CriteriaMode optimizationCriteria;
     private List<TransportMode> transportModes;
     private List<String> tags;
-    private Date saveDate;
+    private Date fromDate;
+    private Date toDate;
 }

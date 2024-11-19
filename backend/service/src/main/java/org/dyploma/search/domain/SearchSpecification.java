@@ -32,12 +32,6 @@ public class SearchSpecification {
         };
     }
 
-
-    public static Specification<Search> withSaveDate(Date date) {
-        return (root, query, criteriaBuilder) ->
-                date != null ? criteriaBuilder.equal(root.get("saveDate"), date) : null;
-    }
-
     public static Specification<Search> withTags(List<String> tags) {
         return (root, query, criteriaBuilder) -> {
             if (tags == null || tags.isEmpty()) {
@@ -49,5 +43,21 @@ public class SearchSpecification {
             return inClause;
         };
     }
+
+    public static Specification<Search> withDateRange(Date fromDate, Date toDate) {
+        return (root, query, criteriaBuilder) -> {
+            if (fromDate == null && toDate == null) {
+                return null;
+            }
+            if (fromDate != null && toDate != null) {
+                return criteriaBuilder.between(root.get("saveDate"), fromDate, toDate);
+            } else if (fromDate != null) {
+                return criteriaBuilder.greaterThanOrEqualTo(root.get("saveDate"), fromDate);
+            } else {
+                return criteriaBuilder.lessThanOrEqualTo(root.get("saveDate"), toDate);
+            }
+        };
+    }
+
 }
 

@@ -79,13 +79,14 @@ public class SearchMapper {
         return searchResponse;
     }
 
-    public static SearchFilterRequest mapToSearchFilterRequest(com.openapi.model.CriteriaMode optimizationCriteria, List<com.openapi.model.TransportMode> preferredTransports, LocalDate saveDate, List<String> tags) {
+    public static SearchFilterRequest mapToSearchFilterRequest(com.openapi.model.CriteriaMode optimizationCriteria, List<com.openapi.model.TransportMode> preferredTransports, LocalDate fromDate, LocalDate toDate, List<String> tags) {
         return SearchFilterRequest.builder()
                 .optimizationCriteria(optimizationCriteria != null ? mapToCriteriaMode(optimizationCriteria) : null)
                 .transportModes(preferredTransports != null ? preferredTransports.stream()
                         .map(TransportModeMapper::mapToTransportMode)
                         .toList() : null)
-                .saveDate(saveDate != null ? Date.valueOf(saveDate) : null)
+                .fromDate(fromDate != null ? Date.valueOf(fromDate) : null)
+                .toDate(toDate != null ? Date.valueOf(toDate) : null)
                 .tags(tags)
                 .build();
     }
