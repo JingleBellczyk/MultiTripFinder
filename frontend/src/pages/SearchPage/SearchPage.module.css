@@ -10,6 +10,7 @@
     text-align: center;
     border: 1px solid #ddd;
     min-height: 80vh;
+    border-radius: 10px;
 }
 
 .pinkButton {
@@ -31,4 +32,39 @@
     font-weight: bold;
     text-align: left;
     margin-bottom: var(--mantine-spacing-md);
+}
+.blueBackground {
+    background-color: var(--primary-color)!important;
+}
+/*.saveBox {*/
+/*    display: flex;*/
+/*    flex-direction: column; !* Stack the items vertically *!*/
+/*    justify-content: center; !* Center the items *!*/
+/*    align-items: center; !* Align items in the center *!*/
+/*    border: 1px solid #e0e0e0;*/
+/*    background-color: var(--primary-color);*/
+/*    padding: 12px 16px; !* Adjust padding for a more compact layout *!*/
+/*    border-radius: 8px;*/
+/*    margin-top: 20px;*/
+/*    padding-top: 20px;*/
+/*    font-size: var(--mantine-font-size-lg);*/
+/*    color: #ffffff;*/
+/*    font-weight: 600;*/
+/*    gap: 4px; !* Small gap between text and icon *!*/
+/*}*/
+
+.saveBox > button {
+    width: 100%;
+    background-color: var(--primary-color);
+    color: white;            /* Text color */
+    cursor: pointer;         /* Cursor style */
+    border-radius: 5px;
+    transition: background-color 0.3s ease; /* Smooth transition effect */
+    font-size: var(--mantine-font-size-lg);
+    margin-top: var(--mantine-spacing-md);
+    height: var(--button-height-xl);
+}
+.saveBox > button:hover {
+    background-color: var(--hover-color);
+
 }

@@ -1,5 +1,5 @@
 TIA,TIA,Tirana,Tirana,Albania
-EVN,EVN,Yerevan Zvartnots,Yerevan Zvartnots,Armenia
+EVN,EVN,Yerevan Zvartnots,Yerevan,Armenia
 GRZ,GRZ,Graz,Graz,Austria
 INN,INN,Innsbruck,Innsbruck,Austria
 KLU,KLU,Klagenfurt,Klagenfurt,Austria
@@ -11,7 +11,8 @@ ANR,ANR,Antwerp,Antwerp,Belgium
 BRU,BRU,Brussels,Brussels,Belgium
 CRL,CRL,Charleroi,Charleroi,Belgium
 LGG,LGG,Liege,Liege,Belgium
-OST,OST,Ostend Bruges,Ostend Bruges,Belgium
+OST,OST,Ostend Bruges,Bruges,Belgium
+OST,OST,Ostend Bruges,Ostend,Belgium
 SJJ,SJJ,Sarajevo,Sarajevo,Bosnia and Herzegovina
 TZL,TZL,Tuzla,Tuzla,Bosnia and Herzegovina
 BOJ,BOJ,Burgas,Burgas,Bulgaria
@@ -19,7 +20,7 @@ SOF,SOF,Sofia,Sofia,Bulgaria
 VAR,VAR,Varna,Varna,Bulgaria
 DBV,DBV,Dubrovnik,Dubrovnik,Croatia
 PUY,PUY,Pula,Pula,Croatia
-RJK,RJK,Rijeka Krk,Rijeka Krk,Croatia
+RJK,RJK,Rijeka Krk,Rijeka,Croatia
 SPU,SPU,Split,Split,Croatia
 ZAD,ZAD,Zadar,Zadar,Croatia
 ZAG,ZAG,Zagreb,Zagreb,Croatia
@@ -45,10 +46,10 @@ BIA,BIA,Bastia,Bastia,France
 EGC,EGC,Bergerac,Bergerac,France
 BIQ,BIQ,Biarritz,Biarritz,France
 BOD,BOD,Bordeaux,Bordeaux,France
-BES,BES,Brest Bretagne,Brest Bretagne,France
-FSC,FSC,Figari South Corsica,Figari South Corsica,France
+BES,BES,Brest Bretagne,Brest,France
+FSC,FSC,Figari South Corsica,Figari,France
 LIL,LIL,Lille,Lille,France
-LYS,LYS,Lyon-Saint Exupery,Lyon-Saint Exupery,France
+LYS,LYS,Lyon-Saint Exupery,Lyon,France
 MRS,MRS,Marseille,Marseille,France
 MPL,MPL,Montpellier,Montpellier,France
 NTE,NTE,Nantes,Nantes,France
@@ -56,17 +57,20 @@ NCE,NCE,Nice,Nice,France
 BVA,PAR,Paris Beauvais,Paris,France
 CDG,PAR,Paris Charles de Gaulle,Paris,France
 ORY,PAR,Paris Orly,Paris,France
-RNS,RNS,Rennes Bretagne,Rennes Bretagne,France
-RUN,RUN,Reunion Roland Garros,Reunion Roland Garros,France
+RNS,RNS,Rennes Bretagne,Rennes,France
+RUN,RUN,Reunion Roland Garros,Reunion,France
 SXB,SXB,Strasbourg,Strasbourg,France
-TLN,TLN,Toulon-Hyres,Toulon-Hyres,France
-TLS,TLS,Toulouse Blagnac,Toulouse Blagnac,France
+TLN,TLN,Toulon-Hyres,Hyres,France
+TLN,TLN,Toulon-Hyres,Toulon,France
+TLS,TLS,Toulouse Blagnac,Blagnac,France
+TLS,TLS,Toulouse Blagnac,Toulouse,France
 KUT,KUT,Kutaisi,Kutaisi,Georgia
 TBS,TBS,Tbilisi,Tbilisi,Georgia
-FMM,FMM,Allgaeu Airport M,Allgaeu Airport M,Germany
-BER,BER,Berlin Brandenburg,Berlin Brandenburg,Germany
+FMM,FMM,Allgaeu,Allgaeu,Germany
+BER,BER,Berlin Brandenburg,Berlin,Germany
 BRE,BRE,Bremen,Bremen,Germany
-CGN,CGN,Cologne Bonn,Cologne Bonn,Germany
+CGN,CGN,Cologne Bonn,Bonn,Germany
+CGN,CGN,Cologne Bonn,Cologne,Germany
 DTM,DTM,Dortmund,Dortmund,Germany
 DRS,DRS,Dresden,Dresden,Germany
 DUS,DUS,Duesseldorf,Duesseldorf,Germany
@@ -75,12 +79,16 @@ HHN,FRA,Frankfurt-Hahn,Frankfurt,Germany
 FDH,FDH,Friedrichshafen,Friedrichshafen,Germany
 HAM,HAM,Hamburg,Hamburg,Germany
 HAJ,HAJ,Hanover,Hanover,Germany
-FKB,FKB,Karlsruhe Baden-Baden,Karlsruhe Baden-Baden,Germany
-LEJ,LEJ,Leipzig Halle,Leipzig Halle,Germany
+FKB,FKB,Karlsruhe Baden-Baden,Karlsruhe,Germany
+FKB,FKB,Karlsruhe Baden-Baden,Baden-Baden,Germany
+LEJ,LEJ,Leipzig Halle,Leipzig,Germany
+LEJ,LEJ,Leipzig Halle,Halle,Germany
 MUC,MUC,Munich,Munich,Germany
-FMO,FMO,Muenster Osnabrueck,Muenster Osnabrueck,Germany
+FMO,FMO,Muenster Osnabrueck,Osnabrueck,Germany
+FMO,FMO,Muenster Osnabrueck,Muenster,Germany
 NUE,NUE,Nuremberg,Nuremberg,Germany
-PAD,PAD,Paderborn Lippstadt,Paderborn Lippstadt,Germany
+PAD,PAD,Paderborn Lippstadt,Paderborn,Germany
+PAD,PAD,Paderborn Lippstadt,Lippstadt,Germany
 STR,STR,Stuttgart,Stuttgart,Germany
 NRN,NRN,Weeze,Weeze,Germany
 PVK,PVK,Aktion,Aktion,Greece
@@ -90,7 +98,8 @@ CFU,CFU,Corfu,Corfu,Greece
 HER,HER,Heraklion,Heraklion,Greece
 EFL,EFL,Kefalonia,Kefalonia,Greece
 KGS,KGS,Kos,Kos,Greece
-MJT,MJT,Lesvos Mytilene,Lesvos Mytilene,Greece
+MJT,MJT,Lesvos Mytilene,Mytilene,Greece
+MJT,MJT,Lesvos Mytilene,Lesvos,Greece
 JMK,JMK,Mykonos,Mykonos,Greece
 RHO,RHO,Rhodes,Rhodes,Greece
 SMI,SMI,Samos,Samos,Greece
@@ -103,7 +112,7 @@ DEB,DEB,Debrecen,Debrecen,Hungary
 KEF,KEF,Keflavik,Keflavik,Iceland
 ORK,ORK,Cork,Cork,Ireland
 DUB,DUB,Dublin,Dublin,Ireland
-NOC,NOC,Ireland West Airpo,Ireland West Airpo,Ireland
+NOC,NOC,Ireland West,Knock,Ireland
 KIR,KIR,Kerry,Kerry,Ireland
 SNN,SNN,Shannon,Shannon,Ireland
 AHO,AHO,Alghero,Alghero,Italy
@@ -113,7 +122,7 @@ BGY,BGY,Bergamo,Bergamo,Italy
 BLQ,BLQ,Bologna,Bologna,Italy
 BDS,BDS,Brindisi,Brindisi,Italy
 CAG,CAG,Cagliari,Cagliari,Italy
-CTA,CTA,Catania Fontanarossa,Catania Fontanarossa,Italy
+CTA,CTA,Catania Fontanarossa,Catania,Italy
 CIY,CIY,Comiso,Comiso,Italy
 FLR,FLR,Florence,Florence,Italy
 GOA,GOA,Genoa,Genoa,Italy
@@ -121,13 +130,13 @@ SUF,SUF,Lamezia Terme,Lamezia Terme,Italy
 LIN,MIL,Milan Linate,Milan,Italy
 MXP,MIL,Milan Malpensa,Milan,Italy
 NAP,NAP,Naples,Naples,Italy
-OLB,OLB,Olbia Costa Smeralda,Olbia Costa Smeralda,Italy
+OLB,OLB,Olbia Costa Smeralda,Olbia,Italy
 PMO,PMO,Palermo,Palermo,Italy
 PEG,PEG,Perugia,Perugia,Italy
 PSR,PSR,Pescara,Pescara,Italy
 PSA,PSA,Pisa,Pisa,Italy
-CIA,ROM,Rome Ciampino,Rome Ciampino,Italy
-FCO,ROM,Rome Fiumicino,Rome Fiumicino,Italy
+CIA,ROM,Rome Ciampino,Rome,Italy
+FCO,ROM,Rome Fiumicino,Rome,Italy
 TPS,TPS,Trapani,Trapani,Italy
 TSF,TSF,Treviso,Treviso,Italy
 TRS,TRS,Trieste,Trieste,Italy
@@ -143,19 +152,19 @@ MLA,MLA,Malta,Malta,Malta
 RMO,RMO,Chisinau,Chisinau,Moldova
 TGD,TGD,Podgorica,Podgorica,Montenegro
 TIV,TIV,Tivat,Tivat,Montenegro
-AMS,AMS,Amsterdam Airport ,Amsterdam Airport ,Netherlands
+AMS,AMS,Amsterdam,Amsterdam,Netherlands
 EIN,EIN,Eindhoven,Eindhoven,Netherlands
-GRQ,GRQ,Groningen Airpo,Groningen Airpo,Netherlands
-MST,MST,Maastricht Aachen,Maastricht Aachen,Netherlands
-RTM,RTM,Rotterdam The Hague,Rotterdam The Hague,Netherlands
+GRQ,GRQ,Groningen Airpo,Groningen,Netherlands
+MST,MST,Maastricht Aachen,Maastricht,Netherlands
+RTM,RTM,Rotterdam The Hague,Rotterdam,Netherlands
 SKP,SKP,Skopje,Skopje,North Macedonia
-AES,AES,lesund,lesund,Norway
+AES,AES,Lesund,Lesund,Norway
 BGO,BGO,Bergen,Bergen,Norway
 BOO,BOO,Bod,Bod,Norway
 HAU,HAU,Haugesund,Haugesund,Norway
 KRS,KRS,Kristiansand,Kristiansand,Norway
 OSL,OSL,Oslo,Oslo,Norway
-TRF,TRF,Sandefjord Airp,Sandefjord Airp,Norway
+TRF,TRF,Sandefjord,Sandefjord,Norway
 SVG,SVG,Stavanger,Stavanger,Norway
 TOS,TOS,Troms,Troms,Norway
 TRD,TRD,Trondheim,Trondheim,Norway
@@ -163,7 +172,7 @@ GDN,GDN,Gdansk,Gdansk,Poland
 KTW,KTW,Katowice,Katowice,Poland
 KRK,KRK,Krakow,Krakow,Poland
 POZ,POZ,Poznan,Poznan,Poland
-SZZ,SZZ,Szczecin-Goleniow,Szczecin-Goleniow,Poland
+SZZ,SZZ,Szczecin-Goleniow,Szczecin,Poland
 WAW,WAW,Warsaw,Warsaw,Poland
 WMI,WAW,Warsaw Modlin,Warsaw,Poland
 WRO,WRO,Wroclaw,Wroclaw,Poland
@@ -172,7 +181,7 @@ LIS,LIS,Lisbon,Lisbon,Portugal
 FNC,FNC,Madeira,Madeira,Portugal
 PDL,PDL,Ponta Delgada,Ponta Delgada,Portugal
 OPO,OPO,Porto,Porto,Portugal
-OTP,OTP,Bucharest Henri Coanda,Bucharest Henri Coanda,Romania
+OTP,OTP,Bucharest Henri Coanda,Bucharest,Romania
 CLJ,CLJ,Cluj-Napoca,Cluj-Napoca,Romania
 IAS,IAS,Iasi,Iasi,Romania
 SBZ,SBZ,Sibiu,Sibiu,Romania
@@ -181,12 +190,12 @@ KRR,KRR,Krasnodar,Krasnodar,Russia
 DME,MOW,Moscow Domodedovo,Moscow,Russia
 SVO,MOW,Moscow Sheremetyevo,Moscow,Russia
 VKO,MOW,Moscow Vnukovo,Moscow,Russia
-LED,LED,Saint Petersburg Pulkovo,Saint Petersburg Pulkovo,Russia
+LED,LED,Saint Petersburg Pulkovo,Saint Petersburg,Russia
 AER,AER,Sochi,Sochi,Russia
-BEG,BEG,Belgrade Nikola Tesla,Belgrade Nikola Tesla,Serbia
-INI,INI,Ni,Ni,Serbia
+BEG,BEG,Belgrade Nikola Tesla,Belgrade,Serbia
+INI,INI,Nish,Nish,Serbia
 BTS,BTS,Bratislava,Bratislava,Slovakia
-KSC,KSC,Koice,Koice,Slovakia
+KSC,KSC,Kosice,Kosice,Slovakia
 LJU,LJU,Ljubljana,Ljubljana,Slovenia
 ALC,ALC,Alicante,Alicante,Spain
 LEI,LEI,Almeria,Almeria,Spain
@@ -196,12 +205,13 @@ BIO,BIO,Bilbao,Bilbao,Spain
 FUE,FUE,Fuerteventura,Fuerteventura,Spain
 GRO,GRO,Girona,Girona,Spain
 LPA,LPA,Gran Canaria,Gran Canaria,Spain
-GRX,GRX,Granada-Jaen,Granada-Jaen,Spain
+GRX,GRX,Granada-Jaen,Granada,Spain
+GRX,GRX,Granada-Jaen,Jaen,Spain
 IBZ,IBZ,Ibiza,Ibiza,Spain
 XRY,XRY,Jerez,Jerez,Spain
 SPC,SPC,La Palma,La Palma,Spain
 ACE,ACE,Lanzarote,Lanzarote,Spain
-MAD,MAD,Madrid Barajas,Madrid Barajas,Spain
+MAD,MAD,Madrid Barajas,Madrid,Spain
 AGP,AGP,Malaga,Malaga,Spain
 MAH,MAH,Menorca,Menorca,Spain
 PMI,PMI,Palma de Mallorca,Palma de Mallorca,Spain
@@ -214,22 +224,27 @@ TFN,TCI,Tenerife North,Tenerife,Spain
 TFS,TCI,Tenerife South,Tenerife,Spain
 VLC,VLC,Valencia,Valencia,Spain
 ZAZ,ZAZ,Zaragoza,Zaragoza,Spain
-GOT,GOT,Gothenburg Landvetter,Gothenburg Landvetter,Sweden
+GOT,GOT,Gothenburg Landvetter,Gothenburg,Sweden
+GOT,GOT,Gothenburg Landvetter,Landvetter,Sweden
 MMX,MMX,Malmoe,Malmoe,Sweden
 ARN,STO,Stockholm Arlanda,Stockholm,Sweden
 BMA,STO,Stockholm Bromma,Stockholm,Sweden
 NYO,STO,Stockholm Skavsta,Stockholm,Sweden
-BSL,BSL,Basel Mulhouse Freiburg,Basel Mulhouse Freiburg,Switzerland
+BSL,BSL,Basel Mulhouse Freiburg,Basel,Switzerland
+BSL,BSL,Basel Mulhouse Freiburg,Mulhouse,Switzerland
+BSL,BSL,Basel Mulhouse Freiburg,Freiburg,Switzerland
 GVA,GVA,Geneva,Geneva,Switzerland
 ZRH,ZRH,Zurich,Zurich,Switzerland
-ESB,ESB,Ankara Esenboga,Ankara Esenboga,Turkey
+ESB,ESB,Ankara Esenboga,Ankara,Turkey
+ESB,ESB,Ankara Esenboga,Esenboga,Turkey
 AYT,AYT,Antalya,Antalya,Turkey
-COV,COV,Çukurova,Çukurova,Turkey
+COV,COV,Cukurova,Cukurova,Turkey
 DLM,DLM,Dalaman,Dalaman,Turkey
-IST,IST,Istanbul,Isntabul,Turkey
-SAW,IST,Istanbul Sabiha Goekcen,Isntabul,Turkey
-ADB,ADB,Izmir Adnan Menderes,Izmir Adnan Menderes,Turkey
-BJV,BJV,Milas-Bodrum,Milas-Bodrum,Turkey
+IST,IST,Istanbul,Istanbul,Turkey
+SAW,IST,Istanbul Sabiha Goekcen,Istanbul,Turkey
+ADB,ADB,Izmir Adnan Menderes,Izmir,Turkey
+BJV,BJV,Milas-Bodrum,Milas,Turkey
+BJV,BJV,Milas-Bodrum,Bodrum,Turkey
 TZX,TZX,Trabzon,Trabzon,Turkey
 HRK,HRK,Kharkiv,Kharkiv,Ukraine
 KBP,IEV,Kiev Boryspil,Kiev,Ukraine
@@ -248,7 +263,8 @@ EXT,EXT,Exeter,Exeter,United Kingdom
 GLA,GLA,Glasgow,Glasgow,United Kingdom
 PIK,GLA,Glasgow Prestwick,Glasgow,United Kingdom
 JER,JER,Jersey,Jersey,United Kingdom
-LBA,LBA,Leeds Bradford,Leeds Bradford,United Kingdom
+LBA,LBA,Leeds Bradford,Leeds,United Kingdom
+LBA,LBA,Leeds Bradford,Bradford,United Kingdom
 LPL,LPL,Liverpool,Liverpool,United Kingdom
 LCY,LON,London City,London,United Kingdom
 LGW,LON,London Gatwick,London,United Kingdom
