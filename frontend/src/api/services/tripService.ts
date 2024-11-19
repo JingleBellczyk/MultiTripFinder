@@ -3,17 +3,18 @@ import axios from 'axios';
 
 const BASE_URL: string = "http://localhost:8080";
 
-export async function saveTripToBackend(trip: Trip): Promise<{ isSuccess: boolean; errorMessage?: string }> {
+export async function saveTripToBackend(trip: Trip, userId: number): Promise<{ isSuccess: boolean; errorMessage?: string }> {
     console.log("Saving trip to backend");
     console.log(trip);
-    const userId = 1; // example
     const url = `${BASE_URL}/tripList/${userId}`;
 
     try {
         // Axios POST request
-        await axios.post(url, trip, {
+        const response = await axios.post(url, trip, {
             headers: { 'Content-Type': 'application/json' },
+            withCredentials: true,
         });
+        console.log("Received response:", response.data);
 
         return { isSuccess: true };
     } catch (error: unknown) {

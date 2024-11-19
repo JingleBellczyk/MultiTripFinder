@@ -23,6 +23,7 @@ export function SaveSearchTripModal({entityType, onSave}: SaveSearchTripModalPro
         const {isSuccess, errorMessage} = await onSave(name);
 
         if (isSuccess) {
+            window.alert(`${entityType} "${name}" has been saved!`);
             resetFields();
             setOpened(false);
         } else {

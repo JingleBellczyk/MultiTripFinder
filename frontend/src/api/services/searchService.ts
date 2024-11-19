@@ -11,22 +11,22 @@ interface PostResponse {
 export const postSearch = async (dto: SearchDTOPost): Promise<TripList> => {
     const url = `${SERVER}/search`;
 
-    // const response = await fetch(url, {
-    //     method: 'POST',
-    //     headers: {
-    //         'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify(dto),
-    // });
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dto),
+    });
 
-    // if (!response.ok) {
-    //     throw new Error('Network response was not ok');
-    // }
-    // const data = await response.json();
-    // const trips: Trip[] = data.content as Trip[]
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+    const data = await response.json();
+    const trips: Trip[] = data.content as Trip[]
 
     // for tests
-    const trips: Trip[] = tripsJsonData.content as Trip[]
+    // const trips: Trip[] = tripsJsonData.content as Trip[]
 
     console.log(trips);
     return trips;

@@ -94,6 +94,7 @@ function SearchFunction(paramDto: SearchDTO) {
         handleDateChange,
         handleMaxTotalTimeChange,
         handleCriterionChange,
+        handleSearch
     } = useSearchHandlers(paramDto);
 
     const [errors, setErrors] = useState<ValidationErrors>({
@@ -104,18 +105,8 @@ function SearchFunction(paramDto: SearchDTO) {
         maxHoursToSpendError: null
     });
 
-    const handleSearch = async (dto: SearchDTOPost): Promise<Trip[]> => {
-        try {
-            const response = await postSearch(dto);
-            return response;
-        } catch (error) {
-            console.error('Error during POST request:', error);
-            return [];
-        }
-    };
-
     const handleSave = async (name: string): Promise<{ isSuccess: boolean; errorMessage?: string }> => {
-        if (!user || !token){
+        if (!user){
             console.error("User is not authenticated");
             return { isSuccess: false, errorMessage: "User is not authenticated" };
         }
@@ -134,12 +125,11 @@ function SearchFunction(paramDto: SearchDTO) {
         }
     };
 
-
     const handleSubmit = async () => {
+
         const startPlace: PlaceLocation = searchDto.start;
         const endPlace: PlaceLocation = searchDto.end;
         const placesTimeList: PlaceTime[] = searchDto.placesTime;
-
         const numberOfPassengers = searchDto.passengersNumber;
         const selectedTransport = searchDto.transport === MEANS_OF_TRANSPORT[0] ? null : (searchDto.transport === null ? null : searchDto.transport.toUpperCase());
         const selectedDate = searchDto.startDate;
@@ -167,21 +157,23 @@ function SearchFunction(paramDto: SearchDTO) {
             optimizationCriteria: preferredCriteria
         };
 
-        console.log(dto)
-
         setTrips([]);
         setReloading(true);
 
-        setTimeout(async () => {
-
+        try {
             const searchResults = await handleSearch(dto);
             setTrips(searchResults);
+
             setReloading(false);
-        }, 500);
 
+            // Zapisz dane w formacie do zapisu
+            setSearchDTOSave(convertToSearchDTOSave(dto));
+        } catch (error) {
+            console.error("Error during search:", error);
+            setReloading(false);
+        }
+    }
 
-        setSearchDTOSave(convertToSearchDTOSave(dto));
-    };
 
     // grape color - defines small elements like slider and checkbox
     return (
