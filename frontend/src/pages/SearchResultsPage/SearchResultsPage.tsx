@@ -114,11 +114,11 @@ const SearchResultPage: React.FC<SearchResultPageProps> = ({trips}) => {
                     <Accordion.Control style={{ flexGrow: 1 }}>
                         <AccordionLabel trip={trip} />
                     </Accordion.Control>
-                    {isAuthenticated && (
+                    {isAuthenticated && user &&(
                         <Box className={styles.saveBox}>
                             <SaveSearchTripModal
                                 entityType="trip"
-                                onSave={(name) => saveTripToBackend({ ...trip, name })}
+                                onSave={(name) => saveTripToBackend({ ...trip, name },user?.id)}
                             />
                         </Box>
                     )}

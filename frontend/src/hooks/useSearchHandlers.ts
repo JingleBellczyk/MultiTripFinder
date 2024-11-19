@@ -1,5 +1,7 @@
-import { useState } from 'react';
-import { SearchDTO } from '../types/SearchDTO';
+import {useState} from 'react';
+import {SearchDTO, SearchDTOPost} from '../types/SearchDTO';
+import {postSearch} from '../api/services/searchService';
+import {Trip} from "../types/TripDTO";
 
 export const useSearchHandlers = (initialDto: SearchDTO) => {
     const [searchDto, setSearchDto] = useState<SearchDTO>(initialDto);
@@ -51,6 +53,15 @@ export const useSearchHandlers = (initialDto: SearchDTO) => {
         }));
     };
 
+    const handleSearch = async (dto: SearchDTOPost): Promise<Trip[]> => {
+        try {
+            return await postSearch(dto);
+        } catch (error) {
+            console.error('Error during POST request:', error);
+            return [];
+        }
+    };
+
     return {
         searchDto,
         setSearchDto,
@@ -59,5 +70,6 @@ export const useSearchHandlers = (initialDto: SearchDTO) => {
         handleDateChange,
         handleMaxTotalTimeChange,
         handleCriterionChange,
+        handleSearch
     };
 };

@@ -1,7 +1,7 @@
 import React from "react";
 import { Loader, MantineProvider } from "@mantine/core";
 
-const LoginPage: React.FC = () => {
+const LoadingPage: React.FC = () => {
     return (
         <MantineProvider theme={{ primaryColor: 'blue' }}>
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -11,4 +11,4 @@ const LoginPage: React.FC = () => {
     );
 };
 
-export default LoginPage;
+export default LoadingPage;

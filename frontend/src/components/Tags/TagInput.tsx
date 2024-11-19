@@ -10,20 +10,20 @@ type TagInputProps = {
     label: string;
     value: Tag[];
     onRemoveFromAllTags: (tagToRemove: SavedTag, isRemove?: boolean) => void;
-    onEditTagInList: (oldTagName: string, newTagName: string) => void;
-    onRemoveTagFromSearch: (index: number, tagName: string) => void;
+    onEditTagInList: (tagToEdit: SavedTag, newTagName: string) => Promise<void>;
+    onRemoveTag: (index: number, tagName: string) => void;
     onAddTag: (index: number, tagName: string) => void;
     setIsModalOpen: (open: boolean) => void;
     index: number;
 };
 
-export default function TagInput({ list, label, value, onRemoveFromAllTags, onEditTagInList, onRemoveTagFromSearch, onAddTag, setIsModalOpen, index }: TagInputProps) {
+export default function TagInput({ list, label, value, onRemoveFromAllTags, onEditTagInList, onRemoveTag, onAddTag, setIsModalOpen, index }: TagInputProps) {
     const combobox = useCombobox({
         onDropdownClose: () => combobox.resetSelectedOption(),
         onDropdownOpen: () => combobox.updateSelectedOptionIndex('active'),
     });
 
-    const [search, setSearch] = useState<string>('');
+    const [element, setElement] = useState<string>('');
     const inputRef = useRef<HTMLInputElement | null>(null);
 
     const handleModalOpen = () => {
@@ -36,36 +36,38 @@ export default function TagInput({ list, label, value, onRemoveFromAllTags, onEd
         }
     }, []);
 
-    const handleValueSelect = (val: string) => {
-        // Check if the tag already exists in the selected values
+    const handleValueSelect = async (val: string) => {
         if (value.some((tag) => tag.name === val)) {
-            return; // If the tag exists, do nothing
+            return;
         }
-
-        onAddTag(index, val); // Add the tag if it doesn't exist
-        setSearch(''); // Clear the search after adding
+        if (value.length >= 3) {
+            alert("You can only add up to 3 tags.");
+            return;
+        }
+        await onAddTag(index, val);
+        setElement('');
     };
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSearch(event.currentTarget.value.toUpperCase());
+        setElement(event.currentTarget.value);
         combobox.updateSelectedOptionIndex();
     };
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Enter' && search.trim()) {
-            handleValueSelect(search.trim());
+        if (event.key === 'Enter' && element.trim()) {
+            handleValueSelect(element.trim());
             event.preventDefault();
         }
     };
 
-    const values = value.map((item) => (
-        <Pill size="md" key={item.name} withRemoveButton onRemove={() => onRemoveTagFromSearch(index, item.name)}>
+    const values =value.map((item) => (
+        <Pill size="md" key={item.name} withRemoveButton onRemove={async () => onRemoveTag(index, item.name)}>
             {item.name}
         </Pill>
     ));
 
     const options = list
-        .filter((item) => item.name)
+        .filter((item) => item.name.includes(element))
         .map((item) => (
             <Combobox.Option value={item.name} key={item.name}>
                 <Group
@@ -112,11 +114,12 @@ export default function TagInput({ list, label, value, onRemoveFromAllTags, onEd
                                 <PillsInput.Field
                                     ref={inputRef}
                                     onFocus={() => combobox.openDropdown()}
-                                    value={search}
+                                    value={element}
                                     placeholder="Enter tag"
                                     maxLength={MAX_TAG_LENGTH}
                                     onChange={handleInputChange}
                                     onKeyDown={handleKeyDown}
+                                    disabled={value.length>=3}
                                 />
                             </Combobox.EventsTarget>
                         </Pill.Group>
