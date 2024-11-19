@@ -57,7 +57,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                                 .requestMatchers("/searchList/**", "/tripList/**", "/user/**", "/searchTag/**", "tripTag/**", "/auth/**").authenticated()
                                 .requestMatchers(HttpMethod.POST, "/search").permitAll()
-stat
+
 /*                        .requestMatchers(HttpMethod.OPTIONS, "/oauth2/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/auth/**", "/searchList/**", "/searchTag/**", "/tripList/**", "/tripTag/**").authenticated()
                         .requestMatchers(HttpMethod.POST,"/searchList/**", "/searchTag/**", "/tripList/**", "/tripTag/**").authenticated()
