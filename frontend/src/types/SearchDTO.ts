@@ -1,7 +1,17 @@
 export interface SearchDTOPost {
     placesToVisit: PlaceTimePost[];
-    startPlace: PlaceLocationPost;
-    endPlace: PlaceLocationPost;
+    passengerCount: number;
+    maxTripDuration: number;
+    tripStartDate: Date | null;
+    preferredTransport: string | null;
+    optimizationCriteria: string;
+}
+export interface SearchDTOSave {
+    id?: string | null;
+    name?: string | null;
+    saveDate?: string | null; // ISO format or null
+    tags: string[];
+    placesToVisit: PlaceTimePost[];
     passengerCount: number;
     maxTripDuration: number;
     tripStartDate: Date | null;

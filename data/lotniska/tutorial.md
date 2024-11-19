@@ -2,7 +2,7 @@
 
 1. Dodaj plik lotniskaDane.csv do poniżego folderu:
 
-![alt text](mySQLDataFolder.png)
+![alt text](pics/mySQLDataFolder.png)
 
 jego ścieżka:
 
@@ -12,7 +12,7 @@ jego ścieżka:
 
     a) otwórz notatnik z uprawnianiami admina
 
-    ![alt text](adminNotatnik.png)
+    ![alt text](pics/adminNotatnik.png)
 
     b) otwórz w nim plik o podanej ścieżce na Windowsie:
     C:\ProgramData\MySQL\MySQL Server 8.0\my.ini
@@ -22,7 +22,7 @@ jego ścieżka:
 
     c) wyszukaj [mysql] i [mysqld]
 
-    ![alt text](myIni.png)
+    ![alt text](pics/myIni.png)
     
     dodaj w odpowiednie miejsca:
     local_infile=1
@@ -42,28 +42,30 @@ jego ścieżka:
     b) jeśli jeszcze nie masz tabeli z lotniskami wykonaj:
 
     ```
-    CREATE TABLE miastazlotniskami (
-    KodLotniska VARCHAR(3),
-    KodMiasta VARCHAR(3),
-    NazwaLotniska VARCHAR(255),
-    Miasto VARCHAR(255),
-    Kraj VARCHAR(255)
-    );
+   CREATE TABLE Airports (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    airport_code CHAR(3) NOT NULL,
+    city_code CHAR(3) NOT NULL,
+    airport_name VARCHAR(255) NOT NULL,
+    city VARCHAR(255) NOT NULL,
+    country VARCHAR(255) NOT NULL);
     ```
 
-    c) wpisz lotniska z pliku csv do tabeli:
+c) Wpisz lotniska z pliku CSV do tabeli:
 
-
-    ```
+```
     LOAD DATA LOCAL INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Data/lotniskaDane.csv'
-    INTO TABLE lotniska
-    FIELDS TERMINATED BY ',' 
+    INTO TABLE Airports
+    FIELDS TERMINATED BY ','
     ENCLOSED BY '"'
-    LINES TERMINATED BY '\r\n';
-    ```
-    UWAGA!!!:  '\r\n' jest bardzo ważne, bo na końcu kazdej linijki jest znak CR(Carriage Return)
+    LINES TERMINATED BY '\r\n'
+    (airport_code, city_code, airport_name, city, country);
+```
 
-    d) przetestuj:
-    ```
-    SELECT * FROM lotniska WHERE Kraj = 'Poland';
-    ```c
+UWAGA!!!:  '\r\n' jest bardzo ważne, bo na końcu kazdej linijki jest znak CR(Carriage Return)
+
+d) przetestuj:
+
+```
+    SELECT * FROM Airports WHERE country = 'Poland';
+```

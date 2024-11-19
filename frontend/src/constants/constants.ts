@@ -40,3 +40,13 @@ export const GRID_ITEMS_SEARCH: string[] = [
     'Preferable transport',
     'Additional info'
 ];
+
+// Typy dla transportMode
+export type TransportMode = 'TRAIN' | 'BUS' | 'PLANE';
+
+// Słownik mapujący transportMode na ikony
+export const transportIcons: Record<TransportMode, string> = {
+    TRAIN: "🚂", // Train icon
+    BUS: "🚌", // Bus icon
+    PLANE: "✈️" // Plane icon
+};

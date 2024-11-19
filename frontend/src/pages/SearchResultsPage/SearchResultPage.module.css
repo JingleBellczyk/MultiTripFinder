@@ -1,0 +1,125 @@
+.tripPlaces {
+    font-size: var(--mantine-font-size-xl);
+    font-weight: 800;
+    color: #8e44ad;
+}
+.tripDates {
+    font-size: var(--mantine-font-size-xl);
+    color: #8e44ad;
+    font-weight: 600;
+}
+
+.tripPassengers {
+    color: #27ae60;
+    font-weight: 600;
+    font-size: var(--mantine-font-size-lg);
+}
+
+.tripTotalCost {
+    color: #e74c3c;
+    font-weight: 600;
+    font-size: var(--mantine-font-size-lg);
+}
+
+.tripTransferTime {
+    color: #f39c12;
+    font-weight: 600;
+    font-size: var(--mantine-font-size-lg);
+}
+
+.tripDuration {
+    color: #3498db; /* jasny niebieski dla czasu trwania */
+    font-weight: 600;
+    font-size: var(--mantine-font-size-lg);
+}
+/*in label*/
+.tripInfo {
+    margin: var(--mantine-spacing-md);
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.tripLeft {
+    margin: var(--mantine-spacing-md);
+    display: flex;
+    justify-content: flex-start;
+}
+
+.tripRight {
+    margin-right: var(--mantine-spacing-lg);
+    display: flex;
+    justify-content: flex-end;
+}
+
+.tripLeft, .tripRight {
+    gap: 10px;
+}
+
+.searchHeader{
+    font-weight: 1500;
+    color: white;
+    margin: var(--mantine-spacing-md);
+    background-color: var(--primary-color)!important;
+}
+
+.place {
+    margin: 10px 0;
+}
+
+.placeText {
+    font-size: var(--mantine-font-size-xl);
+    font-weight: 800;
+    color: #8e44ad;
+    margin-left: var(--mantine-spacing-xl);
+}
+/*transfers*/
+.transfer {
+    color: #484646;
+}
+
+.transferInfo {
+    font-size: var(--mantine-font-size-lg);
+    font-style: italic;
+    font-weight: 600;
+    color: #343131;
+    margin-left: calc(1 * var(--mantine-spacing-xl));
+}
+/*change*/
+.changeText {
+    color: #504848;
+    font-weight: bold;
+    font-size: var(--mantine-font-size-xl);
+    margin-left: 0;
+}
+.change {
+    color: #504848;
+    font-weight: bold;
+    font-size: var(--mantine-font-size-xl);
+    margin-left: calc(7 * var(--mantine-spacing-xl));
+}
+.firstInside{
+    margin-left: calc(7 * var(--mantine-spacing-xl));
+    font-size: var(--mantine-font-size-xl);
+    font-weight: 500;
+}
+
+.accordionRounded {
+    border-radius: 20px;
+    background-color: #f0f0f0;
+}
+.background {
+    background-color: var(--primary-color)!important;
+}
+
+.tripRow{
+    background-color: rgba(148, 199, 210, 0.13);
+    width: 100%;
+    border-radius: 10px;
+}
+.labelStyle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}

@@ -1,0 +1,389 @@
+{
+  "content": [
+    {
+      "id": null,
+      "name": null,
+      "saveDate": null,
+      "tags": [],
+      "startDate": "2024-11-11",
+      "endDate": "2024-11-12",
+      "passengerCount": 1,
+      "totalCost": 50,
+      "totalTransferTime": 300,
+      "duration": 160,
+      "transfers": [
+        {
+          "startDateTime": "2024-11-11T19:28:28.2753016Z",
+          "endDateTime": "2024-11-11T20:28:28.2753016Z",
+          "carrier": "Carrier",
+          "transportMode": "BUS",
+          "cost": 10,
+          "duration": 60,
+          "transferOrder": 0,
+          "startAddress": "Start address",
+          "endAddress": "End address"
+        },
+        {
+          "startDateTime": "2024-11-11T19:28:28.2753016Z",
+          "endDateTime": "2024-11-11T20:28:28.2753016Z",
+          "carrier": "Carrier",
+          "transportMode": "BUS",
+          "cost": 10,
+          "duration": 60,
+          "transferOrder": 1,
+          "startAddress": "Start address",
+          "endAddress": "End address"
+        },
+        {
+          "startDateTime": "2024-11-11T19:28:28.2753016Z",
+          "endDateTime": "2024-11-11T20:28:28.2753016Z",
+          "carrier": "Carrier",
+          "transportMode": "BUS",
+          "cost": 10,
+          "duration": 60,
+          "transferOrder": 2,
+          "startAddress": "Start address",
+          "endAddress": "End address"
+        }
+      ],
+      "places": [
+        {
+          "country": "poland",
+          "city": "poznań",
+          "isTransfer": false,
+          "stayDuration": 1,
+          "visitOrder": 0
+        },
+        {
+          "country": "italy",
+          "city": "lazio",
+          "isTransfer": false,
+          "stayDuration": 1,
+          "visitOrder": 0
+        },
+        {
+          "country": "united kingdom",
+          "city": "london",
+          "isTransfer": false,
+          "stayDuration": 1,
+          "visitOrder": 0
+        },
+        {
+          "country": "poland",
+          "city": "poznań",
+          "isTransfer": false,
+          "stayDuration": 1,
+          "visitOrder": 0
+        }
+      ]
+    },
+    {
+      "id": null,
+      "name": null,
+      "saveDate": null,
+      "tags": [],
+      "startDate": "2024-11-11",
+      "endDate": "2024-11-12",
+      "passengerCount": 1,
+      "totalCost": 50,
+      "totalTransferTime": 300,
+      "duration": 160,
+      "transfers": [
+        {
+          "startDateTime": "2024-11-11T19:28:28.2753016Z",
+          "endDateTime": "2024-11-11T20:28:28.2753016Z",
+          "carrier": "Carrier",
+          "transportMode": "BUS",
+          "cost": 10,
+          "duration": 60,
+          "transferOrder": 0,
+          "startAddress": "Start address",
+          "endAddress": "End address"
+        },
+        {
+          "startDateTime": "2024-11-11T19:28:28.2753016Z",
+          "endDateTime": "2024-11-11T20:28:28.2753016Z",
+          "carrier": "Carrier",
+          "transportMode": "BUS",
+          "cost": 10,
+          "duration": 60,
+          "transferOrder": 1,
+          "startAddress": "Start address",
+          "endAddress": "End address"
+        },
+        {
+          "startDateTime": "2024-11-11T19:28:28.2753016Z",
+          "endDateTime": "2024-11-11T20:28:28.2753016Z",
+          "carrier": "Carrier",
+          "transportMode": "BUS",
+          "cost": 10,
+          "duration": 60,
+          "transferOrder": 2,
+          "startAddress": "Start address",
+          "endAddress": "End address"
+        }
+      ],
+      "places": [
+        {
+          "country": "poland",
+          "city": "poznań",
+          "isTransfer": false,
+          "stayDuration": 1,
+          "visitOrder": 0
+        },
+        {
+          "country": "italy",
+          "city": "lazio",
+          "isTransfer": false,
+          "stayDuration": 1,
+          "visitOrder": 0
+        },
+        {
+          "country": "united kingdom",
+          "city": "london",
+          "isTransfer": false,
+          "stayDuration": 1,
+          "visitOrder": 0
+        },
+        {
+          "country": "poland",
+          "city": "poznań",
+          "isTransfer": false,
+          "stayDuration": 1,
+          "visitOrder": 0
+        }
+      ]
+    },
+    {
+      "id": null,
+      "name": null,
+      "saveDate": null,
+      "tags": [],
+      "startDate": "2024-11-11",
+      "endDate": "2024-11-12",
+      "passengerCount": 1,
+      "totalCost": 50,
+      "totalTransferTime": 300,
+      "duration": 160,
+      "transfers": [
+        {
+          "startDateTime": "2024-11-11T19:28:28.2753016Z",
+          "endDateTime": "2024-11-11T20:28:28.2753016Z",
+          "carrier": "Carrier",
+          "transportMode": "BUS",
+          "cost": 10,
+          "duration": 60,
+          "transferOrder": 0,
+          "startAddress": "Start address",
+          "endAddress": "End address"
+        },
+        {
+          "startDateTime": "2024-11-11T19:28:28.2753016Z",
+          "endDateTime": "2024-11-11T20:28:28.2753016Z",
+          "carrier": "Carrier",
+          "transportMode": "BUS",
+          "cost": 10,
+          "duration": 60,
+          "transferOrder": 1,
+          "startAddress": "Start address",
+          "endAddress": "End address"
+        },
+        {
+          "startDateTime": "2024-11-11T19:28:28.2753016Z",
+          "endDateTime": "2024-11-11T20:28:28.2753016Z",
+          "carrier": "Carrier",
+          "transportMode": "BUS",
+          "cost": 10,
+          "duration": 60,
+          "transferOrder": 2,
+          "startAddress": "Start address",
+          "endAddress": "End address"
+        }
+      ],
+      "places": [
+        {
+          "country": "poland",
+          "city": "poznań",
+          "isTransfer": false,
+          "stayDuration": 1,
+          "visitOrder": 0
+        },
+        {
+          "country": "italy",
+          "city": "lazio",
+          "isTransfer": false,
+          "stayDuration": 1,
+          "visitOrder": 0
+        },
+        {
+          "country": "united kingdom",
+          "city": "london",
+          "isTransfer": false,
+          "stayDuration": 1,
+          "visitOrder": 0
+        },
+        {
+          "country": "poland",
+          "city": "poznań",
+          "isTransfer": false,
+          "stayDuration": 1,
+          "visitOrder": 0
+        }
+      ]
+    },
+    {
+      "id": null,
+      "name": null,
+      "saveDate": null,
+      "tags": [],
+      "startDate": "2024-11-11",
+      "endDate": "2024-11-12",
+      "passengerCount": 1,
+      "totalCost": 50,
+      "totalTransferTime": 300,
+      "duration": 160,
+      "transfers": [
+        {
+          "startDateTime": "2024-11-11T19:28:28.2753016Z",
+          "endDateTime": "2024-11-11T20:28:28.2753016Z",
+          "carrier": "Carrier",
+          "transportMode": "BUS",
+          "cost": 10,
+          "duration": 60,
+          "transferOrder": 0,
+          "startAddress": "Start address",
+          "endAddress": "End address"
+        },
+        {
+          "startDateTime": "2024-11-11T19:28:28.2753016Z",
+          "endDateTime": "2024-11-11T20:28:28.2753016Z",
+          "carrier": "Carrier",
+          "transportMode": "BUS",
+          "cost": 10,
+          "duration": 60,
+          "transferOrder": 1,
+          "startAddress": "Start address",
+          "endAddress": "End address"
+        },
+        {
+          "startDateTime": "2024-11-11T19:28:28.2753016Z",
+          "endDateTime": "2024-11-11T20:28:28.2753016Z",
+          "carrier": "Carrier",
+          "transportMode": "BUS",
+          "cost": 10,
+          "duration": 60,
+          "transferOrder": 2,
+          "startAddress": "Start address",
+          "endAddress": "End address"
+        }
+      ],
+      "places": [
+        {
+          "country": "poland",
+          "city": "poznań",
+          "isTransfer": false,
+          "stayDuration": 1,
+          "visitOrder": 0
+        },
+        {
+          "country": "italy",
+          "city": "lazio",
+          "isTransfer": false,
+          "stayDuration": 1,
+          "visitOrder": 0
+        },
+        {
+          "country": "united kingdom",
+          "city": "london",
+          "isTransfer": false,
+          "stayDuration": 1,
+          "visitOrder": 0
+        },
+        {
+          "country": "poland",
+          "city": "poznań",
+          "isTransfer": false,
+          "stayDuration": 1,
+          "visitOrder": 0
+        }
+      ]
+    },
+    {
+      "id": null,
+      "name": null,
+      "saveDate": null,
+      "tags": [],
+      "startDate": "2024-11-11",
+      "endDate": "2024-11-12",
+      "passengerCount": 1,
+      "totalCost": 50,
+      "totalTransferTime": 300,
+      "duration": 160,
+      "transfers": [
+        {
+          "startDateTime": "2024-11-11T19:28:28.2753016Z",
+          "endDateTime": "2024-11-11T20:28:28.2753016Z",
+          "carrier": "Carrier",
+          "transportMode": "BUS",
+          "cost": 10,
+          "duration": 60,
+          "transferOrder": 0,
+          "startAddress": "Start address",
+          "endAddress": "End address"
+        },
+        {
+          "startDateTime": "2024-11-11T19:28:28.2753016Z",
+          "endDateTime": "2024-11-11T20:28:28.2753016Z",
+          "carrier": "Carrier",
+          "transportMode": "BUS",
+          "cost": 10,
+          "duration": 60,
+          "transferOrder": 1,
+          "startAddress": "Start address",
+          "endAddress": "End address"
+        },
+        {
+          "startDateTime": "2024-11-11T19:28:28.2753016Z",
+          "endDateTime": "2024-11-11T20:28:28.2753016Z",
+          "carrier": "Carrier",
+          "transportMode": "BUS",
+          "cost": 10,
+          "duration": 60,
+          "transferOrder": 2,
+          "startAddress": "Start address",
+          "endAddress": "End address"
+        }
+      ],
+      "places": [
+        {
+          "country": "poland",
+          "city": "poznań",
+          "isTransfer": false,
+          "stayDuration": 1,
+          "visitOrder": 0
+        },
+        {
+          "country": "italy",
+          "city": "lazio",
+          "isTransfer": false,
+          "stayDuration": 1,
+          "visitOrder": 0
+        },
+        {
+          "country": "united kingdom",
+          "city": "london",
+          "isTransfer": false,
+          "stayDuration": 1,
+          "visitOrder": 0
+        },
+        {
+          "country": "poland",
+          "city": "poznań",
+          "isTransfer": false,
+          "stayDuration": 1,
+          "visitOrder": 0
+        }
+      ]
+    }
+  ]
+}
