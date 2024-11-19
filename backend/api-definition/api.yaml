@@ -798,6 +798,11 @@ components:
         email:
           type: string
           format: email
+        role:
+          type: string
+          enum:
+            - U
+            - A
     userPage:
       type: object
       allOf:
