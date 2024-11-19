@@ -16,12 +16,10 @@ import java.util.Map;
 
 @RestController
 public class OAuth2Controller {
-    private final OAuth2AuthorizedClientService clientService;
     private final UserAccountServiceImpl userAccountService;
 
     @Autowired
-    public OAuth2Controller(OAuth2AuthorizedClientService clientService, UserAccountServiceImpl userAccountService) {
-        this.clientService = clientService;
+    public OAuth2Controller(UserAccountServiceImpl userAccountService) {
         this.userAccountService = userAccountService;
     }
 
@@ -35,7 +33,6 @@ public class OAuth2Controller {
         String email = authentication.getPrincipal().getAttribute("email");
 
         if (email == null) {
-            // Return a 400 Bad Request if email is missing
             return ResponseEntity.badRequest().body(Map.of("error", "Email attribute not found in authentication token"));
         }
 

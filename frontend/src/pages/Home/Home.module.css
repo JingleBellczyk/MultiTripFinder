@@ -10,6 +10,11 @@
     margin-bottom: 40px;
 }
 
+.background {
+    background-color: white;
+    min-height: 80vh;
+}
+
 .welcomeText {
     font-size: 1.5rem;
     color: #000;

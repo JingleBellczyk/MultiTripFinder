@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import {SERVER, User } from "../constants/constants";
+import {SERVER} from "../constants/constants";
+import {User} from "../types/UserDTO";
 
 
 
