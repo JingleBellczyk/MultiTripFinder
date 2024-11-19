@@ -14,40 +14,48 @@ export function convertSearchDTOPostToSearchDTO(dtoPost: SearchDTOPost): SearchD
         hoursToSpend: place.stayDuration
     }));
 
-    const transport = dtoPost.preferredTransport ? transportMapping[dtoPost.preferredTransport.toUpperCase()] : null;
-
-    const startPlace = dtoPost.startPlace
-    const endPlace = dtoPost.endPlace
-
-    const startLocation: PlaceLocation = {
-        name: `${startPlace.city}, ${startPlace.country}`,
-        country: startPlace.country,
-        city: startPlace.city
+    const startPlace: PlaceLocation = {
+        name: `${placesTime[0].city}, ${placesTime[0].country}`,
+        country: placesTime[0].country,
+        city: placesTime[0].city,
     };
 
-    const endLocation: PlaceLocation = {
-        name: `${endPlace.city}, ${endPlace.country}`,
-        country: endPlace.country,
-        city: endPlace.city
+    const endPlace: PlaceLocation = {
+        name: `${placesTime[placesTime.length - 1].city}, ${placesTime[placesTime.length - 1].country}`,
+        country: placesTime[placesTime.length - 1].country,
+        city: placesTime[placesTime.length - 1].city,
     };
+
+    const trimmedPlacesTime = placesTime.slice(1, placesTime.length - 1);
 
     return {
-        placesTime: placesTime,
-        start: startLocation,
-        end: endLocation,
-        maxTotalTime: dtoPost.maxTripDuration/24,
-        transport: transport,
+        placesTime: trimmedPlacesTime,
+        start: startPlace,
+        end: endPlace,
+        maxTotalTime: dtoPost.maxTripDuration / 24,
+        transport: dtoPost.preferredTransport ? transportMapping[dtoPost.preferredTransport.toUpperCase()] : null,
         startDate: dtoPost.tripStartDate,
         passengersNumber: dtoPost.passengerCount,
         preferredCriteria: dtoPost.optimizationCriteria,
     };
 }
 
-export function convertToPlaceTimePost(places: PlaceTime[]): PlaceTimePost[] {
-    return places.map((place, index) => ({
+export function convertToPlaceTimePost(
+    places: PlaceTime[],
+    startPlace: PlaceLocation,
+    endPlace: PlaceLocation
+): PlaceTimePost[] {
+    const fullPlacesList = [
+        { country: startPlace.country, city: startPlace.city, hoursToSpend: 0 },
+        ...places,
+        { country: endPlace.country, city: endPlace.city, hoursToSpend: 0 },
+    ];
+
+    return fullPlacesList.map((place, index) => ({
         country: place.country,
         city: place.city,
         stayDuration: place.hoursToSpend,
-        entryOrder: index + 1
+        entryOrder: index + 1,
     }));
 }
+

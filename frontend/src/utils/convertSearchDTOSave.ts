@@ -7,8 +7,6 @@ export const convertToSearchDTOSave = (dto: SearchDTOPost): SearchDTOSave => {
         saveDate: null,
         tags: [],
         placesToVisit: dto.placesToVisit,
-        startPlace: dto.startPlace,
-        endPlace: dto.endPlace,
         passengerCount: dto.passengerCount,
         maxTripDuration: dto.maxTripDuration,
         tripStartDate: dto.tripStartDate,

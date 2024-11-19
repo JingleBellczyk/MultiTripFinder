@@ -14,3 +14,13 @@ export function formatDateToReadableString(isoDate: string): string {
     // Zwracamy sformatowaną datę w formacie: dd.MM.yyyy HH:mm
     return date.toLocaleString('pl-PL', options);
 }
+export function formatTime(minutes: number) {
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+
+    if (hours > 0) {
+        return `${hours} hr ${remainingMinutes} min`;
+    } else {
+        return `${remainingMinutes} min`;
+    }
+}

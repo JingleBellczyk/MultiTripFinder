@@ -2,28 +2,14 @@ import React from 'react';
 import {Accordion, Box, Group, Text, Title} from '@mantine/core';
 import {Place, Transfer, Trip} from "../../types/TripDTO";
 import styles from "./SearchResultPage.module.css";
-import {formatDateToReadableString} from "../../utils/formatDateToReadableString";
+import {formatDateToReadableString, formatTime} from "../../utils/formatDateToReadableString";
 import {SaveSearchTripModal} from "../../components/SaveSearchTripModal/SaveSearchTripModal";
 import {transportIcons, TransportMode} from "../../constants/constants";
-
-async function saveTripToBackend(trip: Trip): Promise<boolean> {
-    console.log("JEEEEEJ w saveTripToBackend")
-    console.log(trip)
-    try {
-        const response = await fetch('/api/save-trip', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(trip),
-        });
-        return response.ok;
-    } catch (error) {
-        console.error("Error saving trip:", error);
-        return false;
-    }
-}
+import {saveTripToBackend} from "../../api/services/tripService";
+import useAuth from "../../hooks/useAuth";
 
 interface AccordionLabelProps {
-    trip: Trip;  // Now passing the full trip object
+    trip: Trip;
 }
 
 const AccordionLabel: React.FC<AccordionLabelProps> = ({trip}) => {
@@ -32,11 +18,6 @@ const AccordionLabel: React.FC<AccordionLabelProps> = ({trip}) => {
     const filteredPlaces = places.filter(place => !place.isTransfer);
     const sortedPlaces = filteredPlaces.sort((a, b) => a.visitOrder - b.visitOrder);
     const placesString = sortedPlaces.map(place => `${place.city}`).join(" → ");
-
-    const handleSaveTrip = async (name: string) => {
-        const updatedTrip = {...trip, name};
-        return await saveTripToBackend(updatedTrip);
-    };
 
     return (
         <div>
@@ -48,12 +29,8 @@ const AccordionLabel: React.FC<AccordionLabelProps> = ({trip}) => {
                 <div className={styles.tripRight}>
                     <Text className={styles.tripPassengers}>Passengers: {passengerCount}</Text> |
                     <Text className={styles.tripTotalCost}>Total {totalCost}€</Text> |
-                    <Text className={styles.tripTransferTime}>Transfer Time: {totalTransferTime} min</Text> |
-                    <Text className={styles.tripDuration}>Duration: {duration} min</Text>
-                    <SaveSearchTripModal
-                        entityType="trip"
-                        onSave={handleSaveTrip}
-                    />
+                    <Text className={styles.tripTransferTime}>Transfer Time: {formatTime(totalTransferTime)}</Text> |
+                    <Text className={styles.tripDuration}>Duration: {formatTime(duration)}</Text>
                 </div>
             </Group>
         </div>
@@ -128,14 +105,24 @@ interface SearchResultPageProps {
 }
 
 const SearchResultPage: React.FC<SearchResultPageProps> = ({trips}) => {
-
+    const { isAuthenticated, token, user, loading } = useAuth();
 
     const items = trips.map((trip, index) => (
         <Box key={trip.startDate + trip.endDate + index} mb="md">
             <Accordion.Item className={styles.accordionRounded} value={trip.startDate + trip.endDate + index}>
-                <Accordion.Control style={{width: '100%'}}>
-                    <AccordionLabel trip={trip}/>
-                </Accordion.Control>
+                <div className={styles.labelStyle}>
+                    <Accordion.Control style={{ flexGrow: 1 }}>
+                        <AccordionLabel trip={trip} />
+                    </Accordion.Control>
+                    {isAuthenticated && (
+                        <Box className={styles.saveBox}>
+                            <SaveSearchTripModal
+                                entityType="trip"
+                                onSave={(name) => saveTripToBackend({ ...trip, name })}
+                            />
+                        </Box>
+                    )}
+                </div>
                 <Accordion.Panel>
                     <AccordionPanel places={trip.places} transfers={trip.transfers}/>
                 </Accordion.Panel>

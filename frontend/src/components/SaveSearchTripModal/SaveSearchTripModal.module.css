@@ -16,6 +16,12 @@
     justify-content: center;
     gap: 16px;
 }
+
+.container {
+    display: flex;
+    justify-content: center;
+}
+
 .saveButton {
     background-color: #f0f0f0;
     color: #555555;

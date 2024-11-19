@@ -35,7 +35,7 @@ import React, {useMemo, useState} from 'react';
 import {postSearch, postSearchSave} from "../../api/services/searchService";
 import {useSearchHandlers} from "../../hooks/useSearchHandlers"
 import {SaveSearchTripModal} from "../../components/SaveSearchTripModal/SaveSearchTripModal";
-import {useDisclosure} from '@mantine/hooks';
+
 import {
     GRID_ITEMS_SEARCH,
     MAX_PASSENGERS_NUMBER,
@@ -46,12 +46,14 @@ import {
     MINIMIZED_CRITERION
 } from "../../constants/constants";
 import {
+    EMPTY_SEARCH_DTO,
     EXAMPLE_SEARCH_POST_DTO,
     INITIAL_SEARCH_DTO_SAVE
 } from "../../constants/searchPostDto"
 import {Trip} from "../../types/TripDTO";
 import useScrollToBottom from "../../hooks/useScrollToBottom";
 import {convertToSearchDTOSave} from "../../utils/convertSearchDTOSave";
+import useAuth from "../../hooks/useAuth";
 
 const span = 12;
 const columnNumber = 1 / 5;
@@ -80,9 +82,9 @@ export function SearchPage() {
 function SearchFunction(paramDto: SearchDTO) {
     const [trips, setTrips] = useState<Trip[]>([]);
     useScrollToBottom(trips);
-    const [loading, setLoading] = useState<boolean>(false);
+    const [reloading, setReloading] = useState<boolean>(false);
     const [searchDTOSave, setSearchDTOSave] = useState<SearchDTOSave>(INITIAL_SEARCH_DTO_SAVE);
-
+    const { isAuthenticated, token, user, loading } = useAuth();
 
     const {
         searchDto,
@@ -102,7 +104,7 @@ function SearchFunction(paramDto: SearchDTO) {
         maxHoursToSpendError: null
     });
 
-    const performSearch = async (dto: SearchDTOPost): Promise<Trip[]> => {
+    const handleSearch = async (dto: SearchDTOPost): Promise<Trip[]> => {
         try {
             const response = await postSearch(dto);
             return response;
@@ -111,16 +113,25 @@ function SearchFunction(paramDto: SearchDTO) {
             return [];
         }
     };
-    const handleSave = async (name: string) => {
-        const updatedSearch: SearchDTOSave = {...searchDTOSave, name};
-        console.log(updatedSearch)
-        const response = await postSearchSave(updatedSearch);
 
-        if (response.success) {
-            return true;
+    const handleSave = async (name: string): Promise<{ isSuccess: boolean; errorMessage?: string }> => {
+        if (!user || !token){
+            console.error("User is not authenticated");
+            return { isSuccess: false, errorMessage: "User is not authenticated" };
         }
 
-        return false;
+        const updatedSearch: SearchDTOSave = { ...searchDTOSave, name};
+        console.log("Prepared DTO for save:", updatedSearch);
+
+        const response = await postSearchSave(updatedSearch, user.id);
+
+        if (response.success) {
+            console.log("Search saved successfully:", response.data);
+            return { isSuccess: true };
+        } else {
+            console.error("Failed to save search:", response.error);
+            return { isSuccess: false, errorMessage: response.error };
+        }
     };
 
 
@@ -145,14 +156,10 @@ function SearchFunction(paramDto: SearchDTO) {
             return;
         }
 
-        const goalPlacesTime: PlaceTimePost[] = convertToPlaceTimePost(placesTimeList)
-        const startPlacePost: PlaceLocationPost = {country: startPlace.country, city: startPlace?.city}
-        const endPlacePost: PlaceLocationPost = {country: endPlace.country, city: endPlace?.city}
+        const goalPlacesTimePost: PlaceTimePost[] = convertToPlaceTimePost(placesTimeList, startPlace, endPlace);
 
         const dto: SearchDTOPost = {
-            placesToVisit: goalPlacesTime,
-            startPlace: startPlacePost,
-            endPlace: endPlacePost,
+            placesToVisit: goalPlacesTimePost,
             passengerCount: numberOfPassengers,
             maxTripDuration: maxHoursToSpend,
             tripStartDate: selectedDate,
@@ -161,14 +168,15 @@ function SearchFunction(paramDto: SearchDTO) {
         };
 
         console.log(dto)
-        setTrips([]); // Clear previous trips
-        setLoading(true);
+
+        setTrips([]);
+        setReloading(true);
 
         setTimeout(async () => {
 
-            const searchResults = await performSearch(dto);
+            const searchResults = await handleSearch(dto);
             setTrips(searchResults);
-            setLoading(false);
+            setReloading(false);
         }, 500);
 
 
@@ -214,17 +222,16 @@ function SearchFunction(paramDto: SearchDTO) {
                                     value={searchDto.passengersNumber}
                                     defaultValue={MIN_PASSENGERS_NUMBER}
                                 />
-                                <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{radius: "sm", blur: 2}}/>
+                                <LoadingOverlay visible={reloading} zIndex={1000} overlayProps={{radius: "sm", blur: 2}}/>
                                 <Button size={"xl"} className={styles.pinkButton}
                                         onClick={handleSubmit}>Search!</Button>
-                                {trips.length > 0 && (
-                                <Box className={styles.saveBox}>
-                                    Save search
+                                {isAuthenticated && trips.length > 0 && (
+                                    <Box className={styles.saveBox}>
                                         <SaveSearchTripModal
                                             entityType="search"
                                             onSave={handleSave}
                                         />
-                                </Box>
+                                    </Box>
                                 )}
 
                             </GridCol>

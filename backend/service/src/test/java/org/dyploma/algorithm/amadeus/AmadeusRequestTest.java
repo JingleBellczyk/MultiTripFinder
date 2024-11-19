@@ -1,22 +1,23 @@
 package org.dyploma.algorithm.amadeus;
 
+import org.dyploma.EngineeringWorkApplication;
 import org.dyploma.algorithm.amadeus.dto.AmadeusRequest;
 import org.dyploma.algorithm.amadeus.dto.AmadeusResponse;
 import org.dyploma.algorithm.amadeus.dto.TravelSegment;
 import org.dyploma.exception.AmadeusErrorException;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+@SpringBootTest(classes = {EngineeringWorkApplication.class})
 public class AmadeusRequestTest {
 
-    @Autowired
+    @MockBean
     private AmadeusApiClient amadeusApiClient;
 
     @Test

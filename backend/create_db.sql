@@ -71,7 +71,8 @@ CREATE TABLE Search (
 );
 
 CREATE TABLE Airports (
-    airport_code CHAR(3) PRIMARY KEY,
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    airport_code CHAR(3) NOT NULL,
     city_code CHAR(3) NOT NULL,
     airport_name VARCHAR(255) NOT NULL,
     city VARCHAR(255) NOT NULL,

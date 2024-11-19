@@ -1,7 +1,5 @@
 export interface SearchDTOPost {
     placesToVisit: PlaceTimePost[];
-    startPlace: PlaceLocationPost;
-    endPlace: PlaceLocationPost;
     passengerCount: number;
     maxTripDuration: number;
     tripStartDate: Date | null;
@@ -14,8 +12,6 @@ export interface SearchDTOSave {
     saveDate?: string | null; // ISO format or null
     tags: string[];
     placesToVisit: PlaceTimePost[];
-    startPlace: PlaceLocationPost;
-    endPlace: PlaceLocationPost;
     passengerCount: number;
     maxTripDuration: number;
     tripStartDate: Date | null;

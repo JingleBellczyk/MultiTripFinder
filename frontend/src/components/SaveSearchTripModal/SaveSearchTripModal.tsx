@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { Modal, Button, TextInput, Text, Box } from '@mantine/core';
+import React, {useState} from 'react';
+import {Modal, Tooltip, Button, TextInput, Text, Box} from '@mantine/core';
 import styles from "./SaveSearchTripModal.module.css";
 
 interface SaveSearchTripModalProps {
     entityType: string;
-    onSave: (name: string) => Promise<boolean>;
+    onSave: (name: string) => Promise<{ isSuccess: boolean; errorMessage?: string }>;
 }
 
-export function SaveSearchTripModal({ entityType, onSave }: SaveSearchTripModalProps) {
+export function SaveSearchTripModal({entityType, onSave}: SaveSearchTripModalProps) {
     const [opened, setOpened] = useState(false);
     const [name, setName] = useState("");
     const [error, setError] = useState("");
@@ -20,12 +20,13 @@ export function SaveSearchTripModal({ entityType, onSave }: SaveSearchTripModalP
             return;
         }
 
-        const isSuccess = await onSave(name);
+        const {isSuccess, errorMessage} = await onSave(name);
+
         if (isSuccess) {
             resetFields();
             setOpened(false);
         } else {
-            setError("This name is taken");
+            setError(errorMessage || "An error occurred while saving.");
         }
     };
 
@@ -80,12 +81,17 @@ export function SaveSearchTripModal({ entityType, onSave }: SaveSearchTripModalP
                 </Box>
             </Modal>
 
-            <Button
-                className={styles.saveButton}
-                onClick={(e) => { e.stopPropagation(); setOpened(true); }}
-            >
-                💾
-            </Button>
+            <Tooltip label={entityType === "trip" ? "Save Trip" : "Save Search"} position="top" withArrow>
+                <Button
+                    className={styles.saveButton}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        setOpened(true);
+                    }}
+                >
+                    {entityType === "trip" ? "💾" : "Save search 💾"}
+                </Button>
+            </Tooltip>
         </>
     );
 }
