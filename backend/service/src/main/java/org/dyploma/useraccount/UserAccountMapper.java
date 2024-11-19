@@ -17,6 +17,7 @@ public class UserAccountMapper {
     public static User mapToUserApi(UserAccount userAccount) {
         return new User()
                 .id(userAccount.getId())
+                .role(User.RoleEnum.valueOf(userAccount.getRole().toString()))
                 .email(userAccount.getEmail());
     }
 
