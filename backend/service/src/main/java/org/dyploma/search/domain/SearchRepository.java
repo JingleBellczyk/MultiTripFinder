@@ -17,5 +17,6 @@ public interface SearchRepository extends JpaRepository<Search, Integer>, JpaSpe
     Boolean existsByNameAndUserAccount(String name, UserAccount userAccount);
     Optional<Search> findByNameAndUserAccount(String name, UserAccount userAccount);
     Boolean existsByIdAndUserAccount(Integer id, UserAccount userAccount);
-    @Query("SELECT s.name FROM Search s WHERE s.userAccount = :userAccount")
-    List<String> findAllNamesByUserAccount(@Param("userAccount") UserAccount userAccount);}
+    @Query("SELECT s.name FROM Search s WHERE s.userAccount = :userAccount ORDER BY s.name ASC")
+    List<String> findAllNamesByUserAccount(@Param("userAccount") UserAccount userAccount);
+}

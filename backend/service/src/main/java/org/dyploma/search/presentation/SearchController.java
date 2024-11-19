@@ -69,7 +69,7 @@ public class SearchController implements SearchApi, SearchListApi {
                         userId,
                         SearchMapper.mapToSearchFilterRequest(
                                 optimizationCriteria, preferredTransports, fromDate, toDate, searchTags),
-                                PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "name"))))
+                                PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "saveDate"))))
         );
     }
 
