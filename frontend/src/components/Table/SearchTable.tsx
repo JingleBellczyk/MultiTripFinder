@@ -3,10 +3,10 @@ import { Table, CloseButton, Badge, Title, Text, Divider, Pagination, Center} fr
 import {IconSearch, IconTrash } from '@tabler/icons-react';
 import CustomTags from '../Tags/CustomTags';
 import {PlaceLocation, PlaceTime, SavedSearch, SavedTag, SearchDTO} from "../../types/SearchDTO";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import { useNavigate } from 'react-router-dom';
-import {ICON_SIZE, MAX_TAG_LENGTH, SERVER, STROKE} from "../../constants/constants";
-import axios from "axios";
+import {ICON_SIZE, MAX_TAG_LENGTH, PAGE_SIZE, SERVER, STROKE} from "../../constants/constants";
+import axios, {AxiosError} from "axios";
 import {User} from "../../types/UserDTO";
 import NameTextInput from "../TextInput/NameTextInput";
 import {convertHoursToDays} from "../../utils/convertHoursToDays";
@@ -50,24 +50,65 @@ type ShowPlacesProps = {
 };
 
 function ShowPlaces({ places, start, end }: ShowPlacesProps) {
-    const [showDetails, setShowDetails] = useState(false); // State to control detail visibility
+    const [showDetails, setShowDetails] = useState(false);
+    const containerRef = useRef<HTMLDivElement>(null);
 
-    const toggleDetails = () => {
-        setShowDetails(!showDetails);
+    // Toggle the visibility of the details
+    const toggleDetails = (e: React.MouseEvent) => {
+        e.stopPropagation(); // Prevent click from triggering outside click handler
+        setShowDetails((prev) => !prev);
     };
 
-    const formattedPlaces = [start.city, ...places.map(p => p.city), end.city].filter(Boolean).join("->  ");
+    // Close the details when clicking outside
+    const handleClickOutside = (event: MouseEvent) => {
+        if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+            setShowDetails(false);
+        }
+    };
+
+    // Add event listener for outside click
+    useEffect(() => {
+        document.addEventListener('click', handleClickOutside);
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, []);
+
+    const formattedPlaces = [start.city, ...places.map((p) => p.city), end.city]
+        .filter(Boolean)
+        .join(' -> ');
 
     return (
-        <div onClick={toggleDetails} style={{ cursor: 'pointer' }}>
-            {!showDetails && <Text key="places" size="md">{formattedPlaces}</Text>}
+        <div
+            ref={containerRef}
+            onClick={toggleDetails}
+            style={{ cursor: 'pointer' }}
+        >
+            {!showDetails && (
+                <Text key="places" size="md">
+                    {formattedPlaces}
+                </Text>
+            )}
             {showDetails && (
                 <div>
-                    <Text key="start" size="md">{start.country}, {start.city}</Text>
+                    <Text key="start" size="md">
+                        <b>
+                            {start.country}, {start.city}
+                        </b>
+                    </Text>
                     {places.map((place, index) => (
-                        <Text key={index} size="md">{place.country}, {place.city} {convertHoursToDays(place.hoursToSpend)}</Text>
+                        <Text key={index} size="md">
+                            <b>
+                                {place.country}, {place.city}
+                            </b>
+                            : {convertHoursToDays(place.hoursToSpend)}
+                        </Text>
                     ))}
-                    <Text key={"end"} size="md">{end.country}, {end.city}</Text>
+                    <Text key="end" size="md">
+                        <b>
+                            {end.country}, {end.city}
+                        </b>
+                    </Text>
                 </div>
             )}
         </div>
@@ -83,10 +124,10 @@ type ShowDetailsProps = {
 
 function ShowDetails({ criteria, passengerNum, maxTotalTime, startDate }: ShowDetailsProps) {
     return (<>
-            <Text size="md">Passengers: <b>{passengerNum}</b></Text>
-            <Text size="md">Optimization criteria: <b>{criteria}</b></Text>
-            <Text size="md">Max total time: {convertHoursToDays(maxTotalTime)}</Text>
-            <Text size="md">Start date: <b>{startDate.toLocaleDateString()}</b></Text>
+            <Text size="md"><b>Passengers</b>: {passengerNum}</Text>
+            <Text size="md"><b>Criteria</b>: {criteria}</Text>
+            <Text size="md"><b>Max total time</b>: {convertHoursToDays(maxTotalTime)}</Text>
+            <Text size="md"><b>Start date</b>: {startDate.toLocaleDateString()}</Text>
         </>
     );
 }
@@ -96,9 +137,11 @@ type SearchTableProps = {
     searches: SavedSearch[];
     setSearches: React.Dispatch<React.SetStateAction<SavedSearch[]>>
     fetchTags: () => Promise<void>;
+    fetchSearches: (endpoint: string) => Promise<void>;
     searchTags: SavedTag[];
     setIsModalOpen: (open: boolean) => void;
     totalPages: number;
+    currentPage: number;
     setCurrentPage: (page: number) => void;
 };
 
@@ -108,8 +151,10 @@ export default function SearchTable({
                                         setSearches,
                                         searchTags,
                                         fetchTags,
+                                        fetchSearches,
                                         setIsModalOpen,
                                         totalPages,
+                                        currentPage,
                                         setCurrentPage,
                                     }: SearchTableProps) {
     const [searchData, setSearchData] = useState<SavedSearch[]>(searches);
@@ -118,7 +163,7 @@ export default function SearchTable({
     useEffect(() => {
         setTags(searchTags);
         setSearchData(searches);
-    }, [searchTags, searches]);
+    }, [searchTags, searches, setSearches, setCurrentPage, currentPage]);
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
@@ -126,9 +171,16 @@ export default function SearchTable({
     const deleteSearch = async (id: number) => {
         try {
             await axios.delete(`${SERVER}/searchList/${user?.id}/${id}`, {withCredentials: true});
-            setSearches((prevData) => {
-                return prevData.filter((data) => data.id !== id);
-            });
+
+            setSearches((prevData) => prevData.filter((data) => data.id !== id));
+
+            if(searchData.length -1 ==0 && currentPage>0){
+                setCurrentPage(currentPage-1);
+            }
+            else {
+                const endpoint = `${SERVER}/searchList/${user?.id}?size=${PAGE_SIZE}&page=${currentPage - 1}`
+                await fetchSearches(endpoint);
+            }
         }
         catch(error) {
             console.error('Error deleting searches:', error);
@@ -162,26 +214,31 @@ export default function SearchTable({
         );
     }
     const updateName = async (index: number, newName: string) => {
-        if (searchData[index].name == newName) {
-            return;
-        }
         try {
+            const cleanName = newName.trim().replace(/\s+/g, ' ');
             const tags = [...searchData[index].tags];
             const searchId = searchData[index].id;
             const updatedSearches = [...searchData];
-            updatedSearches[index].name = newName;
+            updatedSearches[index].name = cleanName;
             const requestTags = tags.map(tag => tag.name);
             const requestBody = {
-                "name": newName,
+                "name": cleanName,
                 "tags": requestTags
             }
-            await axios.put(`${SERVER}/searchList/${user?.id}/${searchId}`, requestBody, {withCredentials: true});
+            const response = await axios.put(`${SERVER}/searchList/${user?.id}/${searchId}`, requestBody, {withCredentials: true});
             setSearches(updatedSearches);
+            return 200;
         }
         catch (error) {
-            console.error("Errors while updating search name:", error);
+            if (axios.isAxiosError(error) && error.response) {
+                console.error("Errors while updating search name:", error.response.data);
+                return error.response.status;
+            } else {
+                // Handle other unexpected errors
+                console.error("Unexpected error:", error);
+                return 500;
+            }
         }
-
     };
 
     const addTagToSearch = async (searchIndex: number, tagName: string) => {
@@ -327,7 +384,7 @@ export default function SearchTable({
 
     const rows = searchData.map((search, index) => (
         <tr key={index}>
-            <td className={styles.tableHead}>
+            <td className={styles.placesColumn}>
                 <ShowPlaces start={search.start} end={search.end} places={search.placesTime} />
             </td>
             <td className={styles.tableHead}>
@@ -385,7 +442,7 @@ export default function SearchTable({
                         <Table highlightOnHover className={styles.table}>
                             <thead>
                             <tr>
-                                <th className={styles.tableHead}><Text size="lg">Places</Text></th>
+                                <th className={styles.placesHead}><Text size="lg">Places</Text></th>
                                 <th className={styles.tableHead}><Text size="lg">Search name</Text></th>
                                 <th className={styles.tableHead}><Text size="lg">Details</Text></th>
                                 <th className={styles.smallHead}><Text size="lg">Transport</Text></th>
@@ -399,7 +456,7 @@ export default function SearchTable({
                             {rows}
                             </tbody>
                         </Table>
-                        <Pagination total={totalPages} onChange={handlePageChange} />
+                        <Pagination total={totalPages} value={currentPage} onChange={handlePageChange} />
                     </>
                 )}
             </div>

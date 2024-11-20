@@ -11,6 +11,7 @@ import axios from "axios";
 import transformSearches from "../../hooks/transformSearches";
 import {UserProps} from "../../types/UserDTO";
 
+
 const SearchesList: React.FC<UserProps> = ({user}) => {
     const [isFilterVisible, setIsFilterVisible] = useState<boolean>(true);
     const [isFullSearch, setIsFullSearch] = useState<boolean>(false);
@@ -20,7 +21,11 @@ const SearchesList: React.FC<UserProps> = ({user}) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
 
-    const fetchSearchesListEndpoint = `${SERVER}/searchList/${user?.id}?size=${PAGE_SIZE}&page=${currentPage - 1}`
+    const allSearchesEndpoint = `${SERVER}/searchList/${user?.id}?size=${PAGE_SIZE}&page=${currentPage - 1}`
+
+    const [filterEndpoint, setFilterEndpoint] = useState("");
+
+
     const fetchTags = async () => {
         if (!user?.id) return;
         try {
@@ -34,6 +39,7 @@ const SearchesList: React.FC<UserProps> = ({user}) => {
     }
     const fetchSearches = async (endpoint: string) => {
         try {
+
             const response = await axios.get(endpoint, { withCredentials: true });
             setTotalPages(response.data.totalPages);
             const content = response.data.content;
@@ -45,8 +51,16 @@ const SearchesList: React.FC<UserProps> = ({user}) => {
         }
     };
     useEffect(() => {
+        if (!filterEndpoint) {
+            const endpoint = `${SERVER}/searchList/${user?.id}?size=${PAGE_SIZE}&page=${currentPage - 1}`;
+            fetchSearches(endpoint);
+
+        } else {
+            const endpoint = filterEndpoint.replace("page=0", `page=${currentPage - 1}`);
+            fetchSearches(endpoint);
+        }
         fetchTags();
-        fetchSearches(fetchSearchesListEndpoint);
+
     }, [user, currentPage])
 
     const toggleFilter = () => {
@@ -77,8 +91,12 @@ const SearchesList: React.FC<UserProps> = ({user}) => {
                                 <SearchFilter
                                     user={user}
                                     tags={allTags}
+                                    setTotalPages={setTotalPages}
+                                    setCurrentPage={setCurrentPage}
                                     searches={searchData}
                                     fetchSearches={fetchSearches}
+                                    setEndpoint={setFilterEndpoint}
+                                    setSearches={setSearchData}
                                 />
                             </div>
                         )}
@@ -90,8 +108,10 @@ const SearchesList: React.FC<UserProps> = ({user}) => {
                             setSearches={setSearchData}
                             searchTags={allTags}
                             fetchTags={fetchTags}
+                            fetchSearches={fetchSearches}
                             setIsModalOpen={setIsModalOpen}
                             totalPages={totalPages}
+                            currentPage={currentPage}
                             setCurrentPage={setCurrentPage}
                         />
                     </div>

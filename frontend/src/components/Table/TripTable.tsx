@@ -97,7 +97,7 @@ export default function TripTable({
 
     const updateTripName = async (index: number, newName: string) => {
         if (tripData[index].name === newName) {
-            return;
+            return 200;
         }
         try {
             const tags = [...tripData[index].tags];
@@ -108,10 +108,15 @@ export default function TripTable({
                 name: newName,
                 tags: tags.map((tag) => tag.name),
             };
-            await axios.put(`${SERVER}/tripList/${user?.id}/${tripId}`, requestBody, { withCredentials: true });
+            const response = await axios.put(`${SERVER}/tripList/${user?.id}/${tripId}`, requestBody, { withCredentials: true });
+            if (response.status == 409){
+                return 409;
+            }
             setTrips(updatedTrips);
+            return 200;
         } catch (error) {
             console.error('Errors while updating trip name:', error);
+            return 300;
         }
     };
 

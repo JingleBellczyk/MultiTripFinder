@@ -17,6 +17,9 @@ import {User} from "../../types/UserDTO";
 import CustomCombobox from "../Combobox/CustomCombobox";
 import TagFilter from './TagFilter';
 import CustomCheckBox from '../CheckBox/CustomCheckBox';
+import axios from "axios";
+import NameInput from "../NameInput/NameInput";
+import transformSearches from "../../hooks/transformSearches";
 
 type ResetButtonProps = {
     onReset: () => void;
@@ -27,6 +30,10 @@ type SearchFilterProps = {
     tags: SavedTag[];
     user: User | null;
     fetchSearches: (endpoint: string)=> Promise<void>;
+    setSearches: (searches: SavedSearch[]) => void;
+    setEndpoint: (endpoint: string) => void;
+    setTotalPages: (pages: number) => void;
+    setCurrentPage: (page: number) => void;
 };
 
 
@@ -42,9 +49,13 @@ type ShowResultsProps = {
     };
     user: User | null;
     fetchSearches: (endpoint: string)=> Promise<void>;
+    setSearches: (searches: SavedSearch[]) => void;
+    setEndpoint: (endpoint: string) => void;
+    setTotalPages: (pages: number) => void;
+    setCurrentPage: (page: number) => void;
 };
 
-function ShowResults({ filters, user, fetchSearches }: ShowResultsProps) {
+function ShowResults({ filters, user, fetchSearches, setSearches,  setEndpoint, setTotalPages, setCurrentPage }: ShowResultsProps) {
     const [loading, setLoading] = useState<boolean>(false);
 
     // Function to handle the fetching of results based on selected filters
@@ -52,44 +63,59 @@ function ShowResults({ filters, user, fetchSearches }: ShowResultsProps) {
         setLoading(true);
 
         try {
-            const params = new URLSearchParams();
-            params.append("size", PAGE_SIZE.toString());
-            params.append("page", "0");
+            if (filters.selectedName){
+                const encodedName = encodeURIComponent(filters.selectedName);
+                const endpoint = `${SERVER}/searchList/${user?.id}/name/${encodedName}`;
+                const response = await axios.get(endpoint, {withCredentials: true});
+                const content = response.data;
+                const transformed = transformSearches([content]);
+                setSearches(transformed);
+                setTotalPages(1);
+                setCurrentPage(1);
 
-            // Add transport filters dynamically
-            if (filters.airplaneChecked) params.append("preferredTransports", "PLANE");
-            if (filters.busChecked) params.append("preferredTransports", "BUS");
-            if (filters.trainChecked) params.append("preferredTransports", "TRAIN");
+            }
+            else {
+                const params = new URLSearchParams();
+                params.append("size", PAGE_SIZE.toString());
+                params.append("page", "0");
 
-            // Add optimization criteria
-            if (filters.optimisationCriteria) params.append("optimizationCriteria", filters.optimisationCriteria.toUpperCase())
+                // Add transport filters dynamically
+                if (filters.airplaneChecked) params.append("preferredTransports", "PLANE");
+                if (filters.busChecked) params.append("preferredTransports", "BUS");
+                if (filters.trainChecked) params.append("preferredTransports", "TRAIN");
 
-            // Add tags
-            filters.selectedTags?.forEach((tag) => {
-                params.append("searchTags", tag);
-            });
+                // Add optimization criteria
+                if (filters.optimisationCriteria) params.append("optimizationCriteria", filters.optimisationCriteria.toUpperCase())
 
-            // Add date range filters
-            if (filters.dates) {
-                const [startDate, endDate] = filters.dates;
-                if (startDate && endDate) {
-                    let currentDate = new Date(startDate);
-                    const end = new Date(endDate);
+                // Add tags
+                filters.selectedTags?.forEach((tag) => {
+                    params.append("searchTags", tag);
+                });
 
-                    // Set currentDate to the start of the day (midnight) to avoid timezone issues
-                    currentDate.setHours(0, 0, 0, 0);
-                    end.setHours(23, 59, 59, 999);
+                // Add date range filters
+                if (filters.dates) {
+                    const [fromDate, toDate] = filters.dates;
+                    if (fromDate && toDate) {
+                        const start = new Date(fromDate);
+                        const end = new Date(toDate);
 
-                    while (currentDate <= end) {
-                        const formattedDate = currentDate.toISOString().split("T")[0]; // YYYY-MM-DD
-                        params.append("saveDate", formattedDate);
-                        currentDate.setDate(currentDate.getDate() + 1);
+                        start.setHours(23, 59, 59, 999);
+                        end.setHours(23, 59, 59, 999);
+                        const formattedStartDate = start.toISOString().split("T")[0];
+                        const formattedEndDate = end.toISOString().split("T")[0];
+                        params.append("fromDate", formattedStartDate);
+                        params.append("toDate", formattedEndDate);
+                        console.log("fromDate", formattedStartDate);
+                        console.log("toDate", formattedEndDate);
                     }
                 }
+
+                const endpoint = `${SERVER}/searchList/${user?.id}?${params.toString()}`;
+                setEndpoint(endpoint);
+                setCurrentPage(1);
+                await fetchSearches(endpoint);
             }
 
-            const endpoint = `${SERVER}/searchList/${user?.id}?${params.toString()}`;
-            await fetchSearches(endpoint);
         } catch (error) {
            console.error('Error fetching data', error);
         } finally {
@@ -119,26 +145,8 @@ function ResetButton({ onReset }: ResetButtonProps) {
     );
 }
 
-interface NameInputProps {
-    names: string[];
-    value: string;
-    setValue: (value: string) => void;
-}
 
-const NameInput: React.FC<NameInputProps> = ({ names, value, setValue }) => {
-    return (
-        <Autocomplete
-            value={value}
-            onChange={setValue}
-            label="Select or type a name"
-            placeholder="Type a name"
-            data={names}
-        />
-    );
-};
-
-
-export default function SearchFilter({ tags, searches, fetchSearches, user }: SearchFilterProps) {
+export default function SearchFilter({ tags, searches, setSearches, setEndpoint, fetchSearches, user, setCurrentPage, setTotalPages }: SearchFilterProps) {
     const [airplaneChecked, setAirplaneChecked] = useState<boolean>(false);
     const [busChecked, setBusChecked] = useState<boolean>(false);
     const [trainChecked, setTrainChecked] = useState<boolean>(false);
@@ -155,7 +163,9 @@ export default function SearchFilter({ tags, searches, fetchSearches, user }: Se
         setSelectedName('')
         setDates([null, null]);
 
-        await fetchSearches(`${SERVER}/searchList/${user?.id}?size=${PAGE_SIZE}&page=0`);
+        const endpoint = `${SERVER}/searchList/${user?.id}?size=${PAGE_SIZE}&page=0`
+        setEndpoint("");
+        await fetchSearches(endpoint);
     };
 
     const tagNames = tags.map(tag => tag.name);
@@ -205,10 +215,9 @@ export default function SearchFilter({ tags, searches, fetchSearches, user }: Se
                 }}
             />
             <NameInput
-                names={[]}
+                userId={user?.id}
                 value={selectedName}
-                setValue={setSelectedName}/>
-
+                setValue={setSelectedName} searchData={searches}/>
             <DatePickerInput
                 type="range"
                 label="Pick dates range"
@@ -230,6 +239,10 @@ export default function SearchFilter({ tags, searches, fetchSearches, user }: Se
                     }}
                     user={user}
                     fetchSearches={fetchSearches}
+                    setSearches={setSearches}
+                    setCurrentPage={setCurrentPage}
+                    setTotalPages={setTotalPages}
+                    setEndpoint={setEndpoint}
                 />
                 <ResetButton onReset={resetFilters}/>
             </Stack>

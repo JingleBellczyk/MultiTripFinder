@@ -6,7 +6,7 @@ import { Footer } from '../../components/Footer/Footer';
 import axios from 'axios';
 import styles from './List.module.css';
 import AdminTable from '../../components/Table/AdminTable';
-import {User, UserDTO, UserProps} from "../../types/UserDTO";
+import {UserDTO, UserProps} from "../../types/UserDTO";
 import LoadingPage from "../LoadingPage";
 
 const AdminList: React.FC<UserProps> = ({user}) => {
@@ -51,8 +51,10 @@ const AdminList: React.FC<UserProps> = ({user}) => {
                                     users={userData}
                                     setUsers={setUserData}
                                     totalPages={totalPages}
+                                    currentPage={currentPage}
                                     setCurrentPage={setCurrentPage}
                                     disablePagination={loading}
+                                    fetchUsers={fetchUsers}
                                 />
                             </div>
                         </div>

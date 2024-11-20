@@ -1,30 +1,64 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { TextInput, ActionIcon, Text } from '@mantine/core';
-import { IconCheck, IconPencil, IconX } from '@tabler/icons-react';
+import {TextInput, ActionIcon, Text, Alert} from '@mantine/core';
+import {IconAlertCircle, IconCheck, IconPencil, IconX} from '@tabler/icons-react';
 
 interface NameTextInputProps {
     name: string;
-    onNameChange: (newName: string) => void;
+    onNameChange: (newName: string) => Promise<number>;
 }
 
 const NameTextInput: React.FC<NameTextInputProps> = ({ name, onNameChange }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [currentName, setCurrentName] = useState(name);
     const inputRef = useRef<HTMLDivElement>(null);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     // Handle entering edit mode
-    const handleEditClick = () => setIsEditing(true);
+    const handleEditClick = () => {
+        setIsEditing(true);
+        setErrorMessage(null);
+    }
 
-    // Handle saving the new name
-    const handleSaveClick = () => {
-        setIsEditing(false);
-        onNameChange(currentName);
+    const handleSaveClick = async () => {
+        const trimmedName = currentName.trim().replace(/\s+/g, ' ');
+
+        // Prevent saving empty or whitespace-only names
+        if (!trimmedName) {
+            setErrorMessage('Name cannot be empty.');
+            return;
+        }
+
+        // Prevent redundant API calls for unchanged names
+        if (trimmedName === name) {
+            setIsEditing(false);
+            return;
+        }
+
+        // Set the trimmed name to state before calling the API
+        setCurrentName(trimmedName);
+
+        try {
+            const status = await onNameChange(trimmedName);
+            if (status === 200) {
+                setErrorMessage(null);
+                setIsEditing(false); // Exit edit mode on success
+            } else if (status === 409) {
+                setErrorMessage('Search with this name already exists. Choose another name.');
+                setIsEditing(true); // Stay in edit mode for retry
+            } else {
+                setErrorMessage('An unexpected error occurred. Please try again.');
+                setIsEditing(true);
+            }
+        } catch (error) {
+            setErrorMessage('An unexpected error occurred. Please try again.');
+            setIsEditing(true);
+        }
     };
 
-    // Handle canceling edit without saving
     const handleCancelClick = () => {
         setIsEditing(false);
-        setCurrentName(name); // Revert to the original name
+        setCurrentName(name); // Revert to original name
+        setErrorMessage(null);
     };
 
     // Handle clicks outside the component
@@ -58,6 +92,7 @@ const NameTextInput: React.FC<NameTextInputProps> = ({ name, onNameChange }) => 
                         }}
                         autoFocus
                         maxLength={100}
+                        styles={{ input: { maxWidth: 300 } }}
                     />
                     <ActionIcon onClick={handleSaveClick} color="blue" variant="filled" size="sm">
                         <IconCheck />
@@ -79,6 +114,18 @@ const NameTextInput: React.FC<NameTextInputProps> = ({ name, onNameChange }) => 
                         <IconPencil size={16} />
                     </ActionIcon>
                 </div>
+            )}
+            {errorMessage && (
+                <Alert
+                    icon={<IconAlertCircle size={16} />}
+                    title="Error"
+                    color="red"
+                    mt="sm"
+                    withCloseButton
+                    onClose={() => setErrorMessage(null)}
+                >
+                    {errorMessage}
+                </Alert>
             )}
         </div>
     );
