@@ -4,6 +4,7 @@ import com.openapi.api.SearchListApi;
 import com.openapi.model.*;
 import org.dyploma.search.domain.SearchService;
 import org.dyploma.search.place.PlaceInSearchMapper;
+import org.dyploma.tag.search_tag.presentation.SearchTagMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -55,21 +56,24 @@ public class SearchController implements SearchApi, SearchListApi {
                                                         userId,
                                                         SearchMapper.mapToSearch(search),
                                                         PlaceInSearchMapper.mapToPlacesInSearch(search.getPlacesToVisit()),
-                                                        search.getTags())));
+                                                        SearchTagMapper.mapToSearchTags(search.getTags()))));
     }
 
     @Override
     public ResponseEntity<Search> updateSearch(Integer userId, Integer searchId, SearchUpdating searchUpdating) {
-        return ResponseEntity.ok(SearchMapper.mapToSearchApi(searchService.updateUserSearch(userId, searchId, searchUpdating.getName(), searchUpdating.getTags())));
+        return ResponseEntity.ok(SearchMapper.mapToSearchApi(searchService.updateUserSearch(
+                userId,
+                searchId,
+                searchUpdating.getName().trim().replaceAll("\\s+", " ").toLowerCase(),
+                SearchTagMapper.mapToSearchTags(searchUpdating.getTags()))));
     }
 
     @Override
     public ResponseEntity<SearchPage> listUserSearch(Integer userId, Integer page, Integer size, CriteriaMode optimizationCriteria, List<TransportMode> preferredTransports, LocalDate fromDate, LocalDate toDate, List<String> searchTags) {
         return ResponseEntity.ok(SearchMapper.mapToSearchPageApi(searchService.getUserSearches(
                         userId,
-                        SearchMapper.mapToSearchFilterRequest(
-                                optimizationCriteria, preferredTransports, fromDate, toDate, searchTags),
-                                PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "saveDate"))))
+                        SearchMapper.mapToSearchFilterRequest(optimizationCriteria, preferredTransports, fromDate, toDate, searchTags),
+                        PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "saveDate"))))
         );
     }
 

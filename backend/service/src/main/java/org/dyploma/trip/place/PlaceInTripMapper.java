@@ -1,10 +1,21 @@
 package org.dyploma.trip.place;
 
+import org.dyploma.search.place.PlaceInSearch;
+import org.dyploma.search.place.PlaceInSearchMapper;
+
+import java.util.List;
+
 public class PlaceInTripMapper {
-    public static PlaceInTrip mapToPlaceInTrip(com.openapi.model.PlaceInTrip placeInTripApi) {
+    public static List<PlaceInTrip> mapToPlacesInTrip(List<com.openapi.model.PlaceInTrip> placesInTripApi) {
+        return placesInTripApi.stream()
+                .map(PlaceInTripMapper::mapToPlaceInTrip)
+                .toList();
+    }
+
+    private static PlaceInTrip mapToPlaceInTrip(com.openapi.model.PlaceInTrip placeInTripApi) {
         return PlaceInTrip.builder()
-                .country(placeInTripApi.getCountry())
-                .city(placeInTripApi.getCity())
+                .country(placeInTripApi.getCountry().toLowerCase())
+                .city(placeInTripApi.getCity().toLowerCase())
                 .stayDuration(placeInTripApi.getStayDuration())
                 .visitOrder(placeInTripApi.getVisitOrder())
                 .isTransfer(placeInTripApi.getIsTransfer())

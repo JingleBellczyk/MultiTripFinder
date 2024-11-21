@@ -23,18 +23,14 @@ import static org.dyploma.transport.TransportModeMapper.mapToTransportModeApi;
 public class SearchMapper {
 
     public static Search mapToSearch(com.openapi.model.Search searchApi) {
-        Search search = Search.builder()
-                .name(searchApi.getName().toLowerCase())
+        return Search.builder()
+                .name(searchApi.getName().trim().replaceAll("\\s+", " ").toLowerCase())
                 .passengerCount(searchApi.getPassengerCount())
                 .preferredTransport(searchApi.getPreferredTransport() != null ? mapToTransportMode(searchApi.getPreferredTransport()) : null)
                 .optimizationCriteria(mapToCriteriaMode(searchApi.getOptimizationCriteria()))
                 .tripStartDate(Date.valueOf(searchApi.getTripStartDate()))
                 .maxTripDuration(searchApi.getMaxTripDuration())
                 .build();
-        for (com.openapi.model.PlaceInSearch placeInSearchApi : searchApi.getPlacesToVisit()) {
-            search.addPlaceToVisit(PlaceInSearchMapper.mapToPlaceInSearch(placeInSearchApi));
-        }
-        return search;
     }
 
     public static com.openapi.model.Search mapToSearchApi(Search search) {

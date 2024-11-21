@@ -63,7 +63,7 @@ public class SearchServiceImpl implements SearchService {
                             .cost(10)
                             .startAddress("Start address")
                             .endAddress("End address")
-                            .transferOrder(j)
+                            .transferOrder(j + 1)
                             .build();
                     transfers.add(transfer);
                 }
@@ -91,6 +91,7 @@ public class SearchServiceImpl implements SearchService {
                 .city(placeInSearch.getCity())
                 .isTransfer(false)
                 .stayDuration(1)
+                .visitOrder(placeInSearch.getEntryOrder())
                 .build();
     }
 
@@ -108,6 +109,7 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public Search createUserSearch(Integer userId, Search search, List<PlaceInSearch> places, List<String> tagNames) {
+        places.forEach(search::addPlaceToVisit);
         searchValidator.validateSearch(search);
         UserAccount userAccount = userAccountService.getUserById(userId);
         if (searchRepository.existsByNameAndUserAccount(search.getName(), userAccount)) {
@@ -157,25 +159,13 @@ public class SearchServiceImpl implements SearchService {
     }
 
     private void setTagsToSearch(UserAccount userAccount, Search search, List<String> tagNames) {
-        List<String> tagNamesProcessed = tagNames.stream()
-                .map(String::trim)
-                .peek(tag -> {
-                    if (tag.isBlank()) {
-                        throw new ValidationException("Tag names must not be blank");
-                    }
-                })
-                .map(String::toLowerCase)
-                .distinct()
-                .toList();
-
-
-        List<SearchTag> existingTags = searchTagRepository.findByNameInAndUserAccount(tagNamesProcessed, userAccount);
+        List<SearchTag> existingTags = searchTagRepository.findByNameInAndUserAccount(tagNames, userAccount);
 
         Map<String, SearchTag> existingTagMap = existingTags.stream()
                 .collect(Collectors.toMap(SearchTag::getName, tag -> tag));
 
         List<SearchTag> tagsToAssociate = new ArrayList<>(existingTags);
-        List<SearchTag> newTags = tagNamesProcessed.stream()
+        List<SearchTag> newTags = tagNames.stream()
                 .filter(tagName -> !existingTagMap.containsKey(tagName))
                 .map(tagName -> SearchTag.builder().name(tagName).userAccount(userAccount).build())
                 .collect(Collectors.toList());

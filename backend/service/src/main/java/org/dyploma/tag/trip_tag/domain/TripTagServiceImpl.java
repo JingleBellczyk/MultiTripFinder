@@ -3,6 +3,9 @@ package org.dyploma.tag.trip_tag.domain;
 import org.dyploma.exception.ConflictException;
 import org.dyploma.exception.NotFoundException;
 import org.dyploma.exception.ValidationException;
+import org.dyploma.tag.trip_tag.domain.TripTag;
+import org.dyploma.tag.trip_tag.domain.TripTagRepository;
+import org.dyploma.tag.trip_tag.domain.TripTagService;
 import org.dyploma.useraccount.UserAccount;
 import org.dyploma.useraccount.UserAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,10 +31,6 @@ public class TripTagServiceImpl implements TripTagService {
 
     @Override
     public TripTag updateUserTripTag(Integer userId, Integer tripTagId, String tag) {
-        if (tag.isBlank()) {
-            throw new ValidationException("Tag name cannot be empty");
-        }
-        tag = tag.trim().toLowerCase();
         UserAccount userAccount = userAccountService.getUserById(userId);
         TripTag tripTag = tripTagRepository.findByIdAndUserAccount(tripTagId, userAccount)
                 .orElseThrow(() -> new NotFoundException("Trip tag not found"));

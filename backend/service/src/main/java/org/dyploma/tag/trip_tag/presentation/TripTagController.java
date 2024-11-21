@@ -23,7 +23,7 @@ public class TripTagController implements TripTagApi {
 
     @Override
     public ResponseEntity<TripTag> updateUserTripTag(Integer userId, Integer tripTagId, TagUpdating tagUpdating) {
-        return ResponseEntity.ok(TripTagMapper.toTripTagApi(tripTagService.updateUserTripTag(userId, tripTagId, tagUpdating.getName())));
+        return ResponseEntity.ok(TripTagMapper.mapToTripTagApi(tripTagService.updateUserTripTag(userId, tripTagId, TripTagMapper.mapToTripTag(tagUpdating.getName()))));
     }
 
     @Override
@@ -34,6 +34,6 @@ public class TripTagController implements TripTagApi {
 
     @Override
     public ResponseEntity<List<TripTag>> listUserTripTags(Integer userId) {
-        return ResponseEntity.ok(TripTagMapper.toTripTagsApi(tripTagService.listUserTripTags(userId)));
+        return ResponseEntity.ok(TripTagMapper.mapToTripTagsApi(tripTagService.listUserTripTags(userId)));
     }
 }
