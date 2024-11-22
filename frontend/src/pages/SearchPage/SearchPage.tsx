@@ -160,6 +160,8 @@ function SearchFunction(paramDto: SearchDTO) {
             optimizationCriteria: preferredCriteria
         };
 
+        console.log(dto)
+
         setTrips([]);
         setReloading(true);
 
