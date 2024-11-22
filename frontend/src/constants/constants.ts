@@ -13,6 +13,8 @@ export const SERVER = "http://localhost:8080";
 
 export const ICON_SIZE = 24;
 export const STROKE = 1.3;
+export const SEARCH_LIST="searchList";
+export const TRIP_LIST="tripList";
 
 export const AUTHENTICATED_LINKS = [
     { link: '/', label: 'Home' },

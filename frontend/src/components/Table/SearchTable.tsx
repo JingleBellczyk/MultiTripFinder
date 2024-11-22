@@ -1,15 +1,17 @@
 import styles from './Table.module.css';
-import { Table, CloseButton, Badge, Title, Text, Divider, Pagination, Center} from '@mantine/core';
+import { Table, CloseButton, Badge, Title, Text, Divider, Pagination, Center, Group} from '@mantine/core';
 import {IconSearch, IconTrash } from '@tabler/icons-react';
 import CustomTags from '../Tags/CustomTags';
 import {PlaceLocation, PlaceTime, SavedSearch, SavedTag, SearchDTO} from "../../types/SearchDTO";
 import {useEffect, useRef, useState} from "react";
 import { useNavigate } from 'react-router-dom';
-import {ICON_SIZE, MAX_TAG_LENGTH, PAGE_SIZE, SERVER, STROKE} from "../../constants/constants";
+import {ICON_SIZE, MAX_TAG_LENGTH, PAGE_SIZE, SEARCH_LIST, SERVER, STROKE} from "../../constants/constants";
 import axios, {AxiosError} from "axios";
 import {User} from "../../types/UserDTO";
 import NameTextInput from "../TextInput/NameTextInput";
 import {convertHoursToDays} from "../../utils/convertHoursToDays";
+import NameInput from "../NameInput/NameInput";
+import {getBadgeColor, handleSearchForName} from "../../utils/commonListFunctions";
 function DeleteIcon({ onClick }: { onClick: () => void }) {
     return <CloseButton onClick={onClick} icon={<IconTrash size={ICON_SIZE} stroke={STROKE} />} />;
 }
@@ -19,17 +21,6 @@ type TransportBadgeProps = {
 };
 
 function TransportBadge({ transport }: TransportBadgeProps) {
-    const getBadgeColor = (element: string | null) => {
-        switch (element) {
-            case 'TRAIN':
-                return 'red';
-            case 'PLANE':
-                return 'indigo';
-            default:
-                return 'green';
-        }
-    };
-
     return (
         <>
             {transport && (
@@ -143,6 +134,9 @@ type SearchTableProps = {
     totalPages: number;
     currentPage: number;
     setCurrentPage: (page: number) => void;
+    setTotalPages: (pages: number) => void;
+    selectedName: string;
+    setSelectedName: (name: string) => void;
 };
 
 export default function SearchTable({
@@ -154,8 +148,11 @@ export default function SearchTable({
                                         fetchSearches,
                                         setIsModalOpen,
                                         totalPages,
+                                        setTotalPages,
                                         currentPage,
                                         setCurrentPage,
+                                        selectedName,
+                                        setSelectedName
                                     }: SearchTableProps) {
     const [searchData, setSearchData] = useState<SavedSearch[]>(searches);
     const [tags, setTags] = useState<SavedTag[]>(searchTags);
@@ -244,7 +241,6 @@ export default function SearchTable({
     const addTagToSearch = async (searchIndex: number, tagName: string) => {
         try {
             const tags = [...searchData[searchIndex].tags];
-            console.log("Tags in add", tags);
             const searchId = searchData[searchIndex].id;
             const newTag = { name: tagName};
             const allTags = [...tags, newTag];
@@ -256,11 +252,9 @@ export default function SearchTable({
             console.log("REQUEST ADD", requestBody);
             await axios.put(`${SERVER}/searchList/${user?.id}/${searchId}`, requestBody, {withCredentials: true});
             setSearches(prevData => {
-                const updatedData = prevData.map((data, i) =>
-                    i === searchIndex ? { ...data, tags: allTags } : data
+                return prevData.map((data, i) =>
+                    i === searchIndex ? {...data, tags: allTags} : data
                 );
-                console.log("Updated search data", updatedData); // Log updated state here
-                return updatedData;
             });
             await fetchTags();
         }
@@ -280,15 +274,11 @@ export default function SearchTable({
                     "name": searchData[index].name,
                     "tags": requestTags
                 }
-                console.log("REQUEST", requestBody);
-                console.log("new tags in remove", newTags);
                 await axios.put(`${SERVER}/searchList/${user?.id}/${searchId}`, requestBody, {withCredentials: true});
                 setSearches(prevData => {
-                    const updatedData = prevData.map((data, i) =>
-                        i === index ? { ...data, tags: newTags } : data
+                    return prevData.map((data, i) =>
+                        i === index ? {...data, tags: newTags} : data
                     );
-                    console.log("Updated search data", updatedData); // Log updated state here
-                    return updatedData;
                 });
             }
         }
@@ -381,7 +371,6 @@ export default function SearchTable({
     };
 
 
-
     const rows = searchData.map((search, index) => (
         <tr key={index}>
             <td className={styles.placesColumn}>
@@ -427,10 +416,21 @@ export default function SearchTable({
 
     return (
         <div className={styles.tableContainer}>
-            <div className={styles.titleContainer}>
-                <Title>My Search History</Title>
-                <Text color="gray">Keep track of your searches.</Text>
-            </div>
+            <Group>
+                <div className={styles.titleContainer}>
+                    <Title>My Search History</Title>
+                    <Text color="gray">Keep track of your searches.</Text>
+                </div>
+                <NameInput
+                    userId={user?.id}
+                    value={selectedName}
+                    setValue={setSelectedName}
+                    data={searches}
+                    type={SEARCH_LIST}
+                    handleSearchClick={() => handleSearchForName(SEARCH_LIST, selectedName, setSearchData, setTotalPages, setCurrentPage, user)}
+                />
+            </Group>
+
             <Divider />
             <div>
                 {searchData.length === 0 ? (

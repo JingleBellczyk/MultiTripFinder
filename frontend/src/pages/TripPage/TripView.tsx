@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Text, Group, Badge, Stack, Divider, MantineProvider, Title } from '@mantine/core';
-import { SavedTripDTO, TransferDTO, TripPlaceDTO } from '../../types/TripDTO';
+import {SavedTripDTO, Transfer, Place} from '../../types/TripDTO';
 import { Tag } from "../../types/SearchDTO";
 import { HeaderSearch } from "../../components/HeaderSearch/HeaderSearch";
 import { Footer } from '../../components/Footer/Footer';
@@ -32,7 +32,7 @@ const SavedTripView: React.FC = () => {
     const maxLength = Math.max(places.length, transfers.length);
 
     const renderPlaceTransfer = () => {
-        const placeTransferArray: (TripPlaceDTO | TransferDTO)[] = [];
+        const placeTransferArray: (Place | Transfer)[] = [];
 
         // Interleave places and transfers
         for (let i = 0; i < maxLength; i++) {
@@ -82,8 +82,10 @@ const SavedTripView: React.FC = () => {
             <HeaderSearch />
             <div className={styles.background}>
                 <Card shadow="sm" padding="lg" className={styles.card}>
-                    <Text size="xl" className={styles.title}>{trip.name}</Text>
-                    <Text size="sm" color="dimmed" className={styles.date}>Saved on: {trip.saveDate}</Text>
+                    <Group>
+                        <Text size="xl" className={styles.title}>{trip.name}</Text>
+                        <Text size="sm" color="dimmed" className={styles.date}>Saved on: {trip.saveDate.toLocaleDateString()}</Text>
+                    </Group>
 
                     <Group className={styles.group}>
                         <Text size="md">Trip Duration: {convertHoursToDays(trip.duration)}</Text>
@@ -102,9 +104,9 @@ const SavedTripView: React.FC = () => {
                     <Divider className={styles.divider} />
 
                     <Stack className={styles.tripdetails}>
-                        <Text size="md"><strong>Trip Start:</strong> {trip.startDate}</Text>
-                        <Text size="md"><strong>Trip End:</strong> {trip.endDate}</Text>
-                        <Text size="md"><strong>Total Cost:</strong> ${trip.totalCost}</Text>
+                        <Text size="md" key="start"><strong>Trip Start:</strong> {trip.startDate.toLocaleDateString()}</Text>
+                        <Text size="md" key="end"><strong>Trip End:</strong> {trip.endDate.toLocaleDateString()}</Text>
+                        <Text size="md" key="cost"><strong>Total Cost:</strong> ${trip.totalCost}</Text>
                         <Text size="md"><strong>Total Transfer Time:</strong> {trip.totalTransferTime} hours</Text>
                     </Stack>
 

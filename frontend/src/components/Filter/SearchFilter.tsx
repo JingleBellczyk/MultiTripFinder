@@ -17,25 +17,10 @@ import {User} from "../../types/UserDTO";
 import CustomCombobox from "../Combobox/CustomCombobox";
 import TagFilter from './TagFilter';
 import CustomCheckBox from '../CheckBox/CustomCheckBox';
-import axios from "axios";
-import NameInput from "../NameInput/NameInput";
-import transformSearches from "../../hooks/transformSearches";
 
 type ResetButtonProps = {
     onReset: () => void;
 }
-
-type SearchFilterProps = {
-    searches: SavedSearch[];
-    tags: SavedTag[];
-    user: User | null;
-    fetchSearches: (endpoint: string)=> Promise<void>;
-    setSearches: (searches: SavedSearch[]) => void;
-    setEndpoint: (endpoint: string) => void;
-    setTotalPages: (pages: number) => void;
-    setCurrentPage: (page: number) => void;
-};
-
 
 type ShowResultsProps = {
     filters: {
@@ -44,18 +29,15 @@ type ShowResultsProps = {
         trainChecked: boolean;
         optimisationCriteria: string | null;
         selectedTags: string[];
-        selectedName: string;
         dates: [Date | null, Date | null];
     };
     user: User | null;
     fetchSearches: (endpoint: string)=> Promise<void>;
-    setSearches: (searches: SavedSearch[]) => void;
     setEndpoint: (endpoint: string) => void;
-    setTotalPages: (pages: number) => void;
     setCurrentPage: (page: number) => void;
 };
 
-function ShowResults({ filters, user, fetchSearches, setSearches,  setEndpoint, setTotalPages, setCurrentPage }: ShowResultsProps) {
+function ShowResults({ filters, user, fetchSearches, setEndpoint, setCurrentPage }: ShowResultsProps) {
     const [loading, setLoading] = useState<boolean>(false);
 
     // Function to handle the fetching of results based on selected filters
@@ -63,58 +45,46 @@ function ShowResults({ filters, user, fetchSearches, setSearches,  setEndpoint, 
         setLoading(true);
 
         try {
-            if (filters.selectedName){
-                const encodedName = encodeURIComponent(filters.selectedName);
-                const endpoint = `${SERVER}/searchList/${user?.id}/name/${encodedName}`;
-                const response = await axios.get(endpoint, {withCredentials: true});
-                const content = response.data;
-                const transformed = transformSearches([content]);
-                setSearches(transformed);
-                setTotalPages(1);
-                setCurrentPage(1);
 
-            }
-            else {
-                const params = new URLSearchParams();
-                params.append("size", PAGE_SIZE.toString());
-                params.append("page", "0");
+            const params = new URLSearchParams();
+            params.append("size", PAGE_SIZE.toString());
+            params.append("page", "0");
 
-                // Add transport filters dynamically
-                if (filters.airplaneChecked) params.append("preferredTransports", "PLANE");
-                if (filters.busChecked) params.append("preferredTransports", "BUS");
-                if (filters.trainChecked) params.append("preferredTransports", "TRAIN");
+            // Add transport filters dynamically
+            if (filters.airplaneChecked) params.append("preferredTransports", "PLANE");
+            if (filters.busChecked) params.append("preferredTransports", "BUS");
+            if (filters.trainChecked) params.append("preferredTransports", "TRAIN");
 
-                // Add optimization criteria
-                if (filters.optimisationCriteria) params.append("optimizationCriteria", filters.optimisationCriteria.toUpperCase())
+            // Add optimization criteria
+            if (filters.optimisationCriteria) params.append("optimizationCriteria", filters.optimisationCriteria.toUpperCase())
 
-                // Add tags
-                filters.selectedTags?.forEach((tag) => {
-                    params.append("searchTags", tag);
-                });
+            // Add tags
+            filters.selectedTags?.forEach((tag) => {
+                params.append("searchTags", tag);
+            });
 
-                // Add date range filters
-                if (filters.dates) {
-                    const [fromDate, toDate] = filters.dates;
-                    if (fromDate && toDate) {
-                        const start = new Date(fromDate);
-                        const end = new Date(toDate);
+            // Add date range filters
+            if (filters.dates) {
+                const [fromDate, toDate] = filters.dates;
+                if (fromDate && toDate) {
+                    const start = new Date(fromDate);
+                    const end = new Date(toDate);
 
-                        start.setHours(23, 59, 59, 999);
-                        end.setHours(23, 59, 59, 999);
-                        const formattedStartDate = start.toISOString().split("T")[0];
-                        const formattedEndDate = end.toISOString().split("T")[0];
-                        params.append("fromDate", formattedStartDate);
-                        params.append("toDate", formattedEndDate);
-                        console.log("fromDate", formattedStartDate);
-                        console.log("toDate", formattedEndDate);
-                    }
+                    start.setHours(23, 59, 59, 999);
+                    end.setHours(23, 59, 59, 999);
+                    const formattedStartDate = start.toISOString().split("T")[0];
+                    const formattedEndDate = end.toISOString().split("T")[0];
+                    params.append("fromDate", formattedStartDate);
+                    params.append("toDate", formattedEndDate);
+                    console.log("fromDate", formattedStartDate);
+                    console.log("toDate", formattedEndDate);
                 }
-
-                const endpoint = `${SERVER}/searchList/${user?.id}?${params.toString()}`;
-                setEndpoint(endpoint);
-                setCurrentPage(1);
-                await fetchSearches(endpoint);
             }
+
+            const endpoint = `${SERVER}/searchList/${user?.id}?${params.toString()}`;
+            setEndpoint(endpoint);
+            setCurrentPage(1);
+            await fetchSearches(endpoint);
 
         } catch (error) {
            console.error('Error fetching data', error);
@@ -145,13 +115,19 @@ function ResetButton({ onReset }: ResetButtonProps) {
     );
 }
 
+type SearchFilterProps = {
+    tags: SavedTag[];
+    user: User | null;
+    fetchSearches: (endpoint: string)=> Promise<void>;
+    setEndpoint: (endpoint: string) => void;
+    setCurrentPage: (page: number) => void;
+};
 
-export default function SearchFilter({ tags, searches, setSearches, setEndpoint, fetchSearches, user, setCurrentPage, setTotalPages }: SearchFilterProps) {
+export default function SearchFilter({ tags, setEndpoint, fetchSearches, user, setCurrentPage }: SearchFilterProps) {
     const [airplaneChecked, setAirplaneChecked] = useState<boolean>(false);
     const [busChecked, setBusChecked] = useState<boolean>(false);
     const [trainChecked, setTrainChecked] = useState<boolean>(false);
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
-    const [selectedName, setSelectedName] = useState<string>('')
     const [dates, setDates] = useState<[Date | null, Date | null]>([null, null]);
     const [optimisationCriteria, setOptimisationCriteria] = useState<string|null>(null);
     const resetFilters = async () => {
@@ -160,7 +136,6 @@ export default function SearchFilter({ tags, searches, setSearches, setEndpoint,
         setTrainChecked(false);
         setOptimisationCriteria(null);
         setSelectedTags([]);
-        setSelectedName('')
         setDates([null, null]);
 
         const endpoint = `${SERVER}/searchList/${user?.id}?size=${PAGE_SIZE}&page=0`
@@ -214,10 +189,6 @@ export default function SearchFilter({ tags, searches, setSearches, setEndpoint,
                     }
                 }}
             />
-            <NameInput
-                userId={user?.id}
-                value={selectedName}
-                setValue={setSelectedName} searchData={searches}/>
             <DatePickerInput
                 type="range"
                 label="Pick dates range"
@@ -234,14 +205,11 @@ export default function SearchFilter({ tags, searches, setSearches, setEndpoint,
                         trainChecked,
                         optimisationCriteria,
                         selectedTags,
-                        selectedName,
                         dates
                     }}
                     user={user}
                     fetchSearches={fetchSearches}
-                    setSearches={setSearches}
                     setCurrentPage={setCurrentPage}
-                    setTotalPages={setTotalPages}
                     setEndpoint={setEndpoint}
                 />
                 <ResetButton onReset={resetFilters}/>

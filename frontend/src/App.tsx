@@ -9,7 +9,6 @@ import AccessDeniedPage from "./pages/AccessDeniedPage";
 import React from "react";
 import axios from "axios";
 import SavedTripView from "./pages/TripPage/TripView";
-import {sampleTrip} from "./types/TripDTO";
 import TripList from "./pages/ListViews/TripList";
 
 function App() {

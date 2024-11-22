@@ -55,7 +55,7 @@ public class SecurityConfig {
                 .addFilterAfter(userAccessFilter, OAuth2LoginAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                                .requestMatchers("/searchList/**", "/tripList/**", "/user/**", "/searchTag/**", "tripTag/**", "/auth/**").authenticated()
+                                .requestMatchers("/searchList/**", "/tripList/**", "/user/**", "/searchTag/**", "/tripTag/**", "/auth/**").authenticated()
                                 .requestMatchers(HttpMethod.POST, "/search").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/user").hasRole("A")
                                 .requestMatchers(HttpMethod.DELETE, "/user/**").hasRole("A")

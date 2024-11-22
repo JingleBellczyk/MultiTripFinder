@@ -2,6 +2,7 @@ import {PlaceTime, SavedSearch, SavedSearchDTO, SavedTag} from "../types/SearchD
 
 
 const transformSearches = (content: any[]): SavedSearch[] => {
+    console.log(content);
     return content.map(search => {
         const placesTime = search.placesToVisit.slice(1, -1).map((place: any) : PlaceTime => ({
             name: place.city,
@@ -9,7 +10,7 @@ const transformSearches = (content: any[]): SavedSearch[] => {
             country: place.country,
             hoursToSpend: place.stayDuration
         }));
-
+        console.log("ok")
         const startPlace = search.placesToVisit[0]
         const endPlace = search.placesToVisit[search.placesToVisit.length - 1]
         const start = { name: '', city: startPlace.city, country: startPlace.country };

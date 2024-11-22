@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { Autocomplete } from '@mantine/core';
+import { Autocomplete, Button, InputWrapper } from '@mantine/core';
 import axios from 'axios';
-import {SERVER} from "../../constants/constants";
-import {SavedSearch} from "../../types/SearchDTO";
+import { SERVER } from "../../constants/constants";
+import { SavedSearch } from "../../types/SearchDTO";
+import {SavedTripDTO} from "../../types/TripDTO";
 
 interface NameInputProps {
     userId: number | undefined;
     value: string;
     setValue: (value: string) => void;
-    searchData: SavedSearch[];
-
+    data: SavedSearch[] | SavedTripDTO[];
+    type: string;
+    handleSearchClick: () => Promise<void>;
 }
 
-
-const NameInput: React.FC<NameInputProps> = ({ userId, value, setValue, searchData }) => {
+const NameInput: React.FC<NameInputProps> = ({ userId, value, setValue, type, data , handleSearchClick}) => {
     const [names, setNames] = useState<string[]>([]); // State for fetched names
     const [loading, setLoading] = useState<boolean>(false); // State for loading indicator
 
@@ -22,7 +23,7 @@ const NameInput: React.FC<NameInputProps> = ({ userId, value, setValue, searchDa
             const fetchNames = async () => {
                 setLoading(true);
                 try {
-                    const endpoint = `${SERVER}/searchList/${userId}/names`;
+                    const endpoint = `${SERVER}/${type}/${userId}/names`;
                     const response = await axios.get(endpoint, { withCredentials: true });
                     setNames(response.data || []);
                 } catch (error) {
@@ -34,18 +35,29 @@ const NameInput: React.FC<NameInputProps> = ({ userId, value, setValue, searchDa
 
             fetchNames();
         }
-    }, [searchData]);
+    }, [data, userId]);
 
     return (
-        <Autocomplete
-            value={value}
-            onChange={setValue}
-            label="Select or type a name"
-            placeholder="Type a name"
-            data={names}
-            disabled={loading || !userId}
-            limit={5}
-        />
+        <InputWrapper
+            style={{ display: 'flex', alignItems: 'center' }}
+        >
+            <Autocomplete
+                value={value}
+                onChange={setValue}
+                placeholder="Type or choose an name..."
+                data={names}
+                disabled={loading || !userId}
+                limit={5}
+            />
+            <Button
+                variant="outline"
+                onClick={handleSearchClick}
+                disabled={loading || !userId || !value}
+                style={{ marginLeft: '10px' }}
+            >
+                Search
+            </Button>
+        </InputWrapper>
     );
 };
 
