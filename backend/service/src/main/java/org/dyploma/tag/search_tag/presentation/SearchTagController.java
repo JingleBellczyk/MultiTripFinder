@@ -23,7 +23,7 @@ public class SearchTagController implements SearchTagApi {
 
     @Override
     public ResponseEntity<SearchTag> updateUserSearchTag(Integer userId, Integer searchTagId, TagUpdating tagUpdating) {
-        return ResponseEntity.ok(SearchTagMapper.toSearchTagApi(searchTagService.updateUserSearchTag(userId, searchTagId, tagUpdating.getName())));
+        return ResponseEntity.ok(SearchTagMapper.mapToSearchTagApi(searchTagService.updateUserSearchTag(userId, searchTagId, SearchTagMapper.mapToSearchTag(tagUpdating.getName()))));
     }
 
     @Override
@@ -34,6 +34,6 @@ public class SearchTagController implements SearchTagApi {
 
     @Override
     public ResponseEntity<List<SearchTag>> listUserSearchTags(Integer userId) {
-        return ResponseEntity.ok(SearchTagMapper.toSearchTagsApi(searchTagService.listUserSearchTags(userId)));
+        return ResponseEntity.ok(SearchTagMapper.mapToSearchTagsApi(searchTagService.listUserSearchTags(userId)));
     }
 }

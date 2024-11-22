@@ -20,7 +20,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "search")
+@Table(name = "search", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"name", "user_account_id"})
+})
 public class Search {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

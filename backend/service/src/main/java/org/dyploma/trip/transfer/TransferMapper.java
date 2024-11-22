@@ -1,23 +1,33 @@
 package org.dyploma.trip.transfer;
 
 
+import org.dyploma.search.place.PlaceInSearch;
+import org.dyploma.search.place.PlaceInSearchMapper;
+
 import java.math.BigDecimal;
 import java.time.ZoneOffset;
+import java.util.List;
 
 import static org.dyploma.transport.TransportModeMapper.mapToTransportMode;
 import static org.dyploma.transport.TransportModeMapper.mapToTransportModeApi;
 
 public class TransferMapper {
+    public static List<Transfer> mapToTransfers(List<com.openapi.model.Transfer> transfersApi) {
+        return transfersApi.stream()
+                .map(TransferMapper::mapToTransfer)
+                .toList();
+    }
+
     public static Transfer mapToTransfer(com.openapi.model.Transfer transferApi) {
         return Transfer.builder()
                 .transportMode(mapToTransportMode(transferApi.getTransportMode()))
                 .carrier(transferApi.getCarrier())
                 .startDateTime(transferApi.getStartDateTime().toLocalDateTime())
-                .endDateTime(transferApi.getStartDateTime().toLocalDateTime())
+                .endDateTime(transferApi.getEndDateTime().toLocalDateTime())
                 .duration(transferApi.getDuration())
                 .cost(transferApi.getCost().doubleValue())
-                .startAddress(transferApi.getStartAddress())
-                .endAddress(transferApi.getEndAddress())
+                .startAddress(transferApi.getStartAddress().toLowerCase())
+                .endAddress(transferApi.getEndAddress().toLowerCase())
                 .transferOrder(transferApi.getTransferOrder())
                 .build();
     }

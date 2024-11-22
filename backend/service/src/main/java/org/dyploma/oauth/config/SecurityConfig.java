@@ -38,6 +38,7 @@ import java.util.Set;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
     private final UserAccessFilter userAccessFilter;
     private final CustomOAuth2UserService customOAuth2UserService;
 
@@ -56,37 +57,10 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                                 .requestMatchers("/searchList/**", "/tripList/**", "/user/**", "/searchTag/**", "tripTag/**", "/auth/**").authenticated()
                                 .requestMatchers(HttpMethod.POST, "/search").permitAll()
-
-/*                        .requestMatchers(HttpMethod.OPTIONS, "/oauth2/**").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/auth/**", "/searchList/**", "/searchTag/**", "/tripList/**", "/tripTag/**").authenticated()
-                        .requestMatchers(HttpMethod.POST,"/searchList/**", "/searchTag/**", "/tripList/**", "/tripTag/**").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/searchList/**", "/searchTag/**", "/tripList/**", "/tripTag/**","/user").authenticated()
-                        .requestMatchers(HttpMethod.PUT, "/searchList/**", "/searchTag/**", "/tripList/**", "/tripTag/**").authenticated()*/
                                 .requestMatchers(HttpMethod.GET, "/user").hasRole("A")
                                 .requestMatchers(HttpMethod.DELETE, "/user/**").hasRole("A")
-/*                        .requestMatchers(HttpMethod.GET, "/user").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/user/**").hasAuthority("ROLE_ADMIN")*/
                                 .anyRequest().denyAll()
                 )
-/*                .oauth2Login(oauth2 -> oauth2
-                        .defaultSuccessUrl("http://localhost:3000/", true)
-                        .successHandler((request, response, authentication) -> {
-                            OAuth2AuthenticationToken oauth2Authentication = (OAuth2AuthenticationToken) authentication;
-                            Collection<GrantedAuthority> authorities = mapAuthorities(oauth2Authentication);
-                            Authentication newAuthentication = new OAuth2AuthenticationToken(
-                                    oauth2Authentication.getPrincipal(),
-                                    authorities,
-                                    oauth2Authentication.getAuthorizedClientRegistrationId()
-                            );
-
-                            SecurityContextHolder.getContext().setAuthentication(newAuthentication);
-                            Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
-                            System.out.println("Current Authentication: " + currentAuthentication);
-                            System.out.println("Authorities: " + currentAuthentication.getAuthorities());
-
-                            response.sendRedirect("http://localhost:3000/");
-                        })
-                )*/
                 .oauth2Login(oauth2 -> {
                     oauth2.defaultSuccessUrl("http://localhost:3000/", true);
                     oauth2.userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService));
@@ -123,34 +97,6 @@ public class SecurityConfig {
 
             return http.build();
         }*/
-/*    private final UserAccountRepository userAccountRepository;
-
-    @Autowired
-    public SecurityConfig(UserAccountRepository userAccountRepository) {
-        this.userAccountRepository = userAccountRepository;
-    }
-
-    // Modified to take OAuth2AuthenticationToken as a parameter
-    private Collection<GrantedAuthority> mapAuthorities(OAuth2AuthenticationToken authentication) {
-        Set<GrantedAuthority> authorities = new HashSet<>();
-
-        OAuth2User oAuth2User = authentication.getPrincipal();
-        String email = oAuth2User.getAttribute("email");
-
-        UserAccount userAccount = userAccountRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
-
-        Character userRole = userAccount.getRole();
-        if (userRole == 'A') {
-            authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-        }
-        else if (userRole == 'U'){
-            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-        }
-
-        return authorities;
-    }*/
-
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
