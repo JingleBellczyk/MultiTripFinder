@@ -106,7 +106,7 @@ export const DndListHandle: React.FC<DndListHandleProps> = ({
     const handlePlaceChange = (id: number, name: string, country:string, city: string) => {
         const index = state.findIndex((item) => item.id === id);
         if (index !== -1) {
-            handlers.setItem(index, { ...state[index], name, city});
+            handlers.setItem(index, { ...state[index], name, country, city});
         }
     };
 
