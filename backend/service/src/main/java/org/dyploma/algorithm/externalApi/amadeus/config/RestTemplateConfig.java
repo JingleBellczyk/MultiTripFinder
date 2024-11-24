@@ -1,4 +1,4 @@
-package org.dyploma.algorithm.amadeus.config;
+package org.dyploma.algorithm.externalApi.amadeus.config;
 
 import org.dyploma.exception.AmadeusErrorException;
 import org.springframework.context.annotation.Bean;

@@ -1,9 +1,10 @@
 package org.dyploma.algorithm.amadeus;
 
 import org.dyploma.EngineeringWorkApplication;
-import org.dyploma.algorithm.amadeus.dto.AmadeusRequest;
-import org.dyploma.algorithm.amadeus.dto.AmadeusResponse;
-import org.dyploma.algorithm.amadeus.dto.TravelSegment;
+import org.dyploma.algorithm.externalApi.amadeus.AmadeusApiClient;
+import org.dyploma.algorithm.externalApi.amadeus.dto.AmadeusRequest;
+import org.dyploma.algorithm.externalApi.amadeus.dto.AmadeusResponse;
+import org.dyploma.algorithm.externalApi.amadeus.dto.TravelSegment;
 import org.dyploma.exception.AmadeusErrorException;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

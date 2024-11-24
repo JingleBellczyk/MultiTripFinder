@@ -1,8 +1,8 @@
-package org.dyploma.algorithm.amadeus;
+package org.dyploma.algorithm.externalApi.amadeus;
 
-import org.dyploma.algorithm.amadeus.dto.AmadeusRequest;
-import org.dyploma.algorithm.amadeus.dto.AmadeusResponse;
-import org.dyploma.algorithm.amadeus.dto.TravelSegment;
+import org.dyploma.algorithm.externalApi.amadeus.dto.AmadeusRequest;
+import org.dyploma.algorithm.externalApi.amadeus.dto.AmadeusResponse;
+import org.dyploma.algorithm.externalApi.amadeus.dto.TravelSegment;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;

@@ -1,8 +1,9 @@
 package org.dyploma.search.domain;
 
+import org.dyploma.algorithm.AlgorithmRequestCreator;
+import org.dyploma.algorithm.dto.AlgorithmRequest;
 import org.dyploma.exception.ConflictException;
 import org.dyploma.exception.NotFoundException;
-import org.dyploma.exception.ValidationException;
 import org.dyploma.search.place.PlaceInSearch;
 import org.dyploma.search.validator.SearchValidator;
 import org.dyploma.tag.search_tag.domain.SearchTag;
@@ -15,9 +16,7 @@ import org.dyploma.useraccount.UserAccount;
 import org.dyploma.useraccount.UserAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -37,17 +36,26 @@ public class SearchServiceImpl implements SearchService {
     private final UserAccountService userAccountService;
     private final SearchValidator searchValidator;
 
+    private final AlgorithmRequestCreator algorithmRequestCreator;
+
     @Autowired
-    public SearchServiceImpl(SearchRepository searchRepository, SearchValidator searchValidator, SearchTagRepository searchTagRepository, UserAccountService userAccountService) {
+    public SearchServiceImpl(SearchRepository searchRepository,
+                             SearchValidator searchValidator,
+                             SearchTagRepository searchTagRepository,
+                             UserAccountService userAccountService,
+                             AlgorithmRequestCreator algorithmRequestCreator) {
         this.searchRepository = searchRepository;
         this.searchTagRepository = searchTagRepository;
         this.searchValidator = searchValidator;
         this.userAccountService = userAccountService;
+        this.algorithmRequestCreator = algorithmRequestCreator;
     }
 
     @Override
     public List<Trip> search(SearchRequest search) {
         searchValidator.validateSearchRequest(search);
+        AlgorithmRequest algorithmRequest = algorithmRequestCreator.createRequest(search);
+        // TODO: Implement algorithm call
         List<Trip> trips = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             List<Transfer> transfers = new ArrayList<>();
