@@ -1,6 +1,5 @@
-package org.dyploma.algorithm.amadeus.dto;
+package org.dyploma.algorithm.externalApi.amadeus.dto;
 
-import lombok.Builder;
 import lombok.Data;
 
 @Data

@@ -1,4 +1,4 @@
-package org.dyploma.algorithm.amadeus.dto;
+package org.dyploma.algorithm.externalApi.amadeus.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
