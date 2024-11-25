@@ -26,7 +26,7 @@ public class SearchMapper {
         return Search.builder()
                 .name(searchApi.getName().trim().replaceAll("\\s+", " ").toLowerCase())
                 .passengerCount(searchApi.getPassengerCount())
-                .preferredTransport(searchApi.getPreferredTransport() != null ? mapToTransportMode(searchApi.getPreferredTransport()) : null)
+                .preferredTransport(mapToTransportMode(searchApi.getPreferredTransport()))
                 .optimizationCriteria(mapToCriteriaMode(searchApi.getOptimizationCriteria()))
                 .tripStartDate(Date.valueOf(searchApi.getTripStartDate()))
                 .maxTripDuration(searchApi.getMaxTripDuration())
@@ -42,7 +42,7 @@ public class SearchMapper {
                         .map(PlaceInSearchMapper::mapToPlaceInSearchApi)
                         .toList())
                 .passengerCount(search.getPassengerCount())
-                .preferredTransport(search.getPreferredTransport() != null ? mapToTransportModeApi(search.getPreferredTransport()) : null)
+                .preferredTransport(mapToTransportModeApi(search.getPreferredTransport()))
                 .optimizationCriteria(mapToCriteriaModeApi(search.getOptimizationCriteria()))
                 .tripStartDate(search.getTripStartDate().toLocalDate())
                 .maxTripDuration(search.getMaxTripDuration());

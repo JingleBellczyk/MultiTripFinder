@@ -1,8 +1,6 @@
 package org.dyploma.airport;
 
-import java.text.Normalizer;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 public class NameTransliterator {
 

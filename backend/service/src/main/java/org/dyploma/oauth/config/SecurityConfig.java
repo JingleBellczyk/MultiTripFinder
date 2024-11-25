@@ -86,7 +86,9 @@ public class SecurityConfig {
 
         return http.build();
     }
-/*            @Bean
+
+/*
+            @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
             http
                     .csrf(AbstractHttpConfigurer::disable) // Disable CSRF if needed, especially for stateless APIs
@@ -95,7 +97,8 @@ public class SecurityConfig {
                     );
 
             return http.build();
-        }*/
+        }
+*/
 
 
     @Bean
