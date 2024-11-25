@@ -1,6 +1,7 @@
 import {Flex, Text} from "@mantine/core";
 import logoSvg from "../../assets/icons/mtfLogo.png";
 import classes from "./Logo.module.css";
+import React from 'react';
 
 interface LogoProps {
     size: number;

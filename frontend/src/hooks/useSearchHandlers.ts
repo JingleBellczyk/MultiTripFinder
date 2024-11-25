@@ -53,14 +53,7 @@ export const useSearchHandlers = (initialDto: SearchDTO) => {
         }));
     };
 
-    const handleSearch = async (dto: SearchDTOPost): Promise<Trip[]> => {
-        try {
-            return await postSearch(dto);
-        } catch (error) {
-            console.error('Error during POST request:', error);
-            return [];
-        }
-    };
+
 
     return {
         searchDto,
@@ -69,7 +62,6 @@ export const useSearchHandlers = (initialDto: SearchDTO) => {
         handleTransportChange,
         handleDateChange,
         handleMaxTotalTimeChange,
-        handleCriterionChange,
-        handleSearch
+        handleCriterionChange
     };
 };

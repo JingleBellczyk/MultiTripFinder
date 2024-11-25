@@ -8,28 +8,25 @@ interface PostResponse {
     id: number;
 }
 
-export const postSearch = async (dto: SearchDTOPost): Promise<TripList> => {
+export const postSearch = async (dto: SearchDTOPost): Promise<Trip[]> => {
     const url = `${SERVER}/search`;
 
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(dto),
-    });
+    try {
+        const response = await axios.post(url, dto, {
+            headers: { 'Content-Type': 'application/json' },
+        });
 
-    if (!response.ok) {
-        throw new Error('Network response was not ok');
+        const trips: Trip[] = response.data.content;
+        return trips;
+
+    } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+            const errorContent = error.response.data || 'An error occurred without detailed content';
+            throw errorContent;
+        } else {
+            throw new Error('An unexpected error occurred');
+        }
     }
-    const data = await response.json();
-    const trips: Trip[] = data.content as Trip[]
-
-    // for tests
-    // const trips: Trip[] = tripsJsonData.content as Trip[]
-
-    console.log(trips);
-    return trips;
 };
 
 
