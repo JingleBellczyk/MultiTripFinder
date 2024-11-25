@@ -6,6 +6,7 @@ import axios from "axios";
 import {IconTrash} from "@tabler/icons-react";
 import {useEffect, useState} from "react";
 import ActionNotAllowedModal from "../Modal/ActionNotAllowedModal";
+import ConfirmationModal from "../Modal/ConfirmationModal";
 
 function DeleteIcon({ onClick }: { onClick: () => void }) {
     return <CloseButton onClick={onClick} icon={<IconTrash size={ICON_SIZE} stroke={STROKE} />} />;
@@ -22,37 +23,60 @@ type AdminTableProps = {
     disablePagination: boolean;
 };
 
-const AdminTable: React.FC<AdminTableProps> = ({ user, users, setUsers, fetchUsers, totalPages, currentPage, setCurrentPage, disablePagination }) => {
+const AdminTable: React.FC<AdminTableProps> = ({
+                                                   user,
+                                                   users,
+                                                   setUsers,
+                                                   fetchUsers,
+                                                   totalPages,
+                                                   currentPage,
+                                                   setCurrentPage,
+                                                   disablePagination,
+                                               }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalMessage, setModalMessage] = useState("");
+    const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
+    const [selectedUser, setSelectedUser] = useState<UserDTO | null>(null);
 
-    useEffect(() => {
-    }, [users]);
-    const deleteUser = async (index: number, id: number) => {
-        if (id === user?.id) {
+    useEffect(() => {}, [users]);
+
+    const handleDeleteConfirmation = (userToDelete: UserDTO) => {
+        if (userToDelete.id === user?.id) {
             setIsModalOpen(true);
-            setModalMessage("You cannot delete your own account as an Admin");
+            setModalMessage("You cannot delete your own account as an Admin.");
             return;
         }
-        else if(users[index].role == 'A'){
+
+        if (userToDelete.role === "A") {
             setIsModalOpen(true);
-            setModalMessage("You cannot delete an Admin account.")
+            setModalMessage("You cannot delete an Admin account.");
             return;
         }
+
+        setSelectedUser(userToDelete);
+        setIsConfirmationOpen(true);
+    };
+
+    const confirmDelete = async () => {
+        if (!selectedUser) return;
+
+        const { id, email, role } = selectedUser;
 
         try {
             await axios.delete(`${SERVER}/user/${id}`, { withCredentials: true });
-            setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
-            if(users.length -1 ==0 && currentPage>0){
-                setCurrentPage(currentPage-1);
-            }
-            else {
-                const fetchUsersEndpoint = `${SERVER}/user?size=${PAGE_SIZE}&page=${currentPage-1}`;
+            setUsers((prevUsers) => prevUsers.filter((u) => u.id !== id));
+
+            if (users.length - 1 === 0 && currentPage > 0) {
+                setCurrentPage(currentPage - 1);
+            } else {
+                const fetchUsersEndpoint = `${SERVER}/user?size=${PAGE_SIZE}&page=${currentPage - 1}`;
                 await fetchUsers(fetchUsersEndpoint);
             }
-
         } catch (error) {
             console.error("Error deleting user:", error);
+        } finally {
+            setIsConfirmationOpen(false);
+            setSelectedUser(null);
         }
     };
 
@@ -60,21 +84,26 @@ const AdminTable: React.FC<AdminTableProps> = ({ user, users, setUsers, fetchUse
         <tr key={index}>
             <td>{user.id}</td>
             <td>{user.email}</td>
-            <td>{user.role}</td>
+            <td>{user.role === 'U' ? 'USER' : user.role === 'A' ? 'ADMIN' : 'Unknown'}</td>
             <td>
-                <DeleteIcon onClick={() => deleteUser(index, user.id)} />
+                <DeleteIcon onClick={() => handleDeleteConfirmation(user)} />
             </td>
         </tr>
     ));
 
     const handlePageChange = (page: number) => {
-        console.log(page);
         setCurrentPage(page);
     };
 
     return (
         <div className={styles.tableContainer}>
-            <ActionNotAllowedModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} warningMessage={modalMessage}/>
+            <ActionNotAllowedModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} warningMessage={modalMessage} />
+            <ConfirmationModal
+                isOpen={isConfirmationOpen}
+                onClose={() => setIsConfirmationOpen(false)}
+                onConfirm={confirmDelete}
+                message={`Do you want to delete user ${selectedUser?.email}?`}
+            />
             <div className={styles.titleContainer}>
                 <Title>List of users</Title>
                 <Text color="gray">As an admin, you can manage users here.</Text>
@@ -90,10 +119,10 @@ const AdminTable: React.FC<AdminTableProps> = ({ user, users, setUsers, fetchUse
                         <Table highlightOnHover className={styles.table}>
                             <thead>
                             <tr>
-                                <th>User ID</th>
-                                <th>Email</th>
-                                <th>Role</th>
-                                <th>Actions</th>
+                                <th><Text size="lg">User ID</Text></th>
+                                <th><Text size="lg">Email</Text></th>
+                                <th><Text size="lg">Role</Text></th>
+                                <th><Text size="lg">Actions</Text></th>
                             </tr>
                             </thead>
                             <tbody>{rows}</tbody>

@@ -62,6 +62,9 @@ public class SecurityConfig {
                                 .anyRequest().denyAll()
                 )
                 .oauth2Login(oauth2 -> {
+                    oauth2.failureHandler((request, response, exception) -> {
+                        response.sendRedirect("http://localhost:3000/loginFailed");
+                    });
                     oauth2.defaultSuccessUrl("http://localhost:3000/", true);
                     oauth2.userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService));
                 })
