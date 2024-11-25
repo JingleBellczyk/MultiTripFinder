@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
     Title,
     Box,
@@ -6,16 +6,13 @@ import {
     Stack,
     Space,
     Center,
-    Autocomplete
 } from '@mantine/core';
 import '@mantine/dates/styles.css';
 import { DatePickerInput } from '@mantine/dates';
-import { SavedSearch, SavedSearchDTO, SavedTag, Tag } from "../../types/SearchDTO";
+import { SavedTag} from "../../types/SearchDTO";
 import {PAGE_SIZE, SERVER, TRIP_LIST} from "../../constants/constants";
 import { User } from "../../types/UserDTO";
-import CustomCombobox from "../Combobox/CustomCombobox";
 import TagFilter from "./TagFilter";
-import CustomCheckBox from "../CheckBox/CustomCheckBox";
 
 type ResetButtonProps = {
     onReset: () => void;
@@ -23,9 +20,6 @@ type ResetButtonProps = {
 
 type ShowResultsProps = {
     filters: {
-        airplaneChecked: boolean;
-        busChecked: boolean;
-        trainChecked: boolean;
         selectedTags: string[];
         dates: [Date | null, Date | null];
     };
@@ -45,10 +39,6 @@ function ShowResults({ filters, user, fetchTrips, setEndpoint, setCurrentPage }:
             const params = new URLSearchParams();
             params.append("size", PAGE_SIZE.toString());
             params.append("page", "0");
-
-            if (filters.airplaneChecked) params.append("preferredTransports", "PLANE");
-            if (filters.busChecked) params.append("preferredTransports", "BUS");
-            if (filters.trainChecked) params.append("preferredTransports", "TRAIN");
 
             filters.selectedTags?.forEach((tag) => {
                 params.append("tripTags", tag);
@@ -115,14 +105,8 @@ type TripFilterProps = {
 export default function TripFilter({ tags, fetchTrips, user, setEndpoint, setCurrentPage }: TripFilterProps) {
     const [selectedTags, setSelectedTags] = useState<string[]>([]);
     const [dates, setDates] = useState<[Date | null, Date | null]>([null, null]);
-    const [airplaneChecked, setAirplaneChecked] = useState<boolean>(false);
-    const [busChecked, setBusChecked] = useState<boolean>(false);
-    const [trainChecked, setTrainChecked] = useState<boolean>(false);
 
     const resetFilters = async () => {
-        setAirplaneChecked(false);
-        setBusChecked(false);
-        setTrainChecked(false);
         setSelectedTags([]);
         setDates([null, null]);
 
@@ -143,9 +127,6 @@ export default function TripFilter({ tags, fetchTrips, user, setEndpoint, setCur
             <Center>
                 <Title order={4}>Filter</Title>
             </Center>
-            <CustomCheckBox checked={airplaneChecked} label={"Airplane"} onChange={(event) => setAirplaneChecked(event.currentTarget.checked)}/>
-            <CustomCheckBox checked={busChecked} label={"Bus"} onChange={(event) => setBusChecked(event.currentTarget.checked)}/>
-            <CustomCheckBox checked={trainChecked} label={"Train"} onChange={(event) => setTrainChecked(event.currentTarget.checked)}/>
             <TagFilter
                 list={tagNames}
                 label="Choose tags"
@@ -169,9 +150,6 @@ export default function TripFilter({ tags, fetchTrips, user, setEndpoint, setCur
             <Stack align="center" justify="center">
                 <ShowResults
                     filters={{
-                        airplaneChecked,
-                        busChecked,
-                        trainChecked,
                         selectedTags,
                         dates
                     }}
