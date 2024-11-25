@@ -12,6 +12,7 @@ import NameTextInput from "../TextInput/NameTextInput";
 import {convertHoursToDays} from "../../utils/convertHoursToDays";
 import NameInput from "../NameInput/NameInput";
 import {getBadgeColor, handleSearchForName} from "../../utils/commonListFunctions";
+import {convertSavedSearchToSearchDTO} from "../../utils/placeConverters";
 function DeleteIcon({ onClick }: { onClick: () => void }) {
     return <CloseButton onClick={onClick} icon={<IconTrash size={ICON_SIZE} stroke={STROKE} />} />;
 }
@@ -186,16 +187,7 @@ export default function SearchTable({
 
     const createSearchDTO = (index: number): SearchDTO => {
         const search = searchData[index];
-        return {
-            placesTime: search.placesTime,
-            start: search.start,
-            end: search.end,
-            maxTotalTime: search.maxTotalTime,
-            transport: search.transport,
-            startDate: search.startDate,
-            passengersNumber: search.passengersNumber,
-            preferredCriteria: search.preferredCriteria
-        };
+        return convertSavedSearchToSearchDTO(search);
     };
 
     function SearchIcon({ index }: { index: number }) {
@@ -267,7 +259,7 @@ export default function SearchTable({
         try {
             const tags = [...searchData[index].tags];
             const searchId = searchData[index].id;
-            if (tags.some(tag => tag.name == tagName)) {
+            if (tags.some(tag => tag.name === tagName)) {
                 const newTags = tags.filter(tag => tag.name !== tagName);
                 const requestTags = newTags.map(tag => tag.name);
                 const requestBody = {
