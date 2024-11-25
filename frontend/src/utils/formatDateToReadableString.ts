@@ -1,4 +1,3 @@
-// utils.ts
 export function formatDateToReadableString(isoDate: string): string {
     const date = new Date(isoDate); // Tworzymy obiekt Date z ISO string
     const options: Intl.DateTimeFormatOptions = {

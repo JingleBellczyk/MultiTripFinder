@@ -12,7 +12,7 @@ import {
 } from '@mantine/core';
 import {HeaderSearch} from "../../components/HeaderSearch/HeaderSearch";
 import {Footer} from "../../components/Footer/Footer";
-import { useLocation } from 'react-router-dom';
+import {useLocation} from 'react-router-dom';
 import {DndListHandle} from "../../components/DndListHandle/DndListHandle";
 import {GridComponent} from "../../components/GridComponent/GridComponent";
 import {DatePicker} from "../../components/DatePicker/DatePicker";
@@ -22,19 +22,12 @@ import {convertSearchDTOPostToSearchDTO, convertToPlaceTimePost} from '../../uti
 import "../../styles/globals.css"
 import styles from "./SearchPage.module.css"
 import SearchResultPage from "../SearchResultsPage/SearchResultsPage"
-import {
-    PlaceLocation,
-    PlaceLocationPost,
-    PlaceTime,
-    PlaceTimePost,
-    SearchDTO,
-    SearchDTOPost,
-    SearchDTOSave
-} from "../../types/SearchDTO"
+import {PlaceLocation, PlaceTime, PlaceTimePost, SearchDTO, SearchDTOPost, SearchDTOSave} from "../../types/SearchDTO"
 import React, {useMemo, useState} from 'react';
 import {postSearch, postSearchSave} from "../../api/services/searchService";
 import {useSearchHandlers} from "../../hooks/useSearchHandlers"
 import {SaveSearchTripModal} from "../../components/SaveSearchTripModal/SaveSearchTripModal";
+import axios from 'axios';
 
 import {
     GRID_ITEMS_SEARCH,
@@ -45,11 +38,7 @@ import {
     MIN_TOTAL_DAYS_NUMBER,
     MINIMIZED_CRITERION
 } from "../../constants/constants";
-import {
-    EMPTY_SEARCH_DTO,
-    EXAMPLE_SEARCH_POST_DTO,
-    INITIAL_SEARCH_DTO_SAVE
-} from "../../constants/searchPostDto"
+import {EMPTY_SEARCH_DTO, EXAMPLE_SEARCH_POST_DTO, INITIAL_SEARCH_DTO_SAVE} from "../../constants/searchPostDto"
 import {Trip} from "../../types/TripDTO";
 import useScrollToBottom from "../../hooks/useScrollToBottom";
 import {convertToSearchDTOSave} from "../../utils/convertSearchDTOSave";
@@ -72,13 +61,13 @@ export function SearchPage() {
 
     const searchDTO: SearchDTO = useMemo(() => {
         return convertSearchDTOPostToSearchDTO(EXAMPLE_SEARCH_POST_DTO);
-    }, [EXAMPLE_SEARCH_POST_DTO]);
+    }, [EMPTY_SEARCH_DTO]);
 
     if (searchData!==undefined && searchData!==null){
         return SearchFunction(searchData);
     }
     return (
-        SearchFunction(searchDTO)
+        SearchFunction(EMPTY_SEARCH_DTO)
     );
 }
 
@@ -96,8 +85,7 @@ function SearchFunction(paramDto: SearchDTO) {
         handleTransportChange,
         handleDateChange,
         handleMaxTotalTimeChange,
-        handleCriterionChange,
-        handleSearch
+        handleCriterionChange
     } = useSearchHandlers(paramDto);
 
     const [errors, setErrors] = useState<ValidationErrors>({
@@ -107,6 +95,48 @@ function SearchFunction(paramDto: SearchDTO) {
         endPlaceError: null,
         maxHoursToSpendError: null
     });
+
+    const handleSearch = async (dto: SearchDTOPost): Promise<Trip[]> => {
+        try {
+            return await postSearch(dto);
+        } catch (error) {
+            console.error('Error in handleSearch:', error);
+
+            // Reset errors
+            setErrors({
+                dateError: null,
+                placesTimeError: null,
+                startPlaceError: null,
+                endPlaceError: null,
+                maxHoursToSpendError: null
+            });
+            let errorMessage = '';
+            if (axios.isAxiosError(error) && error.response?.data?.errors) {
+                errorMessage = error.response.data.errors.join(' ');
+            } else if (typeof error === 'string') {
+                errorMessage = error;
+            } else if (error instanceof Error) {
+                errorMessage = error.message;
+            }
+            console.log("new errors")
+            console.log(errorMessage)
+            const newErrors: ValidationErrors = {
+                dateError: errorMessage.includes("Trip start date couldn't be more than a year in the future") ? "Trip start date couldn't be more than a year in the future" : null,
+                placesTimeError: errorMessage.includes("Start and end place should not be in places to visit") ? "Start and end place should not be in places to visit" :
+                    errorMessage.includes("Places to visit should not contain duplicates") ? "Places to visit should not contain duplicates" :
+                        errorMessage.includes("Stay duration at each place to visit should be specified") ? "Stay duration at each place to visit should be specified" :
+                            errorMessage.includes("Sum of hours to spend at each place to visit should not exceed max trip duration") ? "Sum of hours to spend at each place to visit should not exceed max trip duration" :
+                                errorMessage.includes("Order number of places to visit should be specified") ? "Order number of places to visit should be specified" : null,
+                startPlaceError: errorMessage.includes("Start place error message") ? "Start place error message" : null,
+                endPlaceError: errorMessage.includes("End place error message") ? "End place error message" : null,
+                maxHoursToSpendError: errorMessage.includes("Max hours to spend error message") ? "Max hours to spend error message" : null
+            };
+
+            setErrors(newErrors);
+
+            return [];
+        }
+    };
 
     const handleSave = async (name: string): Promise<{ isSuccess: boolean; errorMessage?: string }> => {
         if (!user){

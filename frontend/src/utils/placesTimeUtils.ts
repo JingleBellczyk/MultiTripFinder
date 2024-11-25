@@ -13,30 +13,35 @@ export const isDateValid = (selectedDate: Date | null): boolean => {
 };
 
 export const isValidPlacesTime = (placesTime: PlaceTime[]): boolean => {
-    for (const placeTime of placesTime) {
-        if (!placeTime.name || placeTime.name.trim() === "") {
-            return false;
-        }
-        if (placeTime.hoursToSpend <= 0) {
-            return false;
+    if(placesTime.length > 0){
+        for (const placeTime of placesTime) {
+            if (!placeTime.name || placeTime.name.trim() === "") {
+                return false;
+            }
+            if (placeTime.hoursToSpend <= 0) {
+                return false;
+            }
         }
     }
     return true;
 };
 
 export const isValidPlace = (place: PlaceLocation | null ): boolean => {
-    if (typeof place?.name !== "string" || place?.name === "") {
+    if (typeof place?.name !== "string" || place?.name === "" || place?.country === "" || place?.city === "") {
         return false;
     }
     return true;
 };
-// Validation function for max hours to spend relative to selected date
-export const isValidMaxHoursToSpend = (selectedDate: Date | null, maxHoursToSpend: number): boolean => {
-    if (!selectedDate) return false;
 
-    const maxDaysToSpend = Math.floor(maxHoursToSpend / 24);
+export const isValidMaxHoursToSpend = (selectedDate: Date | null, maxHoursToSpend: number): boolean => {
+    if (!selectedDate || !maxHoursToSpend || maxHoursToSpend === 0) return false;
+
+    const daysToSpend = Math.floor(maxHoursToSpend / 24);
+    const hoursToSpend = maxHoursToSpend % 24;
+
     const endDate = new Date(selectedDate);
-    endDate.setDate(endDate.getDate() + maxDaysToSpend);
+    endDate.setDate(endDate.getDate() + daysToSpend);
+    endDate.setHours(endDate.getHours() + hoursToSpend);
 
     const oneYearFromNow = new Date();
     oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 1);

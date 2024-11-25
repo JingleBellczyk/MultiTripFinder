@@ -1,4 +1,4 @@
-import {SearchDTOPost, SearchDTO, PlaceLocation, PlaceTime, PlaceTimePost} from '../types/SearchDTO';
+import {SearchDTOPost, SearchDTO, PlaceLocation, PlaceTime, PlaceTimePost, SavedSearch, Tag} from '../types/SearchDTO';
 
 const transportMapping: { [key: string]: string } = {
     'BUS': 'Bus',
@@ -37,6 +37,37 @@ export function convertSearchDTOPostToSearchDTO(dtoPost: SearchDTOPost): SearchD
         startDate: dtoPost.tripStartDate,
         passengersNumber: dtoPost.passengerCount,
         preferredCriteria: dtoPost.optimizationCriteria,
+    };
+}
+export function convertSavedSearchToSearchDTO(savedSearch: SavedSearch): SearchDTO {
+    const placesTime: PlaceTime[] = savedSearch.placesTime.map((place: PlaceTime) => ({
+        name: `${place.city}, ${place.country}`, // Tworzenie name poprzez połączenie city i country
+        country: place.country,
+        city: place.city,
+        hoursToSpend: place.hoursToSpend
+    }));
+
+    const startPlace: PlaceLocation = {
+        name: `${savedSearch.start.city}, ${savedSearch.start.country}`,
+        country: savedSearch.start.country,
+        city:savedSearch.start.city,
+    };
+
+    const endPlace: PlaceLocation = {
+        name: `${savedSearch.end.city}, ${savedSearch.end.country}`,
+        country: savedSearch.end.country,
+        city: savedSearch.end.city,
+    };
+
+    return {
+        placesTime: placesTime,
+        start: startPlace,
+        end: endPlace,
+        maxTotalTime: savedSearch.maxTotalTime / 24,
+        transport: savedSearch.transport ? transportMapping[savedSearch.transport.toUpperCase()] : null,
+        startDate: savedSearch.startDate,
+        passengersNumber: savedSearch.passengersNumber,
+        preferredCriteria: savedSearch.preferredCriteria,
     };
 }
 
