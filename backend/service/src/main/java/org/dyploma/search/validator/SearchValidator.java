@@ -42,12 +42,20 @@ public class SearchValidator {
     }
 
     private void validateDuration(int maxTripDuration, List<PlaceInSearch> places) {
-        if (places.stream().anyMatch(place -> place.getStayDuration() == null)) {
-            throw new ValidationException("Stay duration at each place to visit should be specified");
+        int stayDurationSum = 0;
+        for (int i = 1; i < places.size() - 1; i++) {
+            PlaceInSearch place = places.get(i);
+            if (place.getStayDuration() == null) {
+                throw new ValidationException("Stay duration at each place to visit should be specified");
+            }
+            else if (place.getStayDuration() < 10) {
+                throw new ValidationException("Stay duration at each place to visit should be at least 10 hours");
+            }
+            else if (place.getStayDuration() > 240) {
+                throw new ValidationException("Stay duration at each place to visit should be at most 10 days");
+            }
+            stayDurationSum += place.getStayDuration();
         }
-        int stayDurationSum = places.stream()
-                .mapToInt(PlaceInSearch::getStayDuration)
-                .sum();
         if (stayDurationSum > maxTripDuration) {
             throw new ValidationException("Sum of hours to spend at each place to visit should not exceed max trip duration");
         }

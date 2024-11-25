@@ -9,7 +9,6 @@ import org.dyploma.useraccount.UserAccount;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.List;
 
 public class SearchSpecification {
