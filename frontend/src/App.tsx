@@ -5,11 +5,12 @@ import SearchesList from './pages/ListViews/SearchesList';
 import AuthGuard from './components/Login/AuthGuard';
 import useAuth from "./hooks/useAuth";
 import AdminList from "./pages/ListViews/AdminList";
-import AccessDeniedPage from "./pages/AccessDeniedPage";
+import AccessDeniedPage from "./pages/ErrorPages/AccessDeniedPage";
 import React from "react";
 import axios from "axios";
 import SavedTripView from "./pages/TripPage/TripView";
 import TripList from "./pages/ListViews/TripList";
+import LoginFailedPage from './pages/ErrorPages/LoginFailedPage';
 
 function App() {
     const { isAuthenticated, token, user, loading} = useAuth();
@@ -63,6 +64,12 @@ function App() {
                     path="/denied"
                     element={
                         <AccessDeniedPage/>
+                    }
+                />
+                <Route
+                    path="/loginFailed"
+                    element={
+                        <LoginFailedPage/>
                     }
                 />
                 <Route
