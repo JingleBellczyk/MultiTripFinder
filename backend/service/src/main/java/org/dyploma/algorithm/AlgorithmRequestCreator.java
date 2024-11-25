@@ -79,6 +79,6 @@ public class AlgorithmRequestCreator {
     }
 
     private static int getHoursMax(int hoursMin) {
-        return hoursMin >= 24 ? hoursMin + 24 : (int)(hoursMin * 1.5);
+        return hoursMin >= 24 ? hoursMin + 24 : (int) Math.ceil(hoursMin * 1.5);
     }
 }

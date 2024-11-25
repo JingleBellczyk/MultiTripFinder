@@ -618,7 +618,8 @@ components:
           minLength: 1
         stayDuration:
           type: integer
-          minimum: 0
+          minimum: 10
+          maximum: 240
         entryOrder:
           type: integer
           minimum: 1

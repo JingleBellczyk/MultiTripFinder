@@ -66,6 +66,9 @@ public class SearchValidator {
         if (places.stream().map(PlaceInSearch::getEntryOrder).distinct().count() != places.size()) {
             throw new ValidationException("Order number of places to visit should be unique");
         }
+        if (places.stream().anyMatch(place -> place.getEntryOrder() < 1 || place.getEntryOrder() > places.size())) {
+            throw new ValidationException("Order number of places to visit should be in range from 1 to number of places");
+        }
     }
 
 }
