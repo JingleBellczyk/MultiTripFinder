@@ -91,7 +91,7 @@ export default function TripTable({user, trips, setTrips, tripTags, fetchTags, f
     useEffect(() => {
         setTags(tripTags);
         setTripData(trips);
-    }, [tripTags, trips]);
+    }, [tripTags, trips, setCurrentPage, currentPage, setTrips]);
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
@@ -149,23 +149,25 @@ export default function TripTable({user, trips, setTrips, tripTags, fetchTags, f
     const addTagToTrip = async (tripIndex: number, tagName: string) => {
         try {
             const tags = [...tripData[tripIndex].tags];
-            tagName = tagName.trim().toUpperCase();
-            const newTag = { name: tagName };
+            const tripId = tripData[tripIndex].id;
+            const newTag = { name: tagName};
             const allTags = [...tags, newTag];
-            const requestTags = allTags.map((tag) => tag.name);
+            const requestTags = allTags.map(tag => tag.name);
             const requestBody = {
-                name: tripData[tripIndex].name,
-                tags: requestTags,
-            };
-            await axios.put(`${SERVER}/tripList/${user?.id}/${tripData[tripIndex].id}`, requestBody, { withCredentials: true });
-            setTrips((prevData) => {
+                "name": tripData[tripIndex].name,
+                "tags": requestTags
+            }
+            console.log("REQUEST ADD", requestBody);
+            await axios.put(`${SERVER}/tripList/${user?.id}/${tripId}`, requestBody, {withCredentials: true});
+            setTrips(prevData => {
                 return prevData.map((data, i) =>
                     i === tripIndex ? {...data, tags: allTags} : data
                 );
             });
             await fetchTags();
-        } catch (error) {
-            console.error('Error while adding tag to trip:', error);
+        }
+        catch(error){
+            console.error("Error while adding tag to search:", error);
         }
     };
 
@@ -208,7 +210,7 @@ export default function TripTable({user, trips, setTrips, tripTags, fetchTags, f
                 "tags": requestTags
             }
 
-            await axios.put(`${SERVER}/tagList/${user?.id}/${searchId}`, requestBody, {withCredentials: true});
+            await axios.put(`${SERVER}/tripList/${user?.id}/${searchId}`, requestBody, {withCredentials: true});
             setTrips(prevData => {
                 const updatedData = prevData.map((data, i) =>
                     i === index ? { ...data, tags: updatedTags } : data

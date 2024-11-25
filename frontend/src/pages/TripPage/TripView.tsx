@@ -40,10 +40,12 @@ const SavedTripView: React.FC = () => {
             if (i < transfers.length) placeTransferArray.push(transfers[i]);
         }
 
+        const length = placeTransferArray.length;
+
         return placeTransferArray.map((item, index) => {
             const isPlace = 'country' in item;
             const isFirstPlace = isPlace && index === 0;
-            const isLastPlace = isPlace && index === maxLength+1;
+            const isLastPlace = isPlace && index === length-1;
 
             return (
                 <div key={index}>
@@ -71,7 +73,7 @@ const SavedTripView: React.FC = () => {
                             <Text><strong>Cost:</strong> ${item.cost}</Text>
                         </Card>
                     )}
-                    { index < maxLength+1 && <IconArrowDown className={styles.arrow} /> }
+                    { index < length-1 && <IconArrowDown className={styles.arrow} /> }
                 </div>
             );
         });
