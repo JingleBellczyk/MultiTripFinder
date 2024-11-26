@@ -1,9 +1,11 @@
 package org.dyploma.airport;
 
+import org.dyploma.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AirportService {
@@ -15,12 +17,13 @@ public class AirportService {
         this.airportRepository = airportRepository;
     }
 
-    public List<Airport> getAirportsByCity(String city) {
-        String cityInLatin = NameTransliterator.toLatinAlphabet(city);
-        return airportRepository.findByCity(cityInLatin);
+    public Airport getAirportByAirportCode(String airportCode) {
+        return airportRepository.findByAirportCode(airportCode).orElseThrow(() -> new NotFoundException("Airport with code " + airportCode + " not found"));
     }
 
-    public List<Airport> getAirportsByCode(String airportCode) {
-        return airportRepository.findByAirportCode(airportCode);
+    public String getCityCodeByCountryAndCity(String country, String city) {
+        String cityInLatin = NameTransliterator.toLatinAlphabet(city);
+        Optional<Airport> airport = airportRepository.findFirstByCountryAndCity(country, cityInLatin);
+        return airport.map(Airport::getCityCode).orElse(null);
     }
 }
