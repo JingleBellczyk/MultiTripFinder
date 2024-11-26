@@ -305,7 +305,7 @@ export default function TripTable({user, trips, setTrips, tripTags, fetchTags, f
                                 <th className={styles.placesHead}><Text size="lg">Places</Text></th>
                                 <th className={styles.tableHead}><Text size="lg">Trip name</Text></th>
                                 <th className={styles.tableHead}><Text size="lg">Details</Text></th>
-                                <th className={styles.transportColumn}><Text size="lg">Transport</Text></th>
+                                <th className={styles.smallHead}><Text size="lg">Transport</Text></th>
                                 <th className={styles.tagColumn}><Center><Text size="lg">Tags</Text></Center></th>
                                 <th className={styles.smallHead}><Text size="lg">Save date</Text></th>
                                 <th className={styles.smallHead}></th>
@@ -315,16 +315,16 @@ export default function TripTable({user, trips, setTrips, tripTags, fetchTags, f
                             <tbody>
                             {tripData.map((trip, index) => (
                                 <tr key={trip.id}>
-                                    <td className={styles.placesHead}>
+                                    <td className={styles.placesColumn}>
                                         <ShowPlaces places={trip.places} />
                                     </td>
-                                    <td className={styles.placesHead}>
+                                    <td className={styles.tableHead}>
                                         <NameTextInput name={trip.name} onNameChange={(newName) => updateTripName(index, newName)}/>
                                     </td>
-                                    <td className={styles.placesHead}>
+                                    <td className={styles.tableHead}>
                                         <ShowTripDetails trip={trip}/>
                                     </td>
-                                    <td className={styles.transportColumn}>
+                                    <td className={styles.smallHead}>
                                         <ShowTransport transports={trip.allTransports}/>
                                     </td>
                                     <td className={styles.tagColumn}>
