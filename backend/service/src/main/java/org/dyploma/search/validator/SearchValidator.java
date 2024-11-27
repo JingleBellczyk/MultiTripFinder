@@ -1,5 +1,6 @@
 package org.dyploma.search.validator;
 
+import org.dyploma.algorithm.AlgorithmRequestCreator;
 import org.dyploma.exception.ValidationException;
 import org.dyploma.search.domain.Search;
 import org.dyploma.search.domain.SearchRequest;
@@ -17,14 +18,14 @@ public class SearchValidator {
 
     public void validateSearch(Search search) {
         validatePlaces(search.getPlacesToVisit());
-        validateDuration(search.getMaxTripDuration(), search.getPlacesToVisit());
+        validateSearchDuration(search);
         validateTripStartDate(search.getTripStartDate());
         validatePlacesOrder(search.getPlacesToVisit());
     }
 
     public void validateSearchRequest(SearchRequest searchRequest) {
         validatePlaces(searchRequest.getPlacesToVisit());
-        validateDuration(searchRequest.getMaxTripDuration(), searchRequest.getPlacesToVisit());
+        validateSearchRequestDuration(searchRequest);
         validateTripStartDate(searchRequest.getTripStartDate());
         validatePlacesOrder(searchRequest.getPlacesToVisit());
     }
@@ -41,24 +42,44 @@ public class SearchValidator {
         }
     }
 
-    private void validateDuration(int maxTripDuration, List<PlaceInSearch> places) {
-        int stayDurationSum = 0;
-        for (int i = 1; i < places.size() - 1; i++) {
-            PlaceInSearch place = places.get(i);
-            if (place.getStayDuration() == null) {
-                throw new ValidationException("Stay duration at each place to visit should be specified");
-            }
-            else if (place.getStayDuration() < 10) {
-                throw new ValidationException("Stay duration at each place to visit should be at least 10 hours");
-            }
-            else if (place.getStayDuration() > 240) {
-                throw new ValidationException("Stay duration at each place to visit should be at most 10 days");
-            }
-            stayDurationSum += place.getStayDuration();
+    private void validateSearchDuration(Search search) {
+        int stayDurationInPlacesSum = 0;
+        for (int i = 1; i < search.getPlacesToVisit().size() - 1; i++) {
+            int placeStayDuration = validateAndExtractPlaceDuration(search.getPlacesToVisit().get(i));
+            stayDurationInPlacesSum += placeStayDuration;
         }
-        if (stayDurationSum > maxTripDuration) {
+        if (stayDurationInPlacesSum > search.getMaxTripDuration()) {
             throw new ValidationException("Sum of hours to spend at each place to visit should not exceed max trip duration");
         }
+    }
+
+    private void validateSearchRequestDuration(SearchRequest searchRequest) {
+        int stayDurationInPlacesSum = 0;
+        int maxAvailableTripDuration = 24;
+        for (int i = 1; i < searchRequest.getPlacesToVisit().size() - 1; i++) {
+            int placeStayDuration = validateAndExtractPlaceDuration(searchRequest.getPlacesToVisit().get(i));
+            stayDurationInPlacesSum += placeStayDuration;
+            maxAvailableTripDuration += AlgorithmRequestCreator.getHoursMax(placeStayDuration);
+        }
+        int maxTripDuration = searchRequest.getMaxTripDuration();
+        if (stayDurationInPlacesSum > maxTripDuration) {
+            throw new ValidationException("Sum of hours to spend at each place to visit should not exceed max trip duration");
+        }
+        searchRequest.setMaxTripDuration(Math.min(maxTripDuration, maxAvailableTripDuration));
+    }
+
+    private static Integer validateAndExtractPlaceDuration(PlaceInSearch place) {
+        Integer placeStayDuration = place.getStayDuration();
+        if (placeStayDuration == null) {
+            throw new ValidationException("Stay duration at each place to visit should be specified");
+        }
+        else if (placeStayDuration < 10) {
+            throw new ValidationException("Stay duration at each place to visit should be at least 10 hours");
+        }
+        else if (placeStayDuration > 240) {
+            throw new ValidationException("Stay duration at each place to visit should be at most 10 days");
+        }
+        return placeStayDuration;
     }
 
     private void validateTripStartDate(Date tripStartDate) {
