@@ -58,13 +58,15 @@ public class AlgorithmRequestCreator {
     private PlaceInSearchRequest mapToPlaceInSearchRequest(PlaceInSearch placeInSearch) {
         String city = placeInSearch.getCity();
         String country = placeInSearch.getCountry();
+        Airport airport = airportService.getAirportByCountryAndCity(country, city);
+        String cityCode = airport != null ? airport.getCityCode() : null;
         return PlaceInSearchRequest.builder()
                 .country(country)
                 .city(city)
                 .stayHoursMin(placeInSearch.getStayDuration())
                 .stayHoursMax(getHoursMax(placeInSearch.getStayDuration()))
                 .stationCoordinates(getBusAndRailwayStationCoordinates(country, city))
-                .cityCode(airportService.getCityCodeByCountryAndCity(country, city))
+                .cityCode(cityCode)
                 .build();
     }
 
@@ -75,7 +77,7 @@ public class AlgorithmRequestCreator {
                 .build());
     }
 
-    private static int getHoursMax(int hoursMin) {
+    public static int getHoursMax(int hoursMin) {
         return hoursMin >= 24 ? hoursMin + 24 : (int) Math.ceil(hoursMin * 1.5);
     }
 }
