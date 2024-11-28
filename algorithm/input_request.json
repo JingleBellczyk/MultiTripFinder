@@ -1,0 +1,41 @@
+{
+    "passengers": 3,
+    "start_date": "2024-12-15",
+    "start_city": {
+        "name": "Wroclaw",
+        "country": "Poland",
+        "coordinates": [51.107885, 17.038538],
+        "code": "WRO",
+        "stay_hours_min": 24,
+        "stay_hours_max": 48
+    },
+    "end_city": {
+        "name": "Berlin",
+        "country": "Germany",
+        "coordinates": [52.520008, 13.404954],
+        "code": "BER",
+        "stay_hours_min": 24,
+        "stay_hours_max": 48
+    },
+    "cities_to_visit": [
+        {
+            "name": "Prague",
+            "country": "Czech Republic",
+            "coordinates": [50.075538, 14.437800],
+            "code": null,
+            "stay_hours_min": 24,
+            "stay_hours_max": 48
+        },
+        {
+            "name": "Vienna",
+            "country": "Austria",
+            "coordinates": [48.208176, 16.373819],
+            "code": "VIE",
+            "stay_hours_min": 24,
+            "stay_hours_max": 48
+        }
+    ],
+    "criteria": "time",
+    "preferred_transport": "rail",
+    "max_days": 10
+}

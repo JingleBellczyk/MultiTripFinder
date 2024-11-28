@@ -9,3 +9,5 @@ backend/api-generated/src
 backend/api-generated/.gitignore
 backend/api-generated/.travis.yml
 backend/api-generator/gradlew
+algorithm/__pycache__
+algorithm/env
