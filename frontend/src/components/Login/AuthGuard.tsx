@@ -13,7 +13,7 @@ const AuthGuard: React.FC<AuthGuardProps> = ({ children, isAuthenticated, loadin
     if (loading) {
         return <LoadingPage/>
     }
-    return isAuthenticated ? <>{children}</> : <Navigate to="/" />;
+    return isAuthenticated ? <>{children}</> : <Navigate to="/denied" />;
 
 };
 
