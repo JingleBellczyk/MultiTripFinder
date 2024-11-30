@@ -17,6 +17,7 @@ export const postSearch = async (dto: SearchDTOPost): Promise<Trip[]> => {
         });
 
         const trips: Trip[] = response.data.content;
+        // const trips: Trip[] = tripsJsonData.content as Trip[]
         return trips;
 
     } catch (error) {

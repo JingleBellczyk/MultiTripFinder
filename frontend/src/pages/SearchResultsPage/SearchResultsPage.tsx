@@ -2,7 +2,7 @@ import React from 'react';
 import {Accordion, Box, Group, Text, Title} from '@mantine/core';
 import {Place, Transfer, Trip} from "../../types/TripDTO";
 import styles from "./SearchResultPage.module.css";
-import {formatDateToReadableString, formatTime} from "../../utils/formatDateToReadableString";
+import {formatDateToReadableString, formatTime, formatTimeToDaysAndHours} from "../../utils/formatDateToReadableString";
 import {SaveSearchTripModal} from "../../components/SaveSearchTripModal/SaveSearchTripModal";
 import {transportIcons, TransportMode} from "../../constants/constants";
 import {saveTripToBackend} from "../../api/services/tripService";
@@ -30,7 +30,7 @@ const AccordionLabel: React.FC<AccordionLabelProps> = ({trip}) => {
                     <Text className={styles.tripPassengers}>Passengers: {passengerCount}</Text> |
                     <Text className={styles.tripTotalCost}>Total {totalCost}€</Text> |
                     <Text className={styles.tripTransferTime}>Transfer Time: {formatTime(totalTransferTime)}</Text> |
-                    <Text className={styles.tripDuration}>Duration: {formatTime(duration)}</Text>
+                    <Text className={styles.tripDuration}>Duration: {formatTimeToDaysAndHours(duration)}</Text>
                 </div>
             </Group>
         </div>

@@ -26,7 +26,6 @@ public class AmadeusApiClient {
         this.restTemplate = restTemplate;
     }
 
-
     public AmadeusResponse sendAmadeusRequest(List<AmadeusRequest.OriginDestination> originDestinations, int maxFlightOffers) {
 
         return sendAmadeusRequest(originDestinations,
