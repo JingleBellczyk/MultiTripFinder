@@ -49,7 +49,7 @@ public class AlgorithmRequestCreator {
                 .placesToVisit(placesToVisit.stream().map(this::mapToPlaceInSearchRequest).toList())
                 .passengerCount(searchRequest.getPassengerCount())
                 .tripStartDate(searchRequest.getTripStartDate())
-                .maxTripDuration(searchRequest.getMaxTripDuration())
+                .maxTripDuration(getMaxTripDurationDays(searchRequest.getMaxTripDuration()))
                 .preferredTransport(searchRequest.getPreferredTransport())
                 .optimizationCriteria(searchRequest.getOptimizationCriteria())
                 .build();
@@ -75,6 +75,10 @@ public class AlgorithmRequestCreator {
                 .country(country)
                 .city(city)
                 .build());
+    }
+
+    private static int getMaxTripDurationDays(int hours) {
+        return (int) Math.ceil((double) hours / 24);
     }
 
     public static int getHoursMax(int hoursMin) {

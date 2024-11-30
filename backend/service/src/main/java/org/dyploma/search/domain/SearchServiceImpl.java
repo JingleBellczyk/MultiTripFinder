@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -37,24 +38,30 @@ public class SearchServiceImpl implements SearchService {
     private final SearchValidator searchValidator;
 
     private final AlgorithmRequestCreator algorithmRequestCreator;
+    private final RestTemplate restTemplate;
+    private final String processRouteEndpoint = "http://localhost:8000/process_route";
 
     @Autowired
     public SearchServiceImpl(SearchRepository searchRepository,
                              SearchValidator searchValidator,
                              SearchTagRepository searchTagRepository,
                              UserAccountService userAccountService,
-                             AlgorithmRequestCreator algorithmRequestCreator) {
+                             AlgorithmRequestCreator algorithmRequestCreator,
+                             RestTemplate restTemplate) {
         this.searchRepository = searchRepository;
         this.searchTagRepository = searchTagRepository;
         this.searchValidator = searchValidator;
         this.userAccountService = userAccountService;
         this.algorithmRequestCreator = algorithmRequestCreator;
+        this.restTemplate = restTemplate;
     }
 
     @Override
     public List<Trip> search(SearchRequest search) {
         searchValidator.validateSearchRequest(search);
-        AlgorithmRequest algorithmRequest = algorithmRequestCreator.createRequest(search);
+        AlgorithmRequest algorithmRequestObject = algorithmRequestCreator.createRequest(search);
+        Object algorithmResponse = restTemplate.postForObject(processRouteEndpoint, algorithmRequestObject, Object.class);
+
         // TODO: Implement algorithm call
         List<Trip> trips = new ArrayList<>();
         for (int i = 0; i < 5; i++) {

@@ -9,7 +9,7 @@ def start_otp():
     global otp_process
     try:
         # Command to start OTP service
-        command = ["java", "-Xmx6G", "-jar", "./otp/otp-2.6.0-shaded.jar", "--load", "./otp/graph"]
+        command = ["java", "-Xmx6G", "-jar", "./otp/otp-2.6.0-shaded.jar", "--load", "./otp/graph", "--port", "8801"]
         otp_process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
                                        encoding="utf-8")
 
