@@ -4,7 +4,8 @@ import sys
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from amadeus_utils import process_flight_data
-from models import RouteRequest
+from city_pairs_creator import extract_city_pairs
+from dto import AlgorithmRequest
 from otp_utils import start_otp, stop_otp
 import uvicorn
 
@@ -27,8 +28,9 @@ app = FastAPI(lifespan=lifespan)
 
 
 @app.post("/process_route")
-async def process_route(request: RouteRequest):
-    filtered_results = await process_flight_data(request)
+async def process_route(request: AlgorithmRequest):
+    city_pairs = extract_city_pairs(request)
+    filtered_results = await process_flight_data(request, city_pairs)
     return {"status": "Request processed", "results": filtered_results}
 
 

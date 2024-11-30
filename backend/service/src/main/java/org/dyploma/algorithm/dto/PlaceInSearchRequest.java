@@ -11,8 +11,8 @@ import org.dyploma.algorithm.externalApi.nominatim.NominatimServiceResponse;
 public class PlaceInSearchRequest {
     private String country;
     private String city;
-    private NominatimServiceResponse stationCoordinates;
-    private String cityCode;
-    private int stayHoursMin;
-    private int stayHoursMax;
+    private NominatimServiceResponse station_coordinates;
+    private String city_code;
+    private int stay_hours_min;
+    private int stay_hours_max;
 }

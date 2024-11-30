@@ -8,6 +8,6 @@ import lombok.Data;
 @AllArgsConstructor
 @Builder
 public class NominatimServiceResponse {
-    private NominatimApiResponse railwayStationCoordinates;
-    private NominatimApiResponse busStationCoordinates;
+    private NominatimApiResponse railway_station_coordinates;
+    private NominatimApiResponse bus_station_coordinates;
 }
