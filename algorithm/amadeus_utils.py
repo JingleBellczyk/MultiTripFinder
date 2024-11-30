@@ -2,16 +2,17 @@ import logging
 import os
 
 from amadeus import Client, ResponseError
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from typing import List, Tuple
 import asyncio
-from models import RouteRequest
+
+from dto import AlgorithmRequest, PlaceInSearchRequest
 
 amadeus_client_id = os.environ.get("AMADEUS_CLIENT_ID")
 amadeus_client_secret = os.environ.get("AMADEUS_CLIENT_SECRET")
 
 
-def calculate_date_window(current_date: datetime, days_left: int) -> Tuple[str, datetime]:
+def calculate_date_window(current_date: date, days_left: int) -> Tuple[str, date]:
     """
     Рассчитывает date_window и корректирует current_date для базовой даты.
     :param current_date: Текущая дата начала диапазона.
@@ -108,27 +109,11 @@ async def fetch_amadeus_data(body: dict):
         return []
 
 
-# Основная функция обработки маршрута
-async def process_flight_data(request: RouteRequest):
-    global filtered_results
+async def process_flight_data(request: AlgorithmRequest, city_pairs: List[Tuple[PlaceInSearchRequest, PlaceInSearchRequest]]):
     tasks = []
-
-    # Создание пар городов
-    if request.cities_to_visit != []:
-        city_pairs = [(request.start_city, city) for city in request.cities_to_visit]
-        city_pairs += [(city_a, city_b) for i, city_a in enumerate(request.cities_to_visit) for city_b in
-                       request.cities_to_visit if city_a != city_b]
-        city_pairs += [(city, request.end_city) for city in request.cities_to_visit]
-    else:
-        city_pairs = [(request.start_city, request.end_city)]
-
-    logging.info("City pairs:")
-    for city_pair in city_pairs:
-        logging.info(city_pair[0].name, " - ", city_pair[1].name)
-
     # Генерация base_date и date_window
-    current_date = datetime.strptime(request.start_date, "%Y-%m-%d")
-    days_left = request.max_days
+    current_date = request.trip_start_date
+    days_left = request.max_trip_duration
     date_ranges = []
 
     while days_left > 0:
@@ -146,8 +131,8 @@ async def process_flight_data(request: RouteRequest):
                 "originDestinations": [
                     {
                         "id": "1",
-                        "originLocationCode": origin.code,
-                        "destinationLocationCode": destination.code,
+                        "originLocationCode": origin.city_code,
+                        "destinationLocationCode": destination.city_code,
                         "departureDateTimeRange": {
                             "date": base_date,
                             "dateWindow": date_window

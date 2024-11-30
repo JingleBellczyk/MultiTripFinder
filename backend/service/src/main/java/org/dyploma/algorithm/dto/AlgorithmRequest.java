@@ -13,12 +13,12 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class AlgorithmRequest {
-    private PlaceInSearchRequest startPlace;
-    private PlaceInSearchRequest endPlace;
-    private List<PlaceInSearchRequest> placesToVisit;
-    private int passengerCount;
-    private Date tripStartDate;
-    private int maxTripDuration;
-    private TransportMode preferredTransport;
-    private CriteriaMode optimizationCriteria;
+    private PlaceInSearchRequest start_place;
+    private PlaceInSearchRequest end_place;
+    private List<PlaceInSearchRequest> places_to_visit;
+    private int passenger_count;
+    private Date trip_start_date;
+    private int max_trip_duration;
+    private TransportMode preferred_transport;
+    private CriteriaMode optimization_criteria;
 }

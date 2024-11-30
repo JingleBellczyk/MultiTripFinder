@@ -44,14 +44,14 @@ public class AlgorithmRequestCreator {
             throw new IllegalArgumentException("Start and end places must be provided");
         }
         return AlgorithmRequest.builder()
-                .startPlace(mapToPlaceInSearchRequest(startPlace))
-                .endPlace(mapToPlaceInSearchRequest(endPlace))
-                .placesToVisit(placesToVisit.stream().map(this::mapToPlaceInSearchRequest).toList())
-                .passengerCount(searchRequest.getPassengerCount())
-                .tripStartDate(searchRequest.getTripStartDate())
-                .maxTripDuration(searchRequest.getMaxTripDuration())
-                .preferredTransport(searchRequest.getPreferredTransport())
-                .optimizationCriteria(searchRequest.getOptimizationCriteria())
+                .start_place(mapToPlaceInSearchRequest(startPlace))
+                .end_place(mapToPlaceInSearchRequest(endPlace))
+                .places_to_visit(placesToVisit.stream().map(this::mapToPlaceInSearchRequest).toList())
+                .passenger_count(searchRequest.getPassengerCount())
+                .trip_start_date(searchRequest.getTripStartDate())
+                .max_trip_duration(searchRequest.getMaxTripDuration())
+                .preferred_transport(searchRequest.getPreferredTransport())
+                .optimization_criteria(searchRequest.getOptimizationCriteria())
                 .build();
     }
 
@@ -63,10 +63,10 @@ public class AlgorithmRequestCreator {
         return PlaceInSearchRequest.builder()
                 .country(country)
                 .city(city)
-                .stayHoursMin(placeInSearch.getStayDuration())
-                .stayHoursMax(getHoursMax(placeInSearch.getStayDuration()))
-                .stationCoordinates(getBusAndRailwayStationCoordinates(country, city))
-                .cityCode(cityCode)
+                .stay_hours_min(placeInSearch.getStayDuration())
+                .stay_hours_max(getHoursMax(placeInSearch.getStayDuration()))
+                .station_coordinates(getBusAndRailwayStationCoordinates(country, city))
+                .city_code(cityCode)
                 .build();
     }
 

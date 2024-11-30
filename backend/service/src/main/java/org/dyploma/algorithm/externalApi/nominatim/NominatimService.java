@@ -25,8 +25,8 @@ public class NominatimService {
         NominatimApiResponse railwayStationCoordinates = sendRequest(railwayStationFullRequest);
         NominatimApiResponse busStationCoordinates = sendRequest(busStationFullRequest);
         return NominatimServiceResponse.builder()
-                .railwayStationCoordinates(railwayStationCoordinates)
-                .busStationCoordinates(busStationCoordinates)
+                .railway_station_coordinates(railwayStationCoordinates)
+                .bus_station_coordinates(busStationCoordinates)
                 .build();
     }
 
