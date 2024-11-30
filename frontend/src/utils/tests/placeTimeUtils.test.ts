@@ -89,7 +89,7 @@ describe('Validation Functions', () => {
 
         it('returns false if trip ends after one year from now', () => {
             const today = new Date();
-            const maxHoursToSpend = 365 * 24 + 1; // Slightly more than one year
+            const maxHoursToSpend = 365 * 24 + 1; // More than one year
             expect(isValidMaxHoursToSpend(today, maxHoursToSpend)).toBe(false);
         });
 

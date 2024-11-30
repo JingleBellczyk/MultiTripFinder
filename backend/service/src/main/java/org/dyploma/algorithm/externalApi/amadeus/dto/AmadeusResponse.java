@@ -97,7 +97,10 @@ public class AmadeusResponse {
                 // Directly unpack grandTotal from the price field
                 Map<String, Object> priceData = (Map<String, Object>) offerData.get("price");
                 if (priceData != null) {
-                    offer.setGrandTotal(Double.parseDouble((String) priceData.get("grandTotal")));
+                    String grandTotalStr = (String) priceData.get("grandTotal");
+                    if (grandTotalStr != null) {
+                        offer.setGrandTotal(Double.parseDouble(grandTotalStr));
+                    }
                 }
 
                 this.data.add(offer);
@@ -111,6 +114,15 @@ public class AmadeusResponse {
         private String id;
         private List<Itinerary> itineraries;
         private Double grandTotal;
+
+        @Override
+        public String toString() {
+            return "FlightOffer{" +
+                    "id='" + id + '\'' +
+                    ", itineraries=" + itineraries +
+                    ", grandTotal=" + grandTotal +
+                    '}';
+        }
     }
 
     @Data
@@ -118,6 +130,14 @@ public class AmadeusResponse {
     public static class Itinerary {
         private String duration;
         private List<Segment> segments;
+
+        @Override
+        public String toString() {
+            return "Itinerary{" +
+                    "duration='" + duration + '\'' +
+                    ", segments=" + segments +
+                    '}';
+        }
     }
 
     @Data
@@ -130,6 +150,19 @@ public class AmadeusResponse {
         private String carrierCode;
         private String aircraftCode;
         private String id;
+
+        @Override
+        public String toString() {
+            return "Segment{" +
+                    "departureIataCode='" + departureIataCode + '\'' +
+                    ", departureAt='" + departureAt + '\'' +
+                    ", arrivalIataCode='" + arrivalIataCode + '\'' +
+                    ", arrivalAt='" + arrivalAt + '\'' +
+                    ", carrierCode='" + carrierCode + '\'' +
+                    ", aircraftCode='" + aircraftCode + '\'' +
+                    ", id='" + id + '\'' +
+                    '}';
+        }
     }
 
     @Data
@@ -139,5 +172,15 @@ public class AmadeusResponse {
         private String title;
         private String detail;
         private Integer status;
+
+        @Override
+        public String toString() {
+            return "Error{" +
+                    "code=" + code +
+                    ", title='" + title + '\'' +
+                    ", detail='" + detail + '\'' +
+                    ", status=" + status +
+                    '}';
+        }
     }
 }

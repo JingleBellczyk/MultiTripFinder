@@ -16,23 +16,22 @@ import java.util.List;
 @SpringBootTest
 public class AirportTest {
 
-/*    @Autowired
+    @Autowired
     private AirportService airportService;
 
     @Test
     void findAirportsInCity() {
-        testFindAirportsByCity("Wrocław", 1, "WRO");
-        testFindAirportsByCity("London", 6, "LON");
-        testFindAirportsByCity("Çukurova", 1, "COV");
-        testFindAirportsByCity("Düsseldorf", 1, "DUS");
+        testFindAirportsByCity("Poland","Wrocław", 1, "WRO");
+        testFindAirportsByCity("United Kingdom", "London", 6, "LON");
+        testFindAirportsByCity("Turkey", "Çukurova", 1, "COV");
+        testFindAirportsByCity("Germany", "Düsseldorf", 1, "DUS");
     }
 
-    private void testFindAirportsByCity(String city, int expectedSize, String expectedCityCode) {
-        List<Airport> airports = airportService.getAirportsByCity(city);
+    private void testFindAirportsByCity(String country, String city, int expectedSize, String expectedCityCode) {
+        Airport airport = airportService.getAirportByCountryAndCity(country, city);
 
-        assertThat(airports).hasSize(expectedSize);
-        assertThat(airports.get(0).getCityCode()).isEqualTo(expectedCityCode);
-        System.out.println(airports);
+        assertThat(airport.getCityCode()).isEqualTo(expectedCityCode);
+        System.out.println(airport);
     }
 
     @Test
@@ -42,10 +41,9 @@ public class AirportTest {
     }
 
     private void testFindAirportsByAirportCode(String airportCode, int expectedSize, String expectedCountry) {
-        List<Airport> airports = airportService.getAirportsByCode(airportCode);
+        Airport airport = airportService.getAirportByAirportCode(airportCode);
 
-        assertThat(airports).hasSize(expectedSize);
-        assertThat(airports.get(0).getCountry()).isEqualTo(expectedCountry);
-        System.out.println(airports);
-    }*/
+        assertThat(airport.getCountry()).isEqualTo(expectedCountry);
+        System.out.println(airport);
+    }
 }

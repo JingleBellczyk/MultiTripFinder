@@ -23,3 +23,14 @@ export function formatTime(minutes: number) {
         return `${remainingMinutes} min`;
     }
 }
+export function formatTimeToDaysAndHours(hoursNumber: number) {
+    const days = Math.floor(hoursNumber / 24);
+
+    const hours = hoursNumber % 24;
+
+    if (days > 0) {
+        return `${days} day(s) ${hours} hour(s)`;
+    } else {
+        return `${hours} hour(s)`;
+    }
+}
