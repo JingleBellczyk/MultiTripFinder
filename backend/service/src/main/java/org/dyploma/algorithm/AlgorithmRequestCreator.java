@@ -12,6 +12,7 @@ import org.dyploma.search.place.PlaceInSearch;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Component
@@ -43,6 +44,7 @@ public class AlgorithmRequestCreator {
         if (startPlace == null || endPlace == null) {
             throw new IllegalArgumentException("Start and end places must be provided");
         }
+        placesToVisit.sort(Comparator.comparingInt(PlaceInSearch::getEntryOrder));
         return AlgorithmRequest.builder()
                 .start_place(mapToPlaceInSearchRequest(startPlace))
                 .end_place(mapToPlaceInSearchRequest(endPlace))

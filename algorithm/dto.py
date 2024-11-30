@@ -1,5 +1,5 @@
 from typing import List, Optional
-from datetime import date
+from datetime import datetime
 from enum import Enum
 from pydantic import BaseModel
 
@@ -41,7 +41,7 @@ class AlgorithmRequest(BaseModel):
     end_place: PlaceInSearchRequest
     places_to_visit: List[PlaceInSearchRequest]
     passenger_count: int
-    trip_start_date: date
+    trip_start_date: datetime
     max_trip_duration: int
     preferred_transport: Optional[TransportMode]
     optimization_criteria: CriteriaMode
