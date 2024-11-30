@@ -1,9 +1,15 @@
+import logging
+import os
+
 from amadeus import Client, ResponseError
 from datetime import datetime, timedelta
 from typing import List, Tuple
 import asyncio
-
 from models import RouteRequest
+
+amadeus_client_id = os.environ.get("AMADEUS_CLIENT_ID")
+amadeus_client_secret = os.environ.get("AMADEUS_CLIENT_SECRET")
+
 
 def calculate_date_window(current_date: datetime, days_left: int) -> Tuple[str, datetime]:
     """
@@ -29,6 +35,7 @@ def calculate_date_window(current_date: datetime, days_left: int) -> Tuple[str, 
 
     return date_window, updated_date
 
+
 def filter_flights_by_date(flights, start_date: str, max_days: int) -> List[dict]:
     """
     Фильтрует рейсы, исключая те, у которых departure позже start_date + max_days.
@@ -47,6 +54,7 @@ def filter_flights_by_date(flights, start_date: str, max_days: int) -> List[dict
     ]
     return filtered_flights
 
+
 def extract_flight_details(flight: dict) -> dict:
     """
     Извлекает и форматирует нужные данные из одного ответа API.
@@ -58,7 +66,7 @@ def extract_flight_details(flight: dict) -> dict:
         price = f"{flight['price']['total']} {flight['price']['currency']}"
         duration = flight["itineraries"][0]["duration"]
         segments = flight["itineraries"][0]["segments"]
-        
+
         # Данные о сегментах
         segment_details = []
         for segment in segments:
@@ -80,14 +88,15 @@ def extract_flight_details(flight: dict) -> dict:
             "validatingAirline": flight["validatingAirlineCodes"][0] if flight["validatingAirlineCodes"] else None
         }
     except KeyError as e:
-        print(f"Ошибка извлечения данных: отсутствует ключ {e}")
+        logging.info(f"Ошибка извлечения данных: отсутствует ключ {e}")
         return {}
+
 
 async def fetch_amadeus_data(body: dict):
     # Инициализация Amadeus SDK
     amadeus = Client(
-        client_id='fuGCA1fkAaPY7lYZurtGyBbvK5jKajzK',
-        client_secret='GSzaOCsmahf1cnFM'
+        client_id=amadeus_client_id,
+        client_secret=amadeus_client_secret
     )
 
     try:
@@ -95,8 +104,9 @@ async def fetch_amadeus_data(body: dict):
         await asyncio.sleep(0.1)  # Задержка для предотвращения блокировки
         return response.data
     except ResponseError as error:
-        print(f"Error fetching flights: {error}")
+        logging.info(f"Error fetching flights: {error}")
         return []
+
 
 # Основная функция обработки маршрута
 async def process_flight_data(request: RouteRequest):
@@ -106,14 +116,15 @@ async def process_flight_data(request: RouteRequest):
     # Создание пар городов
     if request.cities_to_visit != []:
         city_pairs = [(request.start_city, city) for city in request.cities_to_visit]
-        city_pairs += [(city_a, city_b) for i, city_a in enumerate(request.cities_to_visit) for city_b in request.cities_to_visit if city_a != city_b]
+        city_pairs += [(city_a, city_b) for i, city_a in enumerate(request.cities_to_visit) for city_b in
+                       request.cities_to_visit if city_a != city_b]
         city_pairs += [(city, request.end_city) for city in request.cities_to_visit]
     else:
         city_pairs = [(request.start_city, request.end_city)]
 
-    print("City pairs:")
+    logging.info("City pairs:")
     for city_pair in city_pairs:
-        print(city_pair[0].name, " - ", city_pair[1].name)
+        logging.info(city_pair[0].name, " - ", city_pair[1].name)
 
     # Генерация base_date и date_window
     current_date = datetime.strptime(request.start_date, "%Y-%m-%d")

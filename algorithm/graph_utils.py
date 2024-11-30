@@ -9,11 +9,13 @@ criteria = None
 preferred_transport = None
 start_date_global = None
 
+
 def set_optimal_criteria(new_criteria: str, new_preferred_transport: str, start_date: str):
     global criteria, preferred_transport, start_date_global
     criteria = new_criteria
     preferred_transport = new_preferred_transport
     start_date_global = datetime.strptime(start_date, "%Y-%m-%dT%H:%M:%S")
+
 
 # Функция для добавления узлов (городов) в граф
 def add_city_to_graph(city: City):
@@ -24,8 +26,10 @@ def add_city_to_graph(city: City):
         stay_hours_max=city.stay_hours_max
     )
 
+
 # Функция для добавления маршрута (рёбер) между городами в граф
-def add_transfer_to_graph(origin: City, destination: City, transport_type: str, depart_time: str, arrival_time: str, fair: float, duration: float, segments: Dict[str, Any]):
+def add_transfer_to_graph(origin: City, destination: City, transport_type: str, depart_time: str, arrival_time: str,
+                          fair: float, duration: float, segments: Dict[str, Any]):
     if preferred_transport and transport_type != preferred_transport:
         transport_cost = 15
     else:
@@ -47,6 +51,7 @@ def add_transfer_to_graph(origin: City, destination: City, transport_type: str, 
         cost=cost
     )
 
+
 # Функция для поиска оптимального маршрута от узла S до узла E, проходящего через все узлы ровно один раз
 def find_optimal_route(start: City, end: City):
     best_route = None
@@ -55,13 +60,13 @@ def find_optimal_route(start: City, end: City):
     def dfs(current_city, visited, current_cost, current_route, current_time):
         nonlocal best_route, best_cost
 
-        print(f"Bieżące miasto: {current_city}, Bieżący koszt: {current_cost}, Bieżąca trasa: {current_route}")
+        logging.info(f"Bieżące miasto: {current_city}, Bieżący koszt: {current_cost}, Bieżąca trasa: {current_route}")
 
         if len(visited) == len(route_graph.nodes) and current_city == end.name:
             if current_cost < best_cost:
                 best_cost = current_cost
                 best_route = list(current_route)
-            print(f"Znaleziona cała trasa: {current_route} z kosztem: {current_cost}")
+            logging.info(f"Znaleziona cała trasa: {current_route} z kosztem: {current_cost}")
             return
 
         for edge in route_graph.edges(current_city, data=True):
@@ -82,19 +87,21 @@ def find_optimal_route(start: City, end: City):
     dfs(start.name, {start.name}, 0, [start.name], start_date_global)
     return best_route, best_cost
 
+
 # Функция для проверки, соответствует ли время отправления ограничениям на пребывание в городе
 def is_valid_stay(current_route: List[str], depart_time: str, current_time: datetime) -> bool:
     try:
         depart_time_dt = datetime.strptime(depart_time, "%Y-%m-%dT%H:%M:%S")
     except ValueError:
-        print(f"Błąd przekształcenia depart_time: {depart_time}")
+        logging.info(f"Błąd przekształcenia depart_time: {depart_time}")
         return False
 
     if len(current_route) == 1:
         # Проверяем первый город: мы должны выехать не позднее, чем через 24 часа от указанной даты с автоматически добавленным временем 00:00
         latest_departure = start_date_global + timedelta(hours=24)
         valid = depart_time_dt <= latest_departure
-        print(f"Sprawdzenie pierwszego miasta. depart_time: {depart_time_dt}, Dopuszczalny depart_time: {latest_departure}, Wynik: {valid}")
+        logging.info(
+            f"Sprawdzenie pierwszego miasta. depart_time: {depart_time_dt}, Dopuszczalny depart_time: {latest_departure}, Wynik: {valid}")
         return valid
 
     last_city = current_route[-1]
@@ -103,34 +110,40 @@ def is_valid_stay(current_route: List[str], depart_time: str, current_time: date
 
     # Получаем время прибытия в город
     previous_edge = route_graph.get_edge_data(current_route[-2], last_city)
-    
+
     if not previous_edge:
-        print(f"Nie ma przedniej krawędzi między {current_route[-2]} a {last_city}")
+        logging.info(f"Nie ma przedniej krawędzi między {current_route[-2]} a {last_city}")
         return False
 
     arrival_time = datetime.strptime(previous_edge['arrival_time'], "%Y-%m-%dT%H:%M:%S")
-    print(f"Znaleziono arrival_time dla {last_city}: {arrival_time}")
+    logging.info(f"Znaleziono arrival_time dla {last_city}: {arrival_time}")
 
     # Проверяем, что время отправления находится в допустимом диапазоне пребывания
     earliest_departure = arrival_time + timedelta(hours=stay_hours_min)
     latest_departure = arrival_time + timedelta(hours=stay_hours_max)
     valid = earliest_departure <= depart_time_dt <= latest_departure
-    print(f"Sprawdzenie czasu pobytu w mieście {last_city}. Czas przyjazdu: {arrival_time}, Czas odjazdu: {depart_time_dt}, Dopuszczalny zakres: ({earliest_departure}, {latest_departure}), Wynik: {valid}")
+    logging.info(
+        f"Sprawdzenie czasu pobytu w mieście {last_city}. Czas przyjazdu: {arrival_time}, Czas odjazdu: {depart_time_dt}, Dopuszczalny zakres: ({earliest_departure}, {latest_departure}), Wynik: {valid}")
 
     # Исправление: если текущее время отправления не удовлетворяет минимальному времени пребывания, оно должно соответствовать минимуму
     if depart_time_dt < earliest_departure:
-        print(f"Godzina odbycia jest zbyt wczesna. Dostosujemy się do możliwego minimum: {earliest_departure}")
+        logging.info(f"Godzina odbycia jest zbyt wczesna. Dostosujemy się do możliwego minimum: {earliest_departure}")
         return False
 
     return valid
 
+
 # Пример использования (комментирование для интеграции с main.py)
 if __name__ == "__main__":
     # Пример добавления городов и маршрутов
-    city1 = City(name="Wroclaw", country="Poland", coordinates=(51.107885, 17.038538), stay_hours_min=24, stay_hours_max=48)
-    city2 = City(name="Berlin", country="Germany", coordinates=(52.520008, 13.404954), stay_hours_min=24, stay_hours_max=72)
-    city3 = City(name="Prague", country="Czech Republic", coordinates=(50.075538, 14.437800), stay_hours_min=24, stay_hours_max=48)
-    city4 = City(name="Vienna", country="Austria", coordinates=(48.208176, 16.373819), stay_hours_min=24, stay_hours_max=72)
+    city1 = City(name="Wroclaw", country="Poland", coordinates=(51.107885, 17.038538), stay_hours_min=24,
+                 stay_hours_max=48)
+    city2 = City(name="Berlin", country="Germany", coordinates=(52.520008, 13.404954), stay_hours_min=24,
+                 stay_hours_max=72)
+    city3 = City(name="Prague", country="Czech Republic", coordinates=(50.075538, 14.437800), stay_hours_min=24,
+                 stay_hours_max=48)
+    city4 = City(name="Vienna", country="Austria", coordinates=(48.208176, 16.373819), stay_hours_min=24,
+                 stay_hours_max=72)
 
     add_city_to_graph(city1)
     add_city_to_graph(city2)
@@ -165,4 +178,4 @@ if __name__ == "__main__":
 
     # Поиск оптимального маршрута
     best_route, best_cost = find_optimal_route(city1, city4)
-    print(f"Best route: {best_route} with cost: {best_cost}")
+    logging.info(f"Best route: {best_route} with cost: {best_cost}")
