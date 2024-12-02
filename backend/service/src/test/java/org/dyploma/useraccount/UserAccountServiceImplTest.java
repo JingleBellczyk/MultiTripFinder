@@ -3,7 +3,8 @@ package org.dyploma.useraccount;
 import org.dyploma.exception.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -12,7 +13,8 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 public class UserAccountServiceImplTest {
@@ -30,15 +32,15 @@ public class UserAccountServiceImplTest {
 
     @Test
     public void testGetOrCreateUserWhenUserExists() {
-        // Arrange
+        // Given
         UserAccount existingUser = new UserAccount();
         existingUser.setEmail("test@example.com");
         when(userAccountRepository.findByEmail("test@example.com")).thenReturn(Optional.of(existingUser));
 
-        // Act
+        // When
         UserAccount result = userAccountService.getOrCreateUser(existingUser);
 
-        // Assert
+        // Then
         assertEquals(existingUser, result, "Should return the existing user");
         verify(userAccountRepository, times(1)).findByEmail("test@example.com");
         verify(userAccountRepository, never()).save(any());
@@ -46,16 +48,16 @@ public class UserAccountServiceImplTest {
 
     @Test
     public void testGetOrCreateUserWhenUserDoesNotExist() {
-        // Arrange
+        // Given
         UserAccount newUser = new UserAccount();
         newUser.setEmail("newuser@example.com");
         when(userAccountRepository.findByEmail("newuser@example.com")).thenReturn(Optional.empty());
         when(userAccountRepository.save(newUser)).thenReturn(newUser);
 
-        // Act
+        // When
         UserAccount result = userAccountService.getOrCreateUser(newUser);
 
-        // Assert
+        // Then
         assertEquals(newUser, result, "Should return the newly created user");
         verify(userAccountRepository, times(1)).findByEmail("newuser@example.com");
         verify(userAccountRepository, times(1)).save(newUser);
@@ -63,55 +65,55 @@ public class UserAccountServiceImplTest {
 
     @Test
     public void testGetUserByIdWhenUserExists() {
-        // Arrange
+        // Given
         UserAccount existingUser = new UserAccount();
         existingUser.setId(1);
         when(userAccountRepository.findById(1)).thenReturn(Optional.of(existingUser));
 
-        // Act
+        // When
         UserAccount result = userAccountService.getUserById(1);
 
-        // Assert
+        // Then
         assertEquals(existingUser, result, "Should return the user with the given ID");
     }
 
     @Test
     public void testGetUserByIdWhenUserDoesNotExist() {
-        // Arrange
+        // Given
         when(userAccountRepository.findById(1)).thenReturn(Optional.empty());
 
-        // Act & Assert
+        // When & Then
         NotFoundException exception = assertThrows(NotFoundException.class, () -> userAccountService.getUserById(1));
         assertEquals("User not found", exception.getMessage());
     }
 
     @Test
     public void testDeleteUserWhenUserExists() {
-        // Arrange
+        // Given
         UserAccount existingUser = new UserAccount();
         existingUser.setId(1);
         when(userAccountRepository.existsById(1)).thenReturn(true);
 
-        // Act
+        // When
         userAccountService.deleteUser(1);
 
-        // Assert
+        // Then
         verify(userAccountRepository, times(1)).deleteById(1);
     }
 
     @Test
     public void testDeleteUserWhenUserDoesNotExist() {
-        // Arrange
+        // Given
         when(userAccountRepository.existsById(1)).thenReturn(false);
 
-        // Act & Assert
+        // When & Then
         NotFoundException exception = assertThrows(NotFoundException.class, () -> userAccountService.deleteUser(1));
         assertEquals("User not found", exception.getMessage());
     }
 
     @Test
     void testListUsers() {
-        // Przygotowanie danych testowych
+        // Given
         UserAccount user1 = UserAccount.builder().id(1).email("user1@example.com").role('U').build();
         UserAccount user2 = UserAccount.builder().id(2).email("user2@example.com").role('A').build();
         List<UserAccount> userList = List.of(user1, user2);
@@ -119,18 +121,16 @@ public class UserAccountServiceImplTest {
         Pageable pageable = PageRequest.of(0, 2);
         Page<UserAccount> userPage = new PageImpl<>(userList, pageable, userList.size());
 
-        // Konfiguracja zachowania mocka
         when(userAccountRepository.findAll(pageable)).thenReturn(userPage);
 
-        // Wywołanie testowanej metody
+        // When
         Page<UserAccount> result = userAccountService.listUsers(pageable);
 
-        // Weryfikacja
+        // Then
         assertEquals(2, result.getTotalElements());
         assertEquals(1, result.getContent().get(0).getId());
         assertEquals("user1@example.com", result.getContent().get(0).getEmail());
 
-        // Sprawdzenie interakcji z mockiem
         verify(userAccountRepository, times(1)).findAll(pageable);
     }
 }
