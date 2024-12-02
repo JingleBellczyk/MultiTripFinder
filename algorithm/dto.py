@@ -17,20 +17,20 @@ class CriteriaMode(str, Enum):
 
 
 # Models
-class NominatimApiResponse(BaseModel):
+class Coordinates(BaseModel):
     lat: str
     lon: str
 
 
-class NominatimServiceResponse(BaseModel):
-    railway_station_coordinates: Optional[NominatimApiResponse]
-    bus_station_coordinates: Optional[NominatimApiResponse]
+class StationCoordinates(BaseModel):
+    railway_station_coordinates: Optional[Coordinates]
+    bus_station_coordinates: Optional[Coordinates]
 
 
 class PlaceInSearchRequest(BaseModel):
     country: str
     city: str
-    station_coordinates: NominatimServiceResponse
+    station_coordinates: StationCoordinates
     city_code: Optional[str]
     stay_hours_min: int
     stay_hours_max: int
