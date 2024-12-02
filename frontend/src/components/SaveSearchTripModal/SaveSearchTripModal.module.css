@@ -11,6 +11,7 @@
 .pinkButton:hover {
     background-color: var(--hover-color);
 }
+
 .buttonGroup {
     display: flex;
     justify-content: center;
@@ -37,6 +38,7 @@
 .saveButton:hover {
     background-color: #e0e0e0;
 }
+
 .modalTitle {
     display: flex;
     justify-content: center;
@@ -44,4 +46,25 @@
     font-weight: bold;
     width: 100%;
     text-align: center;
+}
+
+.notificationContainer {
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    z-index: 1000;
+    width: 80%;
+    max-width: 400px;
+}
+
+.notification {
+    font-size: clamp(2rem, 3vw, 2.5rem);
+    padding: 1.5rem;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    background-color: var(--mantine-color-white);
+    border: 1px solid var(--mantine-color-gray-outline-hover);
 }
