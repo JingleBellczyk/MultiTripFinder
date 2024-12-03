@@ -60,7 +60,7 @@ public class SearchServiceImpl implements SearchService {
     public List<Trip> search(SearchRequest search) {
         searchValidator.validateSearchRequest(search);
         AlgorithmRequest algorithmRequestObject = algorithmRequestCreator.createRequest(search);
-        Object algorithmResponse = restTemplate.postForObject(processRouteEndpoint, algorithmRequestObject, Object.class);
+        //Object algorithmResponse = restTemplate.postForObject(processRouteEndpoint, algorithmRequestObject, Object.class);
 
         // TODO: Implement algorithm call
         List<Trip> trips = new ArrayList<>();
