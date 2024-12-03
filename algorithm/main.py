@@ -1,16 +1,18 @@
 import asyncio
 import logging
 import sys
+import time
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from amadeus_utils import process_flight_data
 from city_pairs_creator import extract_city_pairs
 from dto import AlgorithmRequest
-from otp_utils import start_otp, stop_otp, find_routes_otp
+from otp_utils import start_otp, stop_otp, find_routes_otp_async
 import uvicorn
 
 otp_process = None
 logging.basicConfig(level=logging.INFO)
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -30,9 +32,12 @@ app = FastAPI(lifespan=lifespan)
 @app.post("/process_route")
 async def process_route(request: AlgorithmRequest):
     city_pairs = extract_city_pairs(request)
-    otp_results = await find_routes_otp(request, city_pairs)
-    filtered_results = await process_flight_data(request, city_pairs)
-    return {"status": "Request processed", "results": filtered_results}
+    start_time = time.monotonic()
+    otp_results = await find_routes_otp_async(request, city_pairs)
+    duration = time.monotonic() - start_time
+    logging.info(f"async find_routes_otp executed in {duration:.2f} seconds")
+    #filtered_results = await process_flight_data(request, city_pairs)
+    return {"status": "Request processed", "results": "filtered_results"}
 
 
 if __name__ == "__main__":

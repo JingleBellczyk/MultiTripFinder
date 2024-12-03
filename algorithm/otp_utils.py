@@ -1,12 +1,13 @@
+import asyncio
 import logging
 import subprocess
 from datetime import datetime, timedelta, date
 from typing import List, Tuple
-import requests
+
+import aiohttp
 from dto import AlgorithmRequest, PlaceInSearchRequest, Coordinates, TransportMode, CriteriaMode
 from pydantic import BaseModel, Field
 from typing import List, Optional
-import inspect
 
 otp_graphql_endpoint = "http://localhost:8801/otp/gtfs/v1"
 headers = {
@@ -40,26 +41,53 @@ def stop_otp():
         logging.info("OTP process terminated")
 
 
-async def find_routes_otp(request: AlgorithmRequest,
-                          city_pairs: List[Tuple[PlaceInSearchRequest, PlaceInSearchRequest]]):
-    for pair in city_pairs:
-        startPlace = pair[0]
-        endPlace = pair[1]
-        for i in range(request.max_trip_duration):
-            date = request.trip_start_date + timedelta(days=i)
-            request_body = create_otp_request_body(startPlace.station_coordinates.railway_station_coordinates,
-                                                   endPlace.station_coordinates.railway_station_coordinates,
-                                                   date,
-                                                   TransportMode.TRAIN)
-            response = requests.post(otp_graphql_endpoint, headers=headers, json=request_body)
-            isCoroutine = inspect.iscoroutine(response)
-            response_json = response.json()
+async def fetch_otp_data(session, body):
+    async with session.post(otp_graphql_endpoint, headers=headers, json=body) as response:
+        response.raise_for_status()
+        return await response.json()
+
+
+async def process_pair(session, request: AlgorithmRequest, startPlace, endPlace):
+    filtered_itineraries = []
+    for i in range(request.max_trip_duration):
+        date = request.trip_start_date + timedelta(days=i)
+        request_body = create_otp_request_body(
+            startPlace.station_coordinates.railway_station_coordinates,
+            endPlace.station_coordinates.railway_station_coordinates,
+            date,
+            TransportMode.TRAIN,
+        )
+        try:
+            response_json = await fetch_otp_data(session, request_body)
             plan = OTPResponse(**response_json["data"]).plan
-            filtered_itineraries = List[Itinerary]
             if request.optimization_criteria == CriteriaMode.DURATION:
-                filtered_itineraries = sorted(plan.itineraries, key=lambda x: x.duration)[:5]
+                filtered_itineraries.extend(sorted(plan.itineraries, key=lambda x: x.duration)[:5])
             else:
-                top_5_itineraries = []
+                # Handle other optimization criteria as needed
+                pass
+        except Exception as e:
+            print(f"Error fetching OTP data: {e}")
+    return filtered_itineraries
+
+
+async def find_routes_otp_async(request: AlgorithmRequest,
+                                city_pairs: List[Tuple[PlaceInSearchRequest, PlaceInSearchRequest]]):
+    final_itineraries = []
+    tasks = []
+
+    async with aiohttp.ClientSession() as session:
+        for pair in city_pairs:
+            startPlace, endPlace = pair
+            tasks.append(
+                process_pair(session, request, startPlace, endPlace)
+            )
+        results = await asyncio.gather(*tasks)
+
+    # Flatten the results
+    for itineraries in results:
+        final_itineraries.extend(itineraries)
+
+    return final_itineraries
 
 
 def create_otp_request_body(fromCoordinates: Coordinates, toCoordinates: Coordinates, date_: date,
