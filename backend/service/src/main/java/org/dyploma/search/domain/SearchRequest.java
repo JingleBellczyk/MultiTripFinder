@@ -6,7 +6,7 @@ import org.dyploma.search.criteria.CriteriaMode;
 import org.dyploma.search.place.PlaceInSearch;
 import org.dyploma.transport.TransportMode;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -16,6 +16,6 @@ public class SearchRequest {
     private int passengerCount;
     private TransportMode preferredTransport;
     private CriteriaMode optimizationCriteria;
-    private Date tripStartDate;
+    private LocalDate tripStartDate;
     private int maxTripDuration;
 }

@@ -1,10 +1,6 @@
 package org.dyploma.trip.presentation;
 
 import com.openapi.model.PageInfo;
-import com.openapi.model.TransportMode;
-import org.dyploma.search.domain.Search;
-import org.dyploma.search.domain.SearchFilterRequest;
-import org.dyploma.search.presentation.SearchMapper;
 import org.dyploma.tag.trip_tag.domain.TripTag;
 import org.dyploma.trip.domain.Trip;
 import org.dyploma.trip.domain.TripFilterRequest;
@@ -21,8 +17,8 @@ public class TripMapper {
     public static Trip mapToTrip(com.openapi.model.Trip tripApi) {
         return Trip.builder()
                 .name(tripApi.getName().trim().replaceAll("\\s+", " ").toLowerCase())
-                .startDate(Date.valueOf(tripApi.getStartDate()))
-                .endDate(Date.valueOf(tripApi.getEndDate()))
+                .startDate(tripApi.getStartDate())
+                .endDate(tripApi.getEndDate())
                 .passengerCount(tripApi.getPassengerCount())
                 .totalCost(tripApi.getTotalCost().doubleValue())
                 .totalTransferTime(tripApi.getTotalTransferTime())
@@ -40,9 +36,9 @@ public class TripMapper {
                 .places(trip.getPlaces().stream()
                         .map(PlaceInTripMapper::mapToPlaceInTripApi)
                         .toList())
-                .startDate(trip.getStartDate().toLocalDate())
-                .endDate(trip.getEndDate().toLocalDate())
-                .saveDate(trip.getSaveDate() != null ? trip.getSaveDate().toLocalDate() : null)
+                .startDate(trip.getStartDate())
+                .endDate(trip.getEndDate())
+                .saveDate(trip.getSaveDate() != null ? trip.getSaveDate() : null)
                 .passengerCount(trip.getPassengerCount())
                 .totalCost(BigDecimal.valueOf(trip.getTotalCost()))
                 .totalTransferTime(trip.getTotalTransferTime())

@@ -7,8 +7,8 @@ import org.dyploma.search.domain.SearchRequest;
 import org.dyploma.search.place.PlaceInSearch;
 import org.springframework.stereotype.Component;
 
-import java.sql.Date;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 
 import static java.time.ZoneOffset.UTC;
@@ -82,8 +82,8 @@ public class SearchValidator {
         return placeStayDuration;
     }
 
-    private void validateTripStartDate(Date tripStartDate) {
-        if (tripStartDate.toLocalDate().isAfter(Instant.now().plusSeconds(60 * 60 * 24 * 365).atZone(UTC).toLocalDate())) {
+    private void validateTripStartDate(LocalDate tripStartDate) {
+        if (tripStartDate.isAfter(Instant.now().plusSeconds(60 * 60 * 24 * 365).atZone(UTC).toLocalDate())) {
             throw new ValidationException("Trip start date couldn't be more than a year in the future");
         }
     }

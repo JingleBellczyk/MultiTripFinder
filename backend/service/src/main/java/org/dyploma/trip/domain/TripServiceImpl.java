@@ -58,7 +58,7 @@ public class TripServiceImpl implements TripService {
         places.forEach(trip::addPlace);
         transfers.forEach(trip::addTransfer);
         setTagsToTrip(userAccount, trip, tagNames);
-        trip.setSaveDate(Date.valueOf(LocalDate.now()));
+        trip.setSaveDate(LocalDate.now());
         return tripRepository.save(trip);
     }
 

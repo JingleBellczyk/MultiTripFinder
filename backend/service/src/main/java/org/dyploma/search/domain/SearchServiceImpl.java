@@ -88,8 +88,8 @@ public class SearchServiceImpl implements SearchService {
             Trip trip = Trip.builder()
                     .transfers(transfers)
                     .places(places)
-                    .startDate(Date.valueOf(LocalDate.now()))
-                    .endDate(Date.valueOf(LocalDate.now().plusDays(1)))
+                    .startDate(LocalDate.now())
+                    .endDate(LocalDate.now().plusDays(1))
                     .passengerCount(1)
                     .totalCost(50)
                     .totalTransferTime(300)
@@ -132,7 +132,7 @@ public class SearchServiceImpl implements SearchService {
         }
         search.setUserAccount(userAccount);
         setTagsToSearch(userAccount, search, tagNames);
-        search.setSaveDate(Date.valueOf(LocalDate.now()));
+        search.setSaveDate(LocalDate.now());
         return searchRepository.save(search);
     }
 

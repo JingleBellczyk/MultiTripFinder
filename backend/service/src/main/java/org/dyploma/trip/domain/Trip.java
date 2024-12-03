@@ -10,7 +10,7 @@ import org.dyploma.trip.transfer.Transfer;
 import org.dyploma.trip.place.PlaceInTrip;
 import org.dyploma.useraccount.UserAccount;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,9 +48,9 @@ public class Trip {
     private List<TripTag> tags;
 
     private String name;
-    private Date startDate;
-    private Date endDate;
-    private Date saveDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private LocalDate saveDate;
     private int passengerCount;
     private double totalCost;
     private int totalTransferTime;

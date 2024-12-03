@@ -28,7 +28,7 @@ public class SearchMapper {
                 .passengerCount(searchApi.getPassengerCount())
                 .preferredTransport(mapToTransportMode(searchApi.getPreferredTransport()))
                 .optimizationCriteria(mapToCriteriaMode(searchApi.getOptimizationCriteria()))
-                .tripStartDate(Date.valueOf(searchApi.getTripStartDate()))
+                .tripStartDate(searchApi.getTripStartDate())
                 .maxTripDuration(searchApi.getMaxTripDuration())
                 .build();
     }
@@ -37,14 +37,14 @@ public class SearchMapper {
         com.openapi.model.Search searchApi = new com.openapi.model.Search()
                 .id(search.getId())
                 .name(search.getName())
-                .saveDate(search.getSaveDate().toLocalDate())
+                .saveDate(search.getSaveDate())
                 .placesToVisit(search.getPlacesToVisit().stream()
                         .map(PlaceInSearchMapper::mapToPlaceInSearchApi)
                         .toList())
                 .passengerCount(search.getPassengerCount())
                 .preferredTransport(mapToTransportModeApi(search.getPreferredTransport()))
                 .optimizationCriteria(mapToCriteriaModeApi(search.getOptimizationCriteria()))
-                .tripStartDate(search.getTripStartDate().toLocalDate())
+                .tripStartDate(search.getTripStartDate())
                 .maxTripDuration(search.getMaxTripDuration());
         if (search.getTags() != null) {
             searchApi.setTags(search.getTags().stream()
@@ -62,7 +62,7 @@ public class SearchMapper {
                 .passengerCount(searchRequestApi.getPassengerCount())
                 .preferredTransport(mapToTransportMode(searchRequestApi.getPreferredTransport()))
                 .optimizationCriteria(mapToCriteriaMode(searchRequestApi.getOptimizationCriteria()))
-                .tripStartDate(Date.valueOf(searchRequestApi.getTripStartDate()))
+                .tripStartDate(Date.valueOf(searchRequestApi.getTripStartDate()).toLocalDate())
                 .maxTripDuration(searchRequestApi.getMaxTripDuration())
                 .build();
     }

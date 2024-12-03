@@ -12,6 +12,7 @@ import org.dyploma.transport.TransportMode;
 import org.dyploma.useraccount.UserAccount;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class Search {
 
     private Integer id;
     private String name;
-    private Date saveDate;
+    private LocalDate saveDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_account_id", nullable = false)
@@ -50,7 +51,7 @@ public class Search {
     private int passengerCount;
     private TransportMode preferredTransport;
     private CriteriaMode optimizationCriteria;
-    private Date tripStartDate;
+    private LocalDate tripStartDate;
     private int maxTripDuration;
 
     public void addPlaceToVisit(PlaceInSearch place) {
