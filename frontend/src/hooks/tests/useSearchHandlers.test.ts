@@ -14,7 +14,7 @@ describe('convertToSearchDTOSave', () => {
             ],
             passengerCount: 4,
             maxTripDuration: 48,
-            tripStartDate: new Date('2024-01-01T10:00:00'),
+            tripStartDate: '2024-01-01',
             preferredTransport: 'CAR',
             optimizationCriteria: 'FASTEST',
         };
@@ -42,7 +42,7 @@ describe('convertToSearchDTOSave', () => {
             placesToVisit: [],
             passengerCount: 2,
             maxTripDuration: 24,
-            tripStartDate: new Date('2024-05-01T12:00:00'),
+            tripStartDate: '2024-05-01',
             preferredTransport: 'PLANE',
             optimizationCriteria: 'CHEAPEST',
         };
@@ -72,7 +72,7 @@ describe('convertToSearchDTOSave', () => {
             ],
             passengerCount: 1,
             maxTripDuration: 12,
-            tripStartDate: new Date('2024-06-01'),
+            tripStartDate: '2024-06-01',
             preferredTransport: null,
             optimizationCriteria: 'ECO-FRIENDLY',
         };
@@ -102,7 +102,7 @@ describe('convertToSearchDTOSave', () => {
             ],
             passengerCount: 3,
             maxTripDuration: 36,
-            tripStartDate: new Date('2024-03-15T08:00:00'),
+            tripStartDate: '2024-03-15',
             preferredTransport: 'TRAIN',
             optimizationCriteria: 'BALANCED',
         };

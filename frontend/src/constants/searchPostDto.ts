@@ -29,7 +29,7 @@ export const EXAMPLE_SEARCH_POST_DTO: SearchDTOPost = {
     ],
     passengerCount: 5,
     maxTripDuration: 240,
-    tripStartDate: new Date("2024-11-28T16:14:52.213Z"),
+    tripStartDate: '2024-11-28',
     preferredTransport: "BUS",
     optimizationCriteria: "DURATION",
 }

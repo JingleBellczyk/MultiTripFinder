@@ -1,4 +1,5 @@
 import {SearchDTOPost, SearchDTO, PlaceLocation, PlaceTime, PlaceTimePost, SavedSearch, Tag} from '../types/SearchDTO';
+import {stringToDate} from "./formatDateToReadableString";
 
 const transportMapping: { [key: string]: string } = {
     'BUS': 'Bus',
@@ -34,7 +35,7 @@ export function convertSearchDTOPostToSearchDTO(dtoPost: SearchDTOPost): SearchD
         end: endPlace,
         maxTotalTime: dtoPost.maxTripDuration / 24,
         transport: dtoPost.preferredTransport ? transportMapping[dtoPost.preferredTransport.toUpperCase()] : null,
-        startDate: dtoPost.tripStartDate,
+        startDate: stringToDate(dtoPost.tripStartDate),
         passengersNumber: dtoPost.passengerCount,
         preferredCriteria: dtoPost.optimizationCriteria,
     };

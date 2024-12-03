@@ -2,10 +2,11 @@ export interface SearchDTOPost {
     placesToVisit: PlaceTimePost[];
     passengerCount: number;
     maxTripDuration: number;
-    tripStartDate: Date | null;
+    tripStartDate: string | null;
     preferredTransport: string | null;
     optimizationCriteria: string;
 }
+
 export interface SearchDTOSave {
     id?: string | null;
     name?: string | null;
@@ -14,7 +15,7 @@ export interface SearchDTOSave {
     placesToVisit: PlaceTimePost[];
     passengerCount: number;
     maxTripDuration: number;
-    tripStartDate: Date | null;
+    tripStartDate: string | null;
     preferredTransport: string | null;
     optimizationCriteria: string;
 }

@@ -1,6 +1,6 @@
 import { convertToSearchDTOSave } from '../convertSearchDTOSave';
 import { SearchDTOPost, SearchDTOSave, PlaceTimePost } from '../../types/SearchDTO';
-
+import {selectedDateToString} from '../../utils/formatDateToReadableString'
 describe('convertToSearchDTOSave', () => {
     it('should convert SearchDTOPost to SearchDTOSave with default null and empty values', () => {
         const input: SearchDTOPost = {
@@ -10,7 +10,7 @@ describe('convertToSearchDTOSave', () => {
             ],
             passengerCount: 4,
             maxTripDuration: 48,
-            tripStartDate: new Date('2024-01-01T10:00:00'),
+            tripStartDate: '2024-01-01',
             preferredTransport: 'BUS',
             optimizationCriteria: 'DURATION',
         };
@@ -38,7 +38,7 @@ describe('convertToSearchDTOSave', () => {
             placesToVisit: [],
             passengerCount: 2,
             maxTripDuration: 24,
-            tripStartDate: new Date('2024-05-01T12:00:00'),
+            tripStartDate: '2024-05-01',
             preferredTransport: 'PLANE',
             optimizationCriteria: 'PRICE',
         };
