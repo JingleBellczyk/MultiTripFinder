@@ -1,5 +1,4 @@
-TIA,TIA,Tirana,Tirana,Albania
-EVN,EVN,Yerevan Zvartnots,Yerevan,Armenia
+TIA,TIA,Tirane,Tirane,Albania
 GRZ,GRZ,Graz,Graz,Austria
 INN,INN,Innsbruck,Innsbruck,Austria
 KLU,KLU,Klagenfurt,Klagenfurt,Austria
@@ -64,8 +63,6 @@ TLN,TLN,Toulon-Hyres,Hyres,France
 TLN,TLN,Toulon-Hyres,Toulon,France
 TLS,TLS,Toulouse Blagnac,Blagnac,France
 TLS,TLS,Toulouse Blagnac,Toulouse,France
-KUT,KUT,Kutaisi,Kutaisi,Georgia
-TBS,TBS,Tbilisi,Tbilisi,Georgia
 FMM,FMM,Allgaeu,Allgaeu,Germany
 BER,BER,Berlin Brandenburg,Berlin,Germany
 BRE,BRE,Bremen,Bremen,Germany
@@ -231,8 +228,8 @@ ARN,STO,Stockholm Arlanda,Stockholm,Sweden
 BMA,STO,Stockholm Bromma,Stockholm,Sweden
 NYO,STO,Stockholm Skavsta,Stockholm,Sweden
 BSL,BSL,Basel Mulhouse Freiburg,Basel,Switzerland
-BSL,BSL,Basel Mulhouse Freiburg,Mulhouse,Switzerland
-BSL,BSL,Basel Mulhouse Freiburg,Freiburg,Switzerland
+BSL,BSL,Basel Mulhouse Freiburg,Mulhouse,France
+BSL,BSL,Basel Mulhouse Freiburg,Freiburg,Germany
 GVA,GVA,Geneva,Geneva,Switzerland
 ZRH,ZRH,Zurich,Zurich,Switzerland
 ESB,ESB,Ankara Esenboga,Ankara,Turkey
@@ -247,8 +244,8 @@ BJV,BJV,Milas-Bodrum,Milas,Turkey
 BJV,BJV,Milas-Bodrum,Bodrum,Turkey
 TZX,TZX,Trabzon,Trabzon,Turkey
 HRK,HRK,Kharkiv,Kharkiv,Ukraine
-KBP,IEV,Kiev Boryspil,Kiev,Ukraine
-IEV,IEV,Kiev Zhuliany,Kiev,Ukraine
+KBP,IEV,Kiev Boryspil,Kyiv,Ukraine
+IEV,IEV,Kiev Zhuliany,Kyiv,Ukraine
 LWO,LWO,Lviv,Lviv,Ukraine
 ODS,ODS,Odessa,Odessa,Ukraine
 ABZ,ABZ,Aberdeen,Aberdeen,United Kingdom
