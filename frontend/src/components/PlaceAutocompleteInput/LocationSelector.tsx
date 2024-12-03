@@ -23,7 +23,6 @@ export const LocationSelector: React.FC<LocationSelectorProps> = ({value, onChan
             const country_row = place.address_components.find(component =>
                 component.types.some(type => type === "country")
             );
-            console.log(place.address_components)
 
             if(city_row && country_row){
                 console.log(city_row?.long_name)

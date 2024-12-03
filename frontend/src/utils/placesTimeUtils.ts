@@ -1,36 +1,52 @@
-import {PlaceTime, PlaceLocation} from "../types/SearchDTO";
-
-/**
- * functions to valid search page
- */
+import { PlaceTime, PlaceLocation } from "../types/SearchDTO";
+import { validCountries } from "../constants/countries";
 
 export const isDateValid = (selectedDate: Date | null): boolean => {
-    if (!selectedDate) return false; // If the date is null, it's not valid
+    if (!selectedDate) return false;
     console.log("valid", selectedDate)
     const now = new Date();
     now.setHours(0, 0, 0, 0);
-    return selectedDate > now; // Return true if selectedDate is today or in the future
+    return selectedDate > now;
 };
 
-export const isValidPlacesTime = (placesTime: PlaceTime[]): boolean => {
-    if(placesTime.length > 0){
+export const isValidPlacesTime = (placesTime: PlaceTime[]): string | null => {
+    if (placesTime.length > 0) {
         for (const placeTime of placesTime) {
             if (!placeTime.name || placeTime.name.trim() === "") {
-                return false;
+                return "Place can't be empty";
             }
+
+            if (!validCountries.includes(placeTime.country)) {
+                return "Place must be in Europe";
+            }
+
             if (placeTime.hoursToSpend <= 0) {
-                return false;
+                return "Time can't be empty";
+            }
+
+            if (!placeTime.city || placeTime.city.trim() === "") {
+                return "Place can't be empty";
             }
         }
     }
-    return true;
+    return null;
 };
 
-export const isValidPlace = (place: PlaceLocation | null ): boolean => {
-    if (typeof place?.name !== "string" || place?.name === "" || place?.country === "" || place?.city === "") {
-        return false;
+export const isValidPlace = (place: PlaceLocation | null): string | null => {
+    if (
+        !place ||
+        place.name.trim() === "" ||
+        place.country.trim() === "" ||
+        place.city.trim() === ""
+    ) {
+        return "Place can't be empty";
     }
-    return true;
+
+    if (!validCountries.includes(place.country)) {
+        return "Place must be in Europe";
+    }
+
+    return null;
 };
 
 export const isValidMaxHoursToSpend = (selectedDate: Date | null, maxHoursToSpend: number): boolean => {
@@ -49,7 +65,7 @@ export const isValidMaxHoursToSpend = (selectedDate: Date | null, maxHoursToSpen
 };
 
 export interface ValidationErrors {
-    dateError: string | null,
+    dateError: string | null;
     placesTimeError: string | null;
     startPlaceError: string | null;
     endPlaceError: string | null;
@@ -67,13 +83,13 @@ export function validateForm(
     maxHoursToSpendError: string | null;
     endPlaceError: string | null;
     startPlaceError: string | null;
-    placesTimeError: string | null
+    placesTimeError: string | null;
 } {
     return {
         dateError: !selectedDate || !isDateValid(selectedDate) ? "Date can't be empty or in the past" : null,
-        placesTimeError: !isValidPlacesTime(placesTimeList) ? "Places or time can't be empty" : null,
-        startPlaceError: !isValidPlace(startPlace) ? "Start place can't be empty" : null,
-        endPlaceError: !isValidPlace(endPlace) ? "End place can't be empty" : null,
+        placesTimeError: isValidPlacesTime(placesTimeList),
+        startPlaceError: isValidPlace(startPlace),
+        endPlaceError: isValidPlace(endPlace),
         maxHoursToSpendError: !isValidMaxHoursToSpend(selectedDate, maxHoursToSpend) ? "The total travel duration can't end later than one year from now" : null
     };
 }
