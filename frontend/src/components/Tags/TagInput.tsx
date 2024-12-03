@@ -26,6 +26,8 @@ export default function TagInput({ list, label, value, onRemoveFromAllTags, onEd
     const [element, setElement] = useState<string>('');
     const inputRef = useRef<HTMLInputElement | null>(null);
 
+    const normalize = (str: string) => str.toLowerCase().trim().replace(/\s+/g, ' ');
+
     const handleModalOpen = () => {
         combobox.closeDropdown();
     };
@@ -37,14 +39,15 @@ export default function TagInput({ list, label, value, onRemoveFromAllTags, onEd
     }, []);
 
     const handleValueSelect = async (val: string) => {
-        if (value.some((tag) => tag.name === val)) {
+        const normalizedValue = normalize(val);
+        if (value.some((tag) => tag.name === normalizedValue)) {
             return;
         }
         if (value.length >= 3) {
             alert("You can only add up to 3 tags.");
             return;
         }
-        await onAddTag(index, val);
+        await onAddTag(index, val.trim());
         setElement('');
     };
 
@@ -67,7 +70,7 @@ export default function TagInput({ list, label, value, onRemoveFromAllTags, onEd
     ));
 
     const options = list
-        .filter((item) => item.name.includes(element))
+        .filter((item) => normalize(item.name).includes(normalize(element)))
         .map((item) => (
             <Combobox.Option value={item.name} key={item.name}>
                 <Group
@@ -77,7 +80,7 @@ export default function TagInput({ list, label, value, onRemoveFromAllTags, onEd
                         gap: 0
                     }}
                 >
-                    {value.some((tag) => tag.name === item.name) && <CheckIcon size={10} />}
+                    {value.some((tag) => normalize(tag.name) === normalize(item.name)) && <CheckIcon size={10} />}
                     <span>{item.name}</span>
                     <Group
                         onClick={(e) => e.stopPropagation()}

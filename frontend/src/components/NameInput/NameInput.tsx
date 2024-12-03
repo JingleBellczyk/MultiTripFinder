@@ -15,8 +15,8 @@ interface NameInputProps {
 }
 
 const NameInput: React.FC<NameInputProps> = ({ userId, value, setValue, type, data , handleSearchClick}) => {
-    const [names, setNames] = useState<string[]>([]); // State for fetched names
-    const [loading, setLoading] = useState<boolean>(false); // State for loading indicator
+    const [names, setNames] = useState<string[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
         if (userId) {

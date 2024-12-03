@@ -6,7 +6,6 @@ import { SavedTripDTO } from "../types/TripDTO";
 import { User } from "../types/UserDTO";
 import transformTrips from "./transformTrips";
 import {Simulate} from "react-dom/test-utils";
-import error = Simulate.error;
 import {Dispatch, SetStateAction} from "react";
 
 export const handleSearchForName = async (
@@ -39,8 +38,14 @@ export const handleSearchForName = async (
         } else {
             console.error("Invalid input: selectedName or user is missing.");
         }
-    } catch (error) {
-        console.error("Error in searching for name: ", error);
+    } catch (error: any) {
+        // Check for 404 status
+        if (axios.isAxiosError(error) && error.response?.status === 404) {
+            console.warn("No data found for the given name. Setting elements to an empty list.");
+            setElements([]);
+        } else {
+            console.error("Error in searching for name: ", error);
+        }
     }
 };
 
