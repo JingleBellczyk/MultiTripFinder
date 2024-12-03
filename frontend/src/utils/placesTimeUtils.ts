@@ -6,10 +6,10 @@ import {PlaceTime, PlaceLocation} from "../types/SearchDTO";
 
 export const isDateValid = (selectedDate: Date | null): boolean => {
     if (!selectedDate) return false; // If the date is null, it's not valid
-
+    console.log("valid", selectedDate)
     const now = new Date();
     now.setHours(0, 0, 0, 0);
-    return selectedDate >= now; // Return true if selectedDate is today or in the future
+    return selectedDate > now; // Return true if selectedDate is today or in the future
 };
 
 export const isValidPlacesTime = (placesTime: PlaceTime[]): boolean => {

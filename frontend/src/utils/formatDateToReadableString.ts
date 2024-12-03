@@ -34,3 +34,18 @@ export function formatTimeToDaysAndHours(hoursNumber: number) {
         return `${hours} hour(s)`;
     }
 }
+
+export const selectedDateToString = (date: Date): string => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Miesiące są 0-indeksowane
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+};
+
+export const stringToDate = (dateString: string | null): Date | null => {
+    if (!dateString) {
+        return null;
+    }
+    const [year, month, day] = dateString.split('-').map(Number); // Rozdziela rok, miesiąc i dzień
+    return new Date(year, month - 1, day, 0, 0, 0); // Tworzy datę z godziną 00:00:00
+};

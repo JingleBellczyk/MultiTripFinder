@@ -18,6 +18,7 @@ import {GridComponent} from "../../components/GridComponent/GridComponent";
 import {DatePicker} from "../../components/DatePicker/DatePicker";
 import RadioComponent from "../../components/RadioComponent/RadioComponent";
 import {validateForm, ValidationErrors} from '../../utils/placesTimeUtils'
+import {selectedDateToString} from '../../utils/formatDateToReadableString'
 import {convertSearchDTOPostToSearchDTO, convertToPlaceTimePost} from '../../utils/placeConverters'
 import "../../styles/globals.css"
 import styles from "./SearchPage.module.css"
@@ -178,14 +179,14 @@ function SearchFunction(paramDto: SearchDTO) {
         if (hasErrors) {
             return;
         }
-
+        const selectedDateString: string = selectedDate ? selectedDateToString(selectedDate) : ''
         const goalPlacesTimePost: PlaceTimePost[] = convertToPlaceTimePost(placesTimeList, startPlace, endPlace);
 
         const dto: SearchDTOPost = {
             placesToVisit: goalPlacesTimePost,
             passengerCount: numberOfPassengers,
             maxTripDuration: maxHoursToSpend,
-            tripStartDate: selectedDate,
+            tripStartDate: selectedDateString,
             preferredTransport: selectedTransport,
             optimizationCriteria: preferredCriteria
         };
