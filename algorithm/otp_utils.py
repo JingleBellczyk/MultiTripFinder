@@ -103,6 +103,7 @@ def create_otp_request_body(fromCoordinates: Coordinates, toCoordinates: Coordin
             searchWindow: "86400"
             numItineraries: 100
             transportModes: [{{mode: {transport}}}]
+            minTransferTime: 1800
           ) {{
             itineraries {{
               start
@@ -112,12 +113,16 @@ def create_otp_request_body(fromCoordinates: Coordinates, toCoordinates: Coordin
               legs {{
                 from {{
                   name
+                  lat
+                  lon
                   departure {{
                     scheduledTime
                   }}
                 }}
                 to {{
                   name
+                  lat
+                  lon
                   arrival {{
                     scheduledTime
                   }}
@@ -155,6 +160,8 @@ class TimeInfo(BaseModel):
 
 class LocationInfo(BaseModel):
     name: str
+    lat: float
+    lon: float
     departure: Optional[TimeInfo] = None
     arrival: Optional[TimeInfo] = None
 

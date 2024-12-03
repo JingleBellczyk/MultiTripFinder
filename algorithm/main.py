@@ -31,10 +31,9 @@ app = FastAPI(lifespan=lifespan)
 
 @app.post("/process_route")
 async def process_route(request: AlgorithmRequest):
-    city_pairs = extract_city_pairs(request)
-
+    start_city_pairs, visit_city_pairs, end_city_pairs = extract_city_pairs(request)
     start_time = time.monotonic()
-    otp_results = await find_routes_otp_async(request, city_pairs)
+    otp_results = await find_routes_otp_async(request, start_city_pairs, visit_city_pairs, end_city_pairs)
     duration = time.monotonic() - start_time
     logging.info(f"async find_routes_otp executed in {duration:.2f} seconds")
     
