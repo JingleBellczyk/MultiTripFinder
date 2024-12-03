@@ -12,3 +12,5 @@ backend/api-generator/gradlew
 algorithm/__pycache__
 algorithm/otp
 .env
+frontend/package-lock.json
+frontend/package.json

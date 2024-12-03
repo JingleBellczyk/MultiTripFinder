@@ -2,94 +2,53 @@ import logging
 import os
 
 from amadeus import Client, ResponseError
-from datetime import datetime, timedelta, date
+from datetime import datetime, timedelta
 from typing import List, Tuple
 import asyncio
 
-from dto import AlgorithmRequest, PlaceInSearchRequest
+from dto import AlgorithmRequest, PlaceInSearchRequest, TransportMode, TransportModeLeg
 
 amadeus_client_id = os.environ.get("AMADEUS_CLIENT_ID")
 amadeus_client_secret = os.environ.get("AMADEUS_CLIENT_SECRET")
 
-
-def calculate_date_window(current_date: date, days_left: int) -> Tuple[str, date]:
+def extract_flight_details(flight: dict, end_datetime: datetime, origin: PlaceInSearchRequest, destination: PlaceInSearchRequest, passenger_count: int) -> dict:
     """
-    Рассчитывает date_window и корректирует current_date для базовой даты.
-    :param current_date: Текущая дата начала диапазона.
-    :param days_left: Количество оставшихся дней для обработки.
-    :return: (date_window, updated_current_date)
-    """
-    if days_left >= 7:
-        date_window = "I3D"  # ±3 дня
-        updated_date = current_date + timedelta(days=3)  # Центральная дата
-    elif 4 <= days_left < 7:
-        date_window = "I2D"  # ±2 дня
-        updated_date = current_date + timedelta(days=2)  # Центральная дата
-    elif 1 < days_left <= 3:
-        date_window = f"P{days_left - 1}D"  # Только вперед
-        updated_date = current_date  # Для короткого периода базовая дата остается начальной
-    elif days_left == 1:
-        date_window = "P1D"
-        updated_date = current_date
-    else:
-        raise ValueError("Invalid number of days left")
-
-    return date_window, updated_date
-
-
-def filter_flights_by_date(flights, start_date: str, max_days: int) -> List[dict]:
-    """
-    Фильтрует рейсы, исключая те, у которых departure позже start_date + max_days.
-    :param flights: Список всех найденных рейсов.
-    :param start_date: Начальная дата в формате YYYY-MM-DD.
-    :param max_days: Максимальное количество дней с начала.
-    :return: Отфильтрованный список рейсов.
-    """
-    start_date = datetime.strptime(start_date, "%Y-%m-%d")
-    end_date = start_date + timedelta(days=max_days)
-
-    # Фильтрация рейсов
-    filtered_flights = [
-        flight for flight in flights
-        if datetime.strptime(flight["itineraries"][0]["segments"][0]["departure"]["at"][:10], "%Y-%m-%d") <= end_date
-    ]
-    return filtered_flights
-
-
-def extract_flight_details(flight: dict) -> dict:
-    """
-    Извлекает и форматирует нужные данные из одного ответа API.
-    :param flight: Один рейс из ответа Amadeus API.
-    :return: Словарь с отфильтрованной информацией.
+    - Pobieramy tylko potrzebne dane z odpowiedzi Amadeus API
+    - Usuwamy połączenia, które kończą się po max_trip_duration 
     """
     try:
-        # Основные данные о рейсе
-        price = f"{flight['price']['total']} {flight['price']['currency']}"
-        duration = flight["itineraries"][0]["duration"]
+        duration = int(timedelta(hours=int(flight["itineraries"][0]["duration"][2:4]), minutes=int(flight["itineraries"][0]["duration"][5:7])).total_seconds() / 60)
         segments = flight["itineraries"][0]["segments"]
 
-        # Данные о сегментах
+        # Wyciąganie szczegółów segmentów
         segment_details = []
         for segment in segments:
             segment_info = {
-                "airline_and_flight": f"{segment['carrierCode']} {segment['number']}",
-                "departure_time": segment["departure"]["at"],
-                "departure_city": segment["departure"]["iataCode"],
-                "arrival_time": segment["arrival"]["at"],
-                "arrival_city": segment["arrival"]["iataCode"],
-                "aircraft": segment["aircraft"]["code"]
+                "departure_time": datetime.strptime(segment["departure"]["at"], "%Y-%m-%dT%H:%M:%S"),
+                "departure_city_code": segment["departure"]["iataCode"],
+                "arrival_time": datetime.strptime(segment["arrival"]["at"], "%Y-%m-%dT%H:%M:%S"),
+                "arrival_city_code": segment["arrival"]["iataCode"],
             }
             segment_details.append(segment_info)
 
+        if segment_details[-1].arrival_time > end_datetime:
+            return {}
+        if flight["numberOfBookableSeats"] < passenger_count:
+            return {}
+
         # Возврат отфильтрованных данных
         return {
-            "price": price,
+            "origin_city": origin,
+            "destination_city": destination,
+            "departure_time": segment_details[0]["departure_time"],
+            "arrival_time": segment_details[0]["arrival_time"][-1]["arrival_time"],
+            "price": flight['price']['total'],
             "duration": duration,
             "segments": segment_details,
-            "validatingAirline": flight["validatingAirlineCodes"][0] if flight["validatingAirlineCodes"] else None
+            "transport_modes": [TransportModeLeg(transport_mode=TransportMode.PLANE, duration=duration)] #list of transport modes + their durations
         }
     except KeyError as e:
-        logging.info(f"Ошибка извлечения данных: отсутствует ключ {e}")
+        logging.info(f"Error extracting data: no such key {e}")
         return {}
 
 
@@ -102,7 +61,7 @@ async def fetch_amadeus_data(body: dict):
 
     try:
         response = amadeus.shopping.flight_offers_search.post(body)
-        await asyncio.sleep(0.1)  # Задержка для предотвращения блокировки
+        await asyncio.sleep(0.05)
         return response.data
     except ResponseError as error:
         logging.info(f"Error fetching flights: {error}")
@@ -111,58 +70,59 @@ async def fetch_amadeus_data(body: dict):
 
 async def process_flight_data(request: AlgorithmRequest, city_pairs: List[Tuple[PlaceInSearchRequest, PlaceInSearchRequest]]):
     tasks = []
-    # Генерация base_date и date_window
-    current_date = request.trip_start_date
-    days_left = request.max_trip_duration
-    date_ranges = []
+    
+    # Generacja maks daty końcowej
+    start_date = request.trip_start_date
+    max_duration = request.max_trip_duration
+    end_datetime = start_date.strftime("%Y-%m-%d") + timedelta(days=max_duration, hours=23, minutes=59).strftime("T%H:%M:%S")
 
-    while days_left > 0:
-        date_window, updated_date = calculate_date_window(current_date, days_left)
-        base_date = updated_date.strftime("%Y-%m-%d")
-        date_ranges.append((base_date, date_window))
-        current_date += timedelta(days=7)
-        days_left -= 7
+    # Generacja dat bazowych
+    base_dates = []
+    for i in range(0, max_duration, 7):
+        base_date = (start_date + timedelta(days=i)).strftime("%Y-%m-%d")
+        base_dates.append(base_date)
 
     # Создание задач для всех пар городов и диапазонов дат
     for origin, destination in city_pairs:
-        for base_date, date_window in date_ranges:
-            body = {
-                "currencyCode": "EUR",
-                "originDestinations": [
-                    {
-                        "id": "1",
-                        "originLocationCode": origin.city_code,
-                        "destinationLocationCode": destination.city_code,
-                        "departureDateTimeRange": {
-                            "date": base_date,
-                            "dateWindow": date_window
+        if origin.city_code and destination.city_code:
+            for base_date in base_dates:
+                body = {
+                    "currencyCode": "EUR",
+                    "originDestinations": [
+                        {
+                            "id": "1",
+                            "originLocationCode": origin.city_code,
+                            "destinationLocationCode": destination.city_code,
+                            "departureDateTimeRange": {
+                                "date": base_date,
+                                "dateWindow": "I3D"
+                            }
                         }
+                    ],
+                    "travelers": [
+                        {
+                            "id": 1,
+                            "travelerType": "ADULT"
+                        }
+                    ],
+                    "sources": [
+                        "GDS"
+                    ],
+                    "searchCriteria": {
+                        "maxFlightOffers": 15,
+                        "oneFlightOfferPerDay": True
                     }
-                ],
-                "travelers": [
-                    {
-                        "id": 1,
-                        "travelerType": "ADULT"
-                    }
-                ],
-                "sources": [
-                    "GDS"
-                ],
-                "searchCriteria": {
-                    "maxFlightOffers": 15,
-                    "oneFlightOfferPerDay": True
                 }
-            }
-            tasks.append(fetch_amadeus_data(body))
+                tasks.append(fetch_amadeus_data(body), origin, destination)
 
-    # Выполнение запросов параллельно
+    # Asynchroniczne wykoanie zapytań
     responses = await asyncio.gather(*tasks)
 
-    # Фильтрация и сохранение результатов
+    # Filtracja wyników
     filtered_results = []
-    for response in responses:
+    for response, origin, destination in responses:
         if response:
             for flight in response:
-                flight_details = extract_flight_details(flight)
+                flight_details = extract_flight_details(flight, end_datetime, origin, destination, request.passenger_count)
                 if flight_details:
                     filtered_results.append(flight_details)

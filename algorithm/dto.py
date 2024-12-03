@@ -17,6 +17,10 @@ class CriteriaMode(str, Enum):
 
 
 # Models
+class TransportModeLeg(BaseModel):
+    transport_mode: TransportMode
+    duration: int
+
 class Coordinates(BaseModel):
     lat: str
     lon: str
@@ -46,3 +50,12 @@ class AlgorithmRequest(BaseModel):
     preferred_transport: Optional[TransportMode]
     optimization_criteria: CriteriaMode
 
+class Connection(BaseModel):
+    origin_city: PlaceInSearchRequest
+    destination_city: PlaceInSearchRequest
+    departure_time: datetime
+    arrival_time: datetime
+    price: float
+    duration: int
+    segments: List[dict]
+    transport_type: TransportMode
