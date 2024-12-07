@@ -1,0 +1,270 @@
+{
+  "routes": [
+    {
+      "legs": [
+        {
+          "steps": [
+            {
+              "transitDetails": {
+                "stopDetails": {
+                  "arrivalStop": {
+                    "name": "Opole Główne",
+                    "location": {
+                      "latLng": {
+                        "latitude": 50.661514999999994,
+                        "longitude": 17.925863
+                      }
+                    }
+                  },
+                  "arrivalTime": "2024-12-05T20:41:00Z",
+                  "departureStop": {
+                    "name": "Wrocław Główny",
+                    "location": {
+                      "latLng": {
+                        "latitude": 51.098078,
+                        "longitude": 17.037088
+                      }
+                    }
+                  },
+                  "departureTime": "2024-12-05T19:58:00Z"
+                },
+                "localizedValues": {
+                  "arrivalTime": {
+                    "time": {
+                      "text": "21:41"
+                    },
+                    "timeZone": "Europe/Warsaw"
+                  },
+                  "departureTime": {
+                    "time": {
+                      "text": "20:58"
+                    },
+                    "timeZone": "Europe/Warsaw"
+                  }
+                },
+                "headsign": "Krakow Glowny",
+                "transitLine": {
+                  "agencies": [
+                    {
+                      "name": "DB Fernverkehr AG",
+                      "uri": "https://www.bahn.de/"
+                    },
+                    {
+                      "name": "PKP Intercity SA",
+                      "phoneNumber": "+48 22 322 22 22",
+                      "uri": "http://intercity.pl/"
+                    }
+                  ],
+                  "name": "EC55",
+                  "color": "#f01414",
+                  "nameShort": "EC55",
+                  "textColor": "#ffffff",
+                  "vehicle": {
+                    "name": {
+                      "text": "Pociąg"
+                    },
+                    "type": "HEAVY_RAIL",
+                    "iconUri": "//maps.gstatic.com/mapfiles/transit/iw2/6/rail2.png"
+                  }
+                },
+                "stopCount": 2
+              }
+            },
+            {},
+            {},
+            {},
+            {
+              "transitDetails": {
+                "stopDetails": {
+                  "arrivalStop": {
+                    "name": "Nysa D.A.",
+                    "location": {
+                      "latLng": {
+                        "latitude": 50.478114299999994,
+                        "longitude": 17.3397397
+                      }
+                    }
+                  },
+                  "arrivalTime": "2024-12-05T22:29:00Z",
+                  "departureStop": {
+                    "name": "Pks Opole",
+                    "location": {
+                      "latLng": {
+                        "latitude": 50.662994999999995,
+                        "longitude": 17.929273
+                      }
+                    }
+                  },
+                  "departureTime": "2024-12-05T21:10:00Z"
+                },
+                "localizedValues": {
+                  "arrivalTime": {
+                    "time": {
+                      "text": "23:29"
+                    },
+                    "timeZone": "Europe/Warsaw"
+                  },
+                  "departureTime": {
+                    "time": {
+                      "text": "22:10"
+                    },
+                    "timeZone": "Europe/Warsaw"
+                  }
+                },
+                "headsign": "Nysa ul. Piłsudskiego /połud.",
+                "transitLine": {
+                  "agencies": [
+                    {
+                      "name": "PKS Nysa",
+                      "phoneNumber": "+48 665 655 199",
+                      "uri": "http://www.pksnysa.pl/"
+                    }
+                  ],
+                  "name": "Opole, Dworzec Autobusowy - Nysa ul. Piłsudskiego /połud.",
+                  "nameShort": "123 Nysa",
+                  "vehicle": {
+                    "name": {
+                      "text": "Autobus"
+                    },
+                    "type": "BUS",
+                    "iconUri": "//maps.gstatic.com/mapfiles/transit/iw2/6/bus2.png"
+                  }
+                },
+                "stopCount": 21
+              }
+            },
+            {},
+            {
+              "transitDetails": {
+                "stopDetails": {
+                  "arrivalStop": {
+                    "name": "Kamienica /skrz",
+                    "location": {
+                      "latLng": {
+                        "latitude": 50.44575,
+                        "longitude": 16.936888
+                      }
+                    }
+                  },
+                  "arrivalTime": "2024-12-06T06:45:00Z",
+                  "departureStop": {
+                    "name": "Nysa D.A.",
+                    "location": {
+                      "latLng": {
+                        "latitude": 50.4781164,
+                        "longitude": 17.3406379
+                      }
+                    }
+                  },
+                  "departureTime": "2024-12-06T05:44:00Z"
+                },
+                "localizedValues": {
+                  "arrivalTime": {
+                    "time": {
+                      "text": "07:45"
+                    },
+                    "timeZone": "Europe/Warsaw"
+                  },
+                  "departureTime": {
+                    "time": {
+                      "text": "06:44"
+                    },
+                    "timeZone": "Europe/Warsaw"
+                  }
+                },
+                "headsign": "Kamienica /skrz",
+                "transitLine": {
+                  "agencies": [
+                    {
+                      "name": "PKS Nysa",
+                      "phoneNumber": "+48 665 655 199",
+                      "uri": "http://www.pksnysa.pl/"
+                    }
+                  ],
+                  "name": "Nysa D.A. - Kamienica /skrz",
+                  "nameShort": "111 Kamienica",
+                  "vehicle": {
+                    "name": {
+                      "text": "Autobus"
+                    },
+                    "type": "BUS",
+                    "iconUri": "//maps.gstatic.com/mapfiles/transit/iw2/6/bus2.png"
+                  }
+                },
+                "stopCount": 23
+              }
+            },
+            {},
+            {
+              "transitDetails": {
+                "stopDetails": {
+                  "arrivalStop": {
+                    "name": "Bílá Voda, léčebna",
+                    "location": {
+                      "latLng": {
+                        "latitude": 50.4401321,
+                        "longitude": 16.8943577
+                      }
+                    }
+                  },
+                  "arrivalTime": "2024-12-06T07:47:00Z",
+                  "departureStop": {
+                    "name": "Bílá Voda, rest.",
+                    "location": {
+                      "latLng": {
+                        "latitude": 50.4418144,
+                        "longitude": 16.9176292
+                      }
+                    }
+                  },
+                  "departureTime": "2024-12-06T07:43:00Z"
+                },
+                "localizedValues": {
+                  "arrivalTime": {
+                    "time": {
+                      "text": "08:47"
+                    },
+                    "timeZone": "Europe/Prague"
+                  },
+                  "departureTime": {
+                    "time": {
+                      "text": "08:43"
+                    },
+                    "timeZone": "Europe/Prague"
+                  }
+                },
+                "headsign": "Bílá Voda,léčebna",
+                "transitLine": {
+                  "agencies": [
+                    {
+                      "name": "ARRIVA VÝCHODNÍ ČECHY a.s.",
+                      "phoneNumber": "+420 725 100 725",
+                      "uri": "https://arriva.cz/"
+                    }
+                  ],
+                  "name": "Jeseník-Javorník-Bílá Voda",
+                  "color": "#00becd",
+                  "nameShort": "120",
+                  "textColor": "#000000",
+                  "vehicle": {
+                    "name": {
+                      "text": "Autobus"
+                    },
+                    "type": "BUS",
+                    "iconUri": "//maps.gstatic.com/mapfiles/transit/iw2/6/bus2.png"
+                  }
+                },
+                "stopCount": 2
+              }
+            },
+            {},
+            {},
+            {},
+            {},
+            {}
+          ]
+        }
+      ]
+    }
+  ]
+}

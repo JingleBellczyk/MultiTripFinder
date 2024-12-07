@@ -1,0 +1,139 @@
+{
+  "routes": [
+    {
+      "legs": [
+        {
+          "steps": [
+            {
+              "transitDetails": {
+                "stopDetails": {
+                  "arrivalStop": {
+                    "name": "Poznań Główny",
+                    "location": {
+                      "latLng": {
+                        "latitude": 52.401416,
+                        "longitude": 16.912131
+                      }
+                    }
+                  },
+                  "arrivalTime": "2024-12-05T18:16:00Z",
+                  "departureStop": {
+                    "name": "Wrocław Główny",
+                    "location": {
+                      "latLng": {
+                        "latitude": 51.098047,
+                        "longitude": 17.036267
+                      }
+                    }
+                  },
+                  "departureTime": "2024-12-05T16:36:00Z"
+                },
+                "localizedValues": {
+                  "arrivalTime": {
+                    "time": {
+                      "text": "19:16"
+                    },
+                    "timeZone": "Europe/Warsaw"
+                  },
+                  "departureTime": {
+                    "time": {
+                      "text": "17:36"
+                    },
+                    "timeZone": "Europe/Warsaw"
+                  }
+                },
+                "headsign": "Gdynia Główna",
+                "transitLine": {
+                  "agencies": [
+                    {
+                      "name": "PKP Intercity SA",
+                      "phoneNumber": "+48 22 322 22 22",
+                      "uri": "http://intercity.pl/"
+                    }
+                  ],
+                  "name": "IC11152",
+                  "color": "#f25e18",
+                  "textColor": "#ffffff",
+                  "vehicle": {
+                    "name": {
+                      "text": "Pociąg"
+                    },
+                    "type": "HEAVY_RAIL",
+                    "iconUri": "//maps.gstatic.com/mapfiles/transit/iw2/6/rail2.png"
+                  }
+                },
+                "stopCount": 7
+              }
+            },
+            {
+              "transitDetails": {
+                "stopDetails": {
+                  "arrivalStop": {
+                    "name": "Berlin Ostbahnhof",
+                    "location": {
+                      "latLng": {
+                        "latitude": 52.5098959,
+                        "longitude": 13.436044899999999
+                      }
+                    }
+                  },
+                  "arrivalTime": "2024-12-05T20:58:00Z",
+                  "departureStop": {
+                    "name": "Poznań Główny",
+                    "location": {
+                      "latLng": {
+                        "latitude": 52.401993,
+                        "longitude": 16.91087
+                      }
+                    }
+                  },
+                  "departureTime": "2024-12-05T18:31:00Z"
+                },
+                "localizedValues": {
+                  "arrivalTime": {
+                    "time": {
+                      "text": "21:58"
+                    },
+                    "timeZone": "Europe/Berlin"
+                  },
+                  "departureTime": {
+                    "time": {
+                      "text": "19:31"
+                    },
+                    "timeZone": "Europe/Warsaw"
+                  }
+                },
+                "headsign": "Berlin Hbf",
+                "transitLine": {
+                  "agencies": [
+                    {
+                      "name": "PKP Intercity",
+                      "uri": "https://www.intercity.pl/de"
+                    },
+                    {
+                      "name": "PKP Intercity SA",
+                      "phoneNumber": "+48 22 322 22 22",
+                      "uri": "http://intercity.pl/"
+                    }
+                  ],
+                  "name": "EC40",
+                  "color": "#8c5e04",
+                  "nameShort": "EC40",
+                  "textColor": "#ffffff",
+                  "vehicle": {
+                    "name": {
+                      "text": "Pociąg"
+                    },
+                    "type": "HEAVY_RAIL",
+                    "iconUri": "//maps.gstatic.com/mapfiles/transit/iw2/6/rail2.png"
+                  }
+                },
+                "stopCount": 7
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

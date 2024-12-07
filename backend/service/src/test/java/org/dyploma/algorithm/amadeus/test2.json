@@ -1,0 +1,73 @@
+{
+  "routes": [
+    {
+      "legs": [
+        {
+          "steps": [
+            {
+              "transitDetails": {
+                "stopDetails": {
+                  "arrivalStop": {
+                    "name": "Poznań Główny",
+                    "location": {
+                      "latLng": {
+                        "latitude": 52.401416,
+                        "longitude": 16.912131
+                      }
+                    }
+                  },
+                  "arrivalTime": "2024-12-05T17:44:00Z",
+                  "departureStop": {
+                    "name": "Wrocław Główny",
+                    "location": {
+                      "latLng": {
+                        "latitude": 51.098047,
+                        "longitude": 17.036267
+                      }
+                    }
+                  },
+                  "departureTime": "2024-12-05T16:14:00Z"
+                },
+                "localizedValues": {
+                  "arrivalTime": {
+                    "time": {
+                      "text": "18:44"
+                    },
+                    "timeZone": "Europe/Warsaw"
+                  },
+                  "departureTime": {
+                    "time": {
+                      "text": "17:14"
+                    },
+                    "timeZone": "Europe/Warsaw"
+                  }
+                },
+                "headsign": "Olsztyn Główny",
+                "transitLine": {
+                  "agencies": [
+                    {
+                      "name": "PKP Intercity SA",
+                      "phoneNumber": "+48 22 322 22 22",
+                      "uri": "http://intercity.pl/"
+                    }
+                  ],
+                  "name": "IC65104",
+                  "color": "#f25e18",
+                  "textColor": "#ffffff",
+                  "vehicle": {
+                    "name": {
+                      "text": "Pociąg"
+                    },
+                    "type": "HEAVY_RAIL",
+                    "iconUri": "//maps.gstatic.com/mapfiles/transit/iw2/6/rail2.png"
+                  }
+                },
+                "stopCount": 8
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

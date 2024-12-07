@@ -1,23 +1,22 @@
 package org.dyploma.algorithm.amadeus;
 
 import org.dyploma.airport.Airport;
-import org.dyploma.airport.AirportRepository;
 import org.dyploma.airport.AirportService;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.List;
 
 @SpringBootTest
 public class AirportTest {
 
     @Autowired
     private AirportService airportService;
+
+//    public AirportTest(AirportService airportService) {
+//        this.airportService = airportService;
+//    }
 
     @Test
     void findAirportsInCity() {
