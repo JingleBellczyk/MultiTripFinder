@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:80","http://frontend:80"})
+//@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:80","http://frontend:80"})
 @RestController
 public class TripTagController implements TripTagApi {
     private final TripTagService tripTagService;

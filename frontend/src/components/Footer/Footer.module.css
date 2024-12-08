@@ -1,6 +1,6 @@
 .footer {
-    margin-top: rem(150px);
-    border-top: rem(1px) solid light-dark(var(--mantine-color-gray-2), var(--mantine-color-dark-5));
+    /*margin-top: 150px;*/
+    border-top: 1px solid var(--mantine-color-gray-2);
     background-color: var(--primary-color);
 }
 
@@ -10,13 +10,13 @@
     justify-content: space-between;
     align-items: center;
     padding: var(--mantine-spacing-xl) var(--mantine-spacing-xl);
-    @media (max-width: $mantine-breakpoint-sm) {
-        flex-direction: column;
-    }
+        @media (max-width: var(--mantine-breakpoint-sm)) {
+            flex-direction: column;
+        }
 }
 
 .links {
-    @media (max-width: $mantine-breakpoint-sm) {
+    @media (max-width: var(--mantine-breakpoint-sm)) {
         margin-top: var(--mantine-spacing-lg);
         margin-bottom: var(--mantine-spacing-sm);
     }

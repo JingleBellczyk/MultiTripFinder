@@ -5,6 +5,7 @@ import React, {useEffect, useMemo, useState} from 'react';
 import {PlaceLocation, SearchDTO} from '../../types/SearchDTO';
 import {DaysInputs} from '../DaysInputs/DaysInputs';
 import {LocationSelector} from '../PlaceAutocompleteInput/LocationSelector';
+import {MAX_PLACES_TO_VIST_NUMBER} from "../../constants/constants";
 
 interface Place extends PlaceLocation {
     id: number;
@@ -83,7 +84,7 @@ export const DndListHandle: React.FC<DndListHandleProps> = ({
     }, [placesTime, startPlace, endPlace]);
 
     const addPlace = () => {
-        if (state.length < 5) {
+        if (state.length < MAX_PLACES_TO_VIST_NUMBER) {
             const newId = state.length ? Math.max(...state.map(item => item.id)) + 1 : 1;
             handlers.append({ id: newId, name: "", country: "", city: "", hours: 0 });
         }

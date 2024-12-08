@@ -21,7 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "search", uniqueConstraints = {
+@Table(name = "Search", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"name", "user_account_id"})
 })
 public class Search {
@@ -30,6 +30,7 @@ public class Search {
 
     private Integer id;
     private String name;
+    @Column(name = "save_date")
     private LocalDate saveDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -42,16 +43,21 @@ public class Search {
 
     @ManyToMany
     @JoinTable(
-            name = "search_search_tag",
+            name = "Search_Search_Tag",
             joinColumns = @JoinColumn(name = "search_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
     private List<SearchTag> tags;
 
+    @Column(name = "passenger_count")
     private int passengerCount;
+    @Column(name = "preferred_transport")
     private TransportMode preferredTransport;
+    @Column(name = "optimization_criteria")
     private CriteriaMode optimizationCriteria;
+    @Column(name = "trip_start_date")
     private LocalDate tripStartDate;
+    @Column(name = "max_trip_duration")
     private int maxTripDuration;
 
     public void addPlaceToVisit(PlaceInSearch place) {

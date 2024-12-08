@@ -1,10 +1,14 @@
 package org.dyploma.algorithm.externalApi.amadeus;
 
+import org.dyploma.algorithm.algorithmGoogleAmadeus.AmadeusTokenResponse;
 import org.dyploma.algorithm.externalApi.amadeus.dto.AmadeusRequest;
 import org.dyploma.algorithm.externalApi.amadeus.dto.AmadeusResponse;
 import org.dyploma.algorithm.externalApi.amadeus.dto.TravelSegment;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -17,7 +21,14 @@ public class AmadeusApiClient {
     @Value("${amadeus.api.url}")
     private String apiUrl;
 
-    @Value("${amadeus.api.key}")
+    @Value("${amadeus.client.id}")
+    private String clientId;
+
+    @Value("${amadeus.client.secret}")
+    private String clientSecret;
+
+    private final String AUTH_URL = "https://test.api.amadeus.com/v1/security/oauth2/token";
+
     private String apiKey;
 
     private final RestTemplate restTemplate;
@@ -52,6 +63,37 @@ public class AmadeusApiClient {
         return sendPostRequest(requestBody);
     }
 
+    @Scheduled(fixedRate = 1800000)
+    public void refreshApiKey() {
+        Logger logger = LoggerFactory.getLogger(AmadeusApiClient.class);
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+            String body = "grant_type=client_credentials" +
+                    "&client_id=" + clientId +
+                    "&client_secret=" + clientSecret;
+
+            HttpEntity<String> requestEntity = new HttpEntity<>(body, headers);
+
+            ResponseEntity<AmadeusTokenResponse> response = restTemplate.exchange(
+                    AUTH_URL,
+                    HttpMethod.POST,
+                    requestEntity,
+                    AmadeusTokenResponse.class
+            );
+
+            if (response.getStatusCode() == HttpStatus.OK) {
+                this.apiKey = response.getBody().getAccess_token();
+                logger.info("New API key obtained: " + this.apiKey);
+            } else {
+                logger.info("Failed to refresh API key: " + response.getStatusCode());
+            }
+        } catch (Exception ex) {
+            logger.info("Error refreshing API key: " + ex.getMessage());
+        }
+    }
+
 
     public AmadeusResponse sendPostRequest(AmadeusRequest requestBody) {
 
@@ -70,6 +112,8 @@ public class AmadeusApiClient {
 
         return response.getBody();
     }
+
+
 
     public List<AmadeusRequest.OriginDestination> createOriginDestinations(List<TravelSegment> segments) {
         if(segments.size() > 2){

@@ -43,7 +43,8 @@
 .tripLeft {
     margin: var(--mantine-spacing-md);
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
+    width: 100%;
 }
 
 .tripRight {

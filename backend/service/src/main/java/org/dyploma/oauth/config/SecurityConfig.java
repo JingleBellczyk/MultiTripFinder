@@ -2,6 +2,7 @@ package org.dyploma.oauth.config;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.dyploma.oauth.domain.CustomOAuth2UserService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -16,6 +17,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Collections;
 import java.util.List;
 
 @Configuration
@@ -24,6 +27,8 @@ public class SecurityConfig {
 
     private final UserAccessFilter userAccessFilter;
     private final CustomOAuth2UserService customOAuth2UserService;
+    @Value("${frontend.url}")
+    private String frontendUrl;
 
     public SecurityConfig(UserAccessFilter userAccessFilter, CustomOAuth2UserService customOAuth2UserService) {
         this.userAccessFilter = userAccessFilter;
@@ -46,9 +51,9 @@ public class SecurityConfig {
                 )
                 .oauth2Login(oauth2 -> {
                     oauth2.failureHandler((request, response, exception) -> {
-                        response.sendRedirect("http://localhost:3000/loginFailed");
+                        response.sendRedirect(frontendUrl + "/loginFailed");
                     });
-                    oauth2.defaultSuccessUrl("http://localhost:3000/", true);
+                    oauth2.defaultSuccessUrl(frontendUrl, true);
                     oauth2.userInfoEndpoint(userInfo -> userInfo.userService(customOAuth2UserService));
                 })
                 .oauth2ResourceServer(auth -> auth.jwt(Customizer.withDefaults()))
@@ -90,7 +95,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:80", "http://frontend:80", "http://localhost", "http://mtf.norwayeast.cloudapp.azure.com"));
         configuration.setAllowedMethods(List.of("GET", "POST", "OPTIONS", "DELETE", "PUT"));
         configuration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
         configuration.setExposedHeaders(List.of("Authorization"));
