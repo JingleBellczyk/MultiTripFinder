@@ -1,0 +1,268 @@
+{
+  "routes": [
+    {
+      "legs": [
+        {
+          "steps": [
+            {},
+            {},
+            {},
+            {
+              "transitDetails": {
+                "stopDetails": {
+                  "arrivalStop": {
+                    "name": "Dworzec Autobusowy",
+                    "location": {
+                      "latLng": {
+                        "latitude": 51.097204399999995,
+                        "longitude": 17.0363434
+                      }
+                    }
+                  },
+                  "arrivalTime": "2024-12-05T02:33:00Z",
+                  "departureStop": {
+                    "name": "Galeria Dominikańska",
+                    "location": {
+                      "latLng": {
+                        "latitude": 51.106708499999996,
+                        "longitude": 17.038270999999998
+                      }
+                    }
+                  },
+                  "departureTime": "2024-12-05T02:18:00Z"
+                },
+                "localizedValues": {
+                  "arrivalTime": {
+                    "time": {
+                      "text": "03:33"
+                    },
+                    "timeZone": "Europe/Warsaw"
+                  },
+                  "departureTime": {
+                    "time": {
+                      "text": "03:18"
+                    },
+                    "timeZone": "Europe/Warsaw"
+                  }
+                },
+                "headsign": "Pilczyce",
+                "transitLine": {
+                  "agencies": [
+                    {
+                      "name": "MPK Autobusy",
+                      "phoneNumber": "+48 71 308 50 30",
+                      "uri": "http://www.mpk.wroc.pl/"
+                    }
+                  ],
+                  "nameShort": "243",
+                  "vehicle": {
+                    "name": {
+                      "text": "Autobus"
+                    },
+                    "type": "BUS",
+                    "iconUri": "//maps.gstatic.com/mapfiles/transit/iw2/6/bus2.png"
+                  }
+                },
+                "stopCount": 8
+              }
+            },
+            {},
+            {
+              "transitDetails": {
+                "stopDetails": {
+                  "arrivalStop": {
+                    "name": "Berlin Airport BER, T 1/2",
+                    "location": {
+                      "latLng": {
+                        "latitude": 52.364627,
+                        "longitude": 13.514225000000001
+                      }
+                    }
+                  },
+                  "arrivalTime": "2024-12-05T06:55:00Z",
+                  "departureStop": {
+                    "name": "Sucha",
+                    "location": {
+                      "latLng": {
+                        "latitude": 51.0968289,
+                        "longitude": 17.0381987
+                      }
+                    }
+                  },
+                  "departureTime": "2024-12-05T02:55:00Z"
+                },
+                "localizedValues": {
+                  "arrivalTime": {
+                    "time": {
+                      "text": "07:55"
+                    },
+                    "timeZone": "Europe/Berlin"
+                  },
+                  "departureTime": {
+                    "time": {
+                      "text": "03:55"
+                    },
+                    "timeZone": "Europe/Warsaw"
+                  }
+                },
+                "headsign": "Berlin central bus station",
+                "transitLine": {
+                  "agencies": [
+                    {
+                      "name": "FlixBus",
+                      "uri": "https://global.flixbus.com/?utm_source=googletraveltransport&utm_medium=gmaps_gtransport&utm_campaign=googletraveltransport&utm_content=com.flixbus"
+                    }
+                  ],
+                  "name": "Berlin - Wroclaw - Kosice",
+                  "color": "#73d700",
+                  "nameShort": "FlixBus N1365",
+                  "textColor": "#ffffff",
+                  "vehicle": {
+                    "name": {
+                      "text": "Autobus"
+                    },
+                    "type": "BUS",
+                    "iconUri": "//maps.gstatic.com/mapfiles/transit/iw2/6/bus2.png"
+                  }
+                },
+                "stopCount": 2
+              }
+            },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {
+              "transitDetails": {
+                "stopDetails": {
+                  "arrivalStop": {
+                    "name": "Berlin Ostbahnhof",
+                    "location": {
+                      "latLng": {
+                        "latitude": 52.5098959,
+                        "longitude": 13.436044899999999
+                      }
+                    }
+                  },
+                  "arrivalTime": "2024-12-05T07:34:00Z",
+                  "departureStop": {
+                    "name": "BER Airport",
+                    "location": {
+                      "latLng": {
+                        "latitude": 52.3648038,
+                        "longitude": 13.5119498
+                      }
+                    }
+                  },
+                  "departureTime": "2024-12-05T07:13:00Z"
+                },
+                "localizedValues": {
+                  "arrivalTime": {
+                    "time": {
+                      "text": "08:34"
+                    },
+                    "timeZone": "Europe/Berlin"
+                  },
+                  "departureTime": {
+                    "time": {
+                      "text": "08:13"
+                    },
+                    "timeZone": "Europe/Berlin"
+                  }
+                },
+                "headsign": "Golm",
+                "transitLine": {
+                  "agencies": [
+                    {
+                      "name": "DB Regio AG Nordost"
+                    },
+                    {
+                      "name": "DB Regio AG",
+                      "phoneNumber": "+49 331 2356881",
+                      "uri": "http://www.bahn.de/brandenburg"
+                    }
+                  ],
+                  "name": "RB23",
+                  "uri": "https://www.vbb.de/fahrinformation/liniennetze/",
+                  "color": "#ee7203",
+                  "nameShort": "RB23",
+                  "textColor": "#ffffff",
+                  "vehicle": {
+                    "name": {
+                      "text": "Pociąg"
+                    },
+                    "type": "HEAVY_RAIL",
+                    "iconUri": "//maps.gstatic.com/mapfiles/transit/iw2/6/rail2.png"
+                  }
+                },
+                "stopCount": 3
+              }
+            },
+            {
+              "transitDetails": {
+                "stopDetails": {
+                  "arrivalStop": {
+                    "name": "Düsseldorf Hauptbahnhof",
+                    "location": {
+                      "latLng": {
+                        "latitude": 51.219961999999995,
+                        "longitude": 6.794319
+                      }
+                    }
+                  },
+                  "arrivalTime": "2024-12-05T12:50:00Z",
+                  "departureStop": {
+                    "name": "Berlin Ostbahnhof",
+                    "location": {
+                      "latLng": {
+                        "latitude": 52.5098959,
+                        "longitude": 13.436044899999999
+                      }
+                    }
+                  },
+                  "departureTime": "2024-12-05T07:54:00Z"
+                },
+                "localizedValues": {
+                  "arrivalTime": {
+                    "time": {
+                      "text": "13:50"
+                    },
+                    "timeZone": "Europe/Berlin"
+                  },
+                  "departureTime": {
+                    "time": {
+                      "text": "08:54"
+                    },
+                    "timeZone": "Europe/Berlin"
+                  }
+                },
+                "headsign": "Köln Hbf",
+                "transitLine": {
+                  "agencies": [
+                    {
+                      "name": "DB Fernverkehr AG",
+                      "uri": "https://www.bahn.de/"
+                    }
+                  ],
+                  "color": "#f01414",
+                  "nameShort": "ICE1050",
+                  "textColor": "#ffffff",
+                  "vehicle": {
+                    "name": {
+                      "text": "Pociąg szybkobieżny"
+                    },
+                    "type": "HIGH_SPEED_TRAIN",
+                    "iconUri": "//maps.gstatic.com/mapfiles/transit/iw2/6/rail2.png",
+                    "localIconUri": "//maps.gstatic.com/mapfiles/transit/iw2/6/de-db-ice-high-speed-trains.png"
+                  }
+                },
+                "stopCount": 10
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
