@@ -13,7 +13,7 @@ import java.util.Map;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AmadeusResponse {
 
-    @JsonProperty("data")
+//    @JsonProperty("data")
     private List<FlightOffer> data = new ArrayList<>();
 
     private Map<String, String> aircraft = new HashMap<>();
@@ -22,10 +22,10 @@ public class AmadeusResponse {
     @JsonProperty("errors")
     private List<Error> errors = new ArrayList<>();
 
-    @JsonProperty("data")
-    public void setData(List<FlightOffer> data) {
-        this.data = data;
-    }
+////    @JsonProperty("data")
+//    public void setData(List<FlightOffer> data) {
+//        this.data = data;
+//    }
 
     @SuppressWarnings("unchecked")
     @JsonProperty("dictionaries")

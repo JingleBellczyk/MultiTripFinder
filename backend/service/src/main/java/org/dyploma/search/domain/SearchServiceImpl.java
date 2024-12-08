@@ -1,6 +1,7 @@
 package org.dyploma.search.domain;
 
 import org.dyploma.algorithm.AlgorithmRequestCreator;
+import org.dyploma.algorithm.algorithmGoogleAmadeus.AlgorithmGoogleAmadeusService;
 import org.dyploma.algorithm.dto.AlgorithmRequest;
 import org.dyploma.exception.ConflictException;
 import org.dyploma.exception.NotFoundException;
@@ -15,6 +16,7 @@ import org.dyploma.trip.transfer.Transfer;
 import org.dyploma.useraccount.UserAccount;
 import org.dyploma.useraccount.UserAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -41,6 +43,12 @@ public class SearchServiceImpl implements SearchService {
     private final RestTemplate restTemplate;
     private final String processRouteEndpoint = "http://localhost:8000/process_route";
 
+    @Value("${algorithm.option}")
+    private String ALGORITHM_OPTION;
+
+    @Autowired
+    AlgorithmGoogleAmadeusService algorithmGoogleAmadeusService;
+
     @Autowired
     public SearchServiceImpl(SearchRepository searchRepository,
                              SearchValidator searchValidator,
@@ -58,46 +66,53 @@ public class SearchServiceImpl implements SearchService {
 
     @Override
     public List<Trip> search(SearchRequest search) {
-        searchValidator.validateSearchRequest(search);
-        AlgorithmRequest algorithmRequestObject = algorithmRequestCreator.createRequest(search);
-        //Object algorithmResponse = restTemplate.postForObject(processRouteEndpoint, algorithmRequestObject, Object.class);
 
-        // TODO: Implement algorithm call
-        List<Trip> trips = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
-            List<Transfer> transfers = new ArrayList<>();
-            List<PlaceInTrip> places = new ArrayList<>();
-            for (int j = 0; j < search.getPlacesToVisit().size(); j++) {
-                if (j < search.getPlacesToVisit().size() - 1) {
-                    Transfer transfer = Transfer.builder()
-                            .transportMode(TransportMode.BUS)
-                            .carrier("Carrier")
-                            .startDateTime(LocalDateTime.now())
-                            .endDateTime(LocalDateTime.now().plusHours(1))
-                            .duration(60)
-                            .cost(10)
-                            .startAddress("Start address")
-                            .endAddress("End address")
-                            .transferOrder(j + 1)
-                            .build();
-                    transfers.add(transfer);
+        searchValidator.validateSearchRequest(search);
+
+        if (ALGORITHM_OPTION.equals("GOOGLE")) {
+
+            return algorithmGoogleAmadeusService.search(search);
+        } else {
+            AlgorithmRequest algorithmRequestObject = algorithmRequestCreator.createRequest(search);
+            //Object algorithmResponse = restTemplate.postForObject(processRouteEndpoint, algorithmRequestObject, Object.class);
+
+            // TODO: Implement algorithm call
+            List<Trip> trips = new ArrayList<>();
+            for (int i = 0; i < 5; i++) {
+                List<Transfer> transfers = new ArrayList<>();
+                List<PlaceInTrip> places = new ArrayList<>();
+                for (int j = 0; j < search.getPlacesToVisit().size(); j++) {
+                    if (j < search.getPlacesToVisit().size() - 1) {
+                        Transfer transfer = Transfer.builder()
+                                .transportMode(TransportMode.BUS)
+                                .carrier("Carrier")
+                                .startDateTime(LocalDateTime.now())
+                                .endDateTime(LocalDateTime.now().plusHours(1))
+                                .duration(60)
+                                .cost(10)
+                                .startAddress("Start address")
+                                .endAddress("End address")
+                                .transferOrder(j + 1)
+                                .build();
+                        transfers.add(transfer);
+                    }
+                    PlaceInTrip placeInTrip = generatePlaceInTrip(search.getPlacesToVisit().get(j));
+                    places.add(placeInTrip);
                 }
-                PlaceInTrip placeInTrip = generatePlaceInTrip(search.getPlacesToVisit().get(j));
-                places.add(placeInTrip);
+                Trip trip = Trip.builder()
+                        .transfers(transfers)
+                        .places(places)
+                        .startDate(LocalDate.now())
+                        .endDate(LocalDate.now().plusDays(1))
+                        .passengerCount(1)
+                        .totalCost(50)
+                        .totalTransferTime(300)
+                        .duration(160)
+                        .build();
+                trips.add(trip);
             }
-            Trip trip = Trip.builder()
-                    .transfers(transfers)
-                    .places(places)
-                    .startDate(LocalDate.now())
-                    .endDate(LocalDate.now().plusDays(1))
-                    .passengerCount(1)
-                    .totalCost(50)
-                    .totalTransferTime(300)
-                    .duration(160)
-                    .build();
-            trips.add(trip);
+            return trips;
         }
-        return trips;
     }
 
     private PlaceInTrip generatePlaceInTrip(PlaceInSearch placeInSearch) {

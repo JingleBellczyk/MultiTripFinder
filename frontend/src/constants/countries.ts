@@ -8,6 +8,7 @@ export const validCountries = [
     "Croatia",
     "Cyprus",
     "Czech Republic",
+    "Czechia",
     "Denmark",
     "Estonia",
     "Finland",
