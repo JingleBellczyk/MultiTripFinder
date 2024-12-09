@@ -1,5 +1,5 @@
 import {SearchDTOPost, SearchDTOSave} from "../../types/SearchDTO"
-import {TripList, Trip} from "../../types/TripDTO"
+import {Trip} from "../../types/TripDTO"
 import tripsJsonData from './trips.json';
 import {SERVER} from "../../constants/constants";
 import axios from "axios";
@@ -17,6 +17,7 @@ export const postSearch = async (dto: SearchDTOPost): Promise<Trip[]> => {
         });
 
         const trips: Trip[] = response.data.content;
+        // const trips: Trip[] = []
         // const trips: Trip[] = tripsJsonData.content as Trip[]
         return trips;
 

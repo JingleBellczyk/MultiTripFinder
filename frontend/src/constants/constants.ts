@@ -7,6 +7,7 @@ export const MAX_PASSENGERS_NUMBER: number = 20
 export const MAX_TOTAL_DAYS_NUMBER: number = 365
 export const MIN_TOTAL_DAYS_NUMBER: number = 1
 export const MAX_TAG_LENGTH: number = 20
+export const MAX_PLACES_TO_VIST_NUMBER = 4
 
 export const PAGE_SIZE=4
 export const SERVER = "http://localhost:8080";

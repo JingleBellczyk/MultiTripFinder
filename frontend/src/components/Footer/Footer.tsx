@@ -1,13 +1,11 @@
-import { Anchor, Group, ActionIcon, rem } from '@mantine/core';
-import { IconBrandTwitter, IconBrandYoutube, IconBrandInstagram } from '@tabler/icons-react';
-import { MantineLogo } from '@mantinex/mantine-logo';
+import {ActionIcon, Anchor, Group, rem, Tooltip} from '@mantine/core';
+import {IconBrandGoogleMaps, IconInputSearch, IconPlaneArrival} from '@tabler/icons-react';
 import classes from './Footer.module.css';
 import {Logo} from "../Logo/Logo";
 
 const links = [
-    { link: '#', label: 'Contact' },
-    { link: '#', label: 'Privacy' },
-    { link: '#', label: 'Blog' },
+    {link: 'https://policies.google.com/privacy', label: 'Privacy'},
+    {link: 'https://github.com/JingleBellczyk/MultiTripFinder', label: 'Github'},
 ];
 
 export function Footer() {
@@ -17,7 +15,8 @@ export function Footer() {
             key={link.label}
             href={link.link}
             lh={1}
-            onClick={(event) => event.preventDefault()}
+            target={link.link.startsWith('http') ? '_blank' : '_self'}
+            rel={link.link.startsWith('http') ? 'noopener noreferrer' : ''}
             size="sm"
         >
             {link.label}
@@ -32,15 +31,30 @@ export function Footer() {
                 <Group className={classes.links}>{items}</Group>
 
                 <Group gap="xs" justify="flex-end" wrap="nowrap">
-                    <ActionIcon size="lg" variant="default" radius="xl">
-                        <IconBrandTwitter style={{ width: rem(18), height: rem(18) }} stroke={1.5} />
-                    </ActionIcon>
-                    <ActionIcon size="lg" variant="default" radius="xl">
-                        <IconBrandYoutube style={{ width: rem(18), height: rem(18) }} stroke={1.5} />
-                    </ActionIcon>
-                    <ActionIcon size="lg" variant="default" radius="xl">
-                        <IconBrandInstagram style={{ width: rem(18), height: rem(18) }} stroke={1.5} />
-                    </ActionIcon>
+                    <a href="https://developers.google.com/maps/documentation/routes" target="_blank"
+                       rel="noopener noreferrer">
+                        <Tooltip label="Google Routes API" position="top" withArrow>
+                            <ActionIcon size="lg" variant="default" radius="xl">
+                                <IconBrandGoogleMaps style={{width: rem(18), height: rem(18)}} stroke={1.5}/>
+                            </ActionIcon>
+                        </Tooltip>
+                    </a>
+                    <a href="https://developers.amadeus.com/self-service/category/cars-and-transfers/api-doc/transfer-search/api-reference"
+                       target="_blank" rel="noopener noreferrer">
+                        <Tooltip label="Amadeus Transfer API" position="top" withArrow>
+                            <ActionIcon size="lg" variant="default" radius="xl">
+                                <IconPlaneArrival style={{width: rem(18), height: rem(18)}} stroke={1.5}/>
+                            </ActionIcon>
+                        </Tooltip>
+                    </a>
+                    <a href="https://developers.google.com/maps/documentation/places/web-service/autocomplete"
+                       target="_blank" rel="noopener noreferrer">
+                        <Tooltip label="Google Places API" position="top" withArrow>
+                            <ActionIcon size="lg" variant="default" radius="xl">
+                                <IconInputSearch style={{width: rem(18), height: rem(18)}} stroke={1.5}/>
+                            </ActionIcon>
+                        </Tooltip>
+                    </a>
                 </Group>
             </div>
         </div>
