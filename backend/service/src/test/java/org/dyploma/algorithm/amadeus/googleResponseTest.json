@@ -1,0 +1,79 @@
+{
+  "routes": [
+    {
+      "legs": [
+        {
+          "steps": [
+            {
+              "transitDetails": {
+                "stopDetails": {
+                  "arrivalStop": {
+                    "name": "Siechnice",
+                    "location": {
+                      "latLng": {
+                        "latitude": 51.038010899999996,
+                        "longitude": 17.1433093
+                      }
+                    }
+                  },
+                  "arrivalTime": "2024-12-05T15:35:00Z",
+                  "departureStop": {
+                    "name": "Wrocław Główny",
+                    "location": {
+                      "latLng": {
+                        "latitude": 51.0978954,
+                        "longitude": 17.0381324
+                      }
+                    }
+                  },
+                  "departureTime": "2024-12-05T15:24:00Z"
+                },
+                "localizedValues": {
+                  "arrivalTime": {
+                    "time": {
+                      "text": "16:35"
+                    },
+                    "timeZone": "Europe/Warsaw"
+                  },
+                  "departureTime": {
+                    "time": {
+                      "text": "16:24"
+                    },
+                    "timeZone": "Europe/Warsaw"
+                  }
+                },
+                "headsign": "Jelcz-Laskowice",
+                "transitLine": {
+                  "agencies": [
+                    {
+                      "name": "Koleje Dolnośląskie",
+                      "phoneNumber": "+48 76 742 11 12",
+                      "uri": "https://www.kolejedolnoslaskie.pl/"
+                    }
+                  ],
+                  "color": "#f2c02e",
+                  "nameShort": "D83/D7",
+                  "textColor": "#000000",
+                  "vehicle": {
+                    "name": {
+                      "text": "Pociąg"
+                    },
+                    "type": "HEAVY_RAIL",
+                    "iconUri": "//maps.gstatic.com/mapfiles/transit/iw2/6/rail2.png"
+                  }
+                },
+                "stopCount": 3
+              }
+            },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {}
+          ]
+        }
+      ]
+    }
+  ]
+}

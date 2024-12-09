@@ -7,8 +7,10 @@ import {
     LoadingOverlay,
     MantineProvider,
     NativeSelect,
+    Notification,
     NumberInput,
-    Text
+    Text,
+    Title
 } from '@mantine/core';
 import {HeaderSearch} from "../../components/HeaderSearch/HeaderSearch";
 import {Footer} from "../../components/Footer/Footer";
@@ -24,7 +26,7 @@ import "../../styles/globals.css"
 import styles from "./SearchPage.module.css"
 import SearchResultPage from "../SearchResultsPage/SearchResultsPage"
 import {PlaceLocation, PlaceTime, PlaceTimePost, SearchDTO, SearchDTOPost, SearchDTOSave} from "../../types/SearchDTO"
-import React, {useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {postSearch, postSearchSave} from "../../api/services/searchService";
 import {useSearchHandlers} from "../../hooks/useSearchHandlers"
 import {SaveSearchTripModal} from "../../components/SaveSearchTripModal/SaveSearchTripModal";
@@ -41,9 +43,9 @@ import {
 } from "../../constants/constants";
 import {EMPTY_SEARCH_DTO, EXAMPLE_SEARCH_POST_DTO, INITIAL_SEARCH_DTO_SAVE} from "../../constants/searchPostDto"
 import {Trip} from "../../types/TripDTO";
-import useScrollToBottom from "../../hooks/useScrollToBottom";
 import {convertToSearchDTOSave} from "../../utils/convertSearchDTOSave";
 import useAuth from "../../hooks/useAuth";
+import {IconX} from "@tabler/icons-react";
 
 const span = 12;
 const columnNumber = 1 / 5;
@@ -64,7 +66,7 @@ export function SearchPage() {
         return convertSearchDTOPostToSearchDTO(EXAMPLE_SEARCH_POST_DTO);
     }, [EMPTY_SEARCH_DTO]);
 
-    if (searchData!==undefined && searchData!==null){
+    if (searchData !== undefined && searchData !== null) {
         return SearchFunction(searchData);
     }
     return (
@@ -73,11 +75,25 @@ export function SearchPage() {
 }
 
 function SearchFunction(paramDto: SearchDTO) {
-    const [trips, setTrips] = useState<Trip[]>([]);
-    useScrollToBottom(trips);
     const [reloading, setReloading] = useState<boolean>(false);
     const [searchDTOSave, setSearchDTOSave] = useState<SearchDTOSave>(INITIAL_SEARCH_DTO_SAVE);
-    const { isAuthenticated, token, user, loading } = useAuth();
+    const {isAuthenticated, token, user, loading} = useAuth();
+    const [serverError, setServerError] = useState<string | null>(null);
+    const [notificationVisible, setNotificationVisible] = useState(false);
+    const [trips, setTrips] = useState<Trip[]>([]);
+    const noTripsRef = useRef<HTMLDivElement | null>(null);
+    const tripsRef = useRef<HTMLDivElement | null>(null);
+    const [hasSearched, setHasSearched] = useState(false);
+
+    //scroll to bottom after search
+    useEffect(() => {
+        if (trips.length > 0 && tripsRef.current) {
+            // useScrollToBottom(trips);
+            tripsRef.current.scrollIntoView({ behavior: "smooth" });
+        } else if (noTripsRef.current) {
+            noTripsRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [trips]);
 
     const {
         searchDto,
@@ -98,12 +114,16 @@ function SearchFunction(paramDto: SearchDTO) {
     });
 
     const handleSearch = async (dto: SearchDTOPost): Promise<Trip[]> => {
+        setHasSearched(false);
+
         try {
+            setServerError(null); // Reset server error before search
+            setNotificationVisible(false);
             return await postSearch(dto);
         } catch (error) {
             console.error('Error in handleSearch:', error);
 
-            // Reset errors
+            // Reset validation errors
             setErrors({
                 dateError: null,
                 placesTimeError: null,
@@ -111,6 +131,7 @@ function SearchFunction(paramDto: SearchDTO) {
                 endPlaceError: null,
                 maxHoursToSpendError: null
             });
+
             let errorMessage = '';
             if (axios.isAxiosError(error) && error.response?.data?.errors) {
                 errorMessage = error.response.data.errors.join(' ');
@@ -119,8 +140,7 @@ function SearchFunction(paramDto: SearchDTO) {
             } else if (error instanceof Error) {
                 errorMessage = error.message;
             }
-            console.log("new errors")
-            console.log(errorMessage)
+
             const newErrors: ValidationErrors = {
                 dateError: errorMessage.includes("Trip start date couldn't be more than a year in the future") ? "Trip start date couldn't be more than a year in the future" : null,
                 placesTimeError: errorMessage.includes("Start and end place should not be in places to visit") ? "Start and end place should not be in places to visit" :
@@ -135,27 +155,33 @@ function SearchFunction(paramDto: SearchDTO) {
 
             setErrors(newErrors);
 
+            if (!Object.values(newErrors).some(err => err !== null)) {
+                setServerError('Server error');
+                setNotificationVisible(true);
+                setTimeout(() => setNotificationVisible(false), 3000); // Hide after 3 seconds
+            }
+
             return [];
         }
     };
 
     const handleSave = async (name: string): Promise<{ isSuccess: boolean; errorMessage?: string }> => {
-        if (!user){
+        if (!user) {
             console.error("User is not authenticated");
-            return { isSuccess: false, errorMessage: "User is not authenticated" };
+            return {isSuccess: false, errorMessage: "User is not authenticated"};
         }
 
-        const updatedSearch: SearchDTOSave = { ...searchDTOSave, name};
+        const updatedSearch: SearchDTOSave = {...searchDTOSave, name};
         console.log("Prepared DTO for save:", updatedSearch);
 
         const response = await postSearchSave(updatedSearch, user.id);
 
         if (response.success) {
             console.log("Search saved successfully:", response.data);
-            return { isSuccess: true };
+            return {isSuccess: true};
         } else {
             console.error("Failed to save search:", response.error);
-            return { isSuccess: false, errorMessage: response.error };
+            return {isSuccess: false, errorMessage: response.error};
         }
     };
 
@@ -199,14 +225,14 @@ function SearchFunction(paramDto: SearchDTO) {
         try {
             const searchResults = await handleSearch(dto);
             setTrips(searchResults);
-
             setReloading(false);
 
-            // Zapisz dane w formacie do zapisu
+            setHasSearched(true);
             setSearchDTOSave(convertToSearchDTOSave(dto));
         } catch (error) {
-            console.error("Error during search:", error);
+            setHasSearched(true)
             setReloading(false);
+            console.error("Error during search:", error);
         }
     }
 
@@ -250,7 +276,8 @@ function SearchFunction(paramDto: SearchDTO) {
                                     value={searchDto.passengersNumber}
                                     defaultValue={MIN_PASSENGERS_NUMBER}
                                 />
-                                <LoadingOverlay visible={reloading} zIndex={1000} overlayProps={{radius: "sm", blur: 2}}/>
+                                <LoadingOverlay visible={reloading} zIndex={1000}
+                                                overlayProps={{radius: "sm", blur: 2}}/>
                                 <Button size={"xl"} className={styles.pinkButton}
                                         onClick={handleSubmit}>Search!</Button>
                                 {isAuthenticated && trips.length > 0 && (
@@ -309,7 +336,35 @@ function SearchFunction(paramDto: SearchDTO) {
 
                             </GridCol>
                         </Grid>
-                        {trips.length > 0 && <SearchResultPage trips={trips}/>}
+
+                        {hasSearched && trips.length > 0 ? (
+                            <div ref={tripsRef}>
+                                <SearchResultPage trips={trips}/>
+                            </div>
+                        ) : (
+                            !serverError && hasSearched && (
+                                <div  ref={noTripsRef} className={styles.background}>
+                                    <Title className={styles.searchHeader} size="h1" ta="center">
+                                        No trips found for defined criteria
+                                    </Title>
+                                </div>
+                            )
+                        )}
+
+                        {/*/!* Display notification for server error *!/*/}
+                        {notificationVisible && hasSearched && (
+                            <div className={styles.notificationContainer}>
+                                <Notification
+                                    color="red"
+                                    title="Error"
+                                    icon={<IconX size="1.5rem"/>}
+                                    className={styles.notification}
+                                    onClose={() => setNotificationVisible(false)}
+                                >
+                                    {serverError}
+                                </Notification>
+                            </div>
+                        )}
                     </div>
                 </Box>
                 <Footer></Footer>

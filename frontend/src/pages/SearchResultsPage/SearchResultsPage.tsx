@@ -11,6 +11,21 @@ import useAuth from "../../hooks/useAuth";
 interface AccordionLabelProps {
     trip: Trip;
 }
+const formatDuration = (minutes: number) => {
+    const hours = Math.floor(minutes / 60); // Convert minutes to hours
+    const days = Math.floor(hours / 24); // Convert hours to days
+
+    if (minutes >= 1440) { // More than or equal to 1 day
+        const remainingHours = hours % 24; // Hours left after full days
+        return `${days} day${days > 1 ? 's' : ''}${remainingHours > 0 ? ` and ${remainingHours} hour${remainingHours > 1 ? 's' : ''}` : ''}`;
+    } else if (minutes >= 60) { // More than or equal to 1 hour, less than 1 day
+        const remainingMinutes = minutes % 60; // Minutes left after full hours
+        return `${hours} hour${hours > 1 ? 's' : ''}${remainingMinutes > 0 ? ` and ${remainingMinutes} minute${remainingMinutes > 1 ? 's' : ''}` : ''}`;
+    } else { // Less than 1 hour
+        return `${minutes} minute${minutes !== 1 ? 's' : ''}`;
+    }
+};
+
 
 const AccordionLabel: React.FC<AccordionLabelProps> = ({trip}) => {
     const {startDate, endDate, passengerCount, totalCost, totalTransferTime, duration, places} = trip;
@@ -23,12 +38,12 @@ const AccordionLabel: React.FC<AccordionLabelProps> = ({trip}) => {
         <div>
             <Group className={styles.tripInfo}>
                 <div className={styles.tripLeft}>
-                    <Text className={styles.tripPlaces}>{placesString}</Text> |
+                    <Text className={styles.tripPlaces}>{placesString}</Text>
                     <Text className={styles.tripDates}>{startDate} - {endDate}</Text>
                 </div>
                 <div className={styles.tripRight}>
                     <Text className={styles.tripPassengers}>Passengers: {passengerCount}</Text> |
-                    <Text className={styles.tripTotalCost}>Total {totalCost}€</Text> |
+                    <Text className={styles.tripTotalCost}>Total {totalCost.toFixed(2)}€</Text> |
                     <Text className={styles.tripTransferTime}>Transfer Time: {formatTime(totalTransferTime)}</Text> |
                     <Text className={styles.tripDuration}>Duration: {formatTimeToDaysAndHours(duration)}</Text>
                 </div>
@@ -71,7 +86,7 @@ const AccordionPanel: React.FC<AccordionPanelProps> = ({ places, transfers }) =>
                                     <Text
                                         className={`${styles.placeText} ${detail.place.isTransfer ? styles.changeText : ''}`}>
                                         {detail.place.city}, {detail.place.country}
-                                        {detail.place.stayDuration > 0 && ` (${detail.place.stayDuration} days)`} {/* Only show stayDuration if it's greater than 0 */}
+                                        {detail.place.stayDuration > 0 && ` (${formatDuration(detail.place.stayDuration)})`}
                                     </Text>
                                 </Group>
                             </div>
@@ -83,7 +98,7 @@ const AccordionPanel: React.FC<AccordionPanelProps> = ({ places, transfers }) =>
                                 {formatDateToReadableString(detail.transfer.startDateTime)} : {detail.transfer.startAddress}
                             </Text>
                             <Text className={styles.transferInfo}>
-                                Transfer time: {detail.transfer.duration} min<br />
+                                Transfer time: {formatTime(detail.transfer.duration)}<br />
                                 {/* Dodanie ikony transportu z transportIcons */}
                                 {transportIcons[detail.transfer.transportMode as TransportMode]} {detail.transfer.transportMode}: {detail.transfer.carrier}<br />
                                 Cost: {detail.transfer.cost}€
