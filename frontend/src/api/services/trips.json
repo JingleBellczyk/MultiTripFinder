@@ -58,14 +58,14 @@
           "country": "Italy",
           "city": "Lazio",
           "isTransfer": false,
-          "stayDuration": 3,
+          "stayDuration": 7231,
           "visitOrder": 0
         },
         {
           "country": "United Kingdom",
           "city": "London",
           "isTransfer": false,
-          "stayDuration": 3,
+          "stayDuration": 350,
           "visitOrder": 0
         },
         {
@@ -95,7 +95,7 @@
           "carrier": "Carrier",
           "transportMode": "BUS",
           "cost": 100,
-          "duration": 60,
+          "duration": 6000,
           "transferOrder": 1,
           "startAddress": "Start address",
           "endAddress": "End address"
@@ -106,7 +106,7 @@
           "carrier": "Carrier",
           "transportMode": "PLANE",
           "cost": 60,
-          "duration": 60,
+          "duration": 600,
           "transferOrder": 0,
           "startAddress": "Start address",
           "endAddress": "End address"
@@ -205,28 +205,28 @@
           "country": "poland",
           "city": "poznań",
           "isTransfer": false,
-          "stayDuration": 1,
+          "stayDuration": 2,
           "visitOrder": 0
         },
         {
           "country": "italy",
           "city": "lazio",
           "isTransfer": false,
-          "stayDuration": 1,
+          "stayDuration": 60,
           "visitOrder": 0
         },
         {
           "country": "united kingdom",
           "city": "london",
           "isTransfer": false,
-          "stayDuration": 1,
+          "stayDuration": 120,
           "visitOrder": 0
         },
         {
           "country": "poland",
           "city": "poznań",
           "isTransfer": false,
-          "stayDuration": 1,
+          "stayDuration": 7200,
           "visitOrder": 0
         }
       ]
