@@ -47,7 +47,6 @@ export const postSearchSave = async (dto: SearchDTOSave, userId: number) => {
 
     } catch (error: unknown) {
         if (axios.isAxiosError(error) && error.response) {
-
             if (error.response.status === 409) {
                 console.warn("Conflict: A record with similar data already exists.");
                 return { success: false, error: "Conflict: This name already exists" };
