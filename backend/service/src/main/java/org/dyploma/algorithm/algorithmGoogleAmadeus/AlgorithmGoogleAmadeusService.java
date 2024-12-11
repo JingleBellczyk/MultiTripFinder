@@ -179,14 +179,12 @@ public class AlgorithmGoogleAmadeusService {
                     continuePermutationChecking = false;
                 }
 
-                //count next start date
-//                if (transferWasFound) {
-//                    LocalDateTime endDateTime = transferList.get(transferList.size() - 1).getEndDateTime();
-//                    int stayDuration = permutation.get(i + 1).getStayDuration();
-//                    startDate = Utils.addHoursToDate(endDateTime, stayDuration);
-//                }
-
                 i++;
+            }
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
             if (continuePermutationChecking) {
                 Trip trip = prepareTrip(placeInTripList, transferList, passengerCount);

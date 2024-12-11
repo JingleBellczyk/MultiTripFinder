@@ -93,3 +93,18 @@ export function validateForm(
         maxHoursToSpendError: !isValidMaxHoursToSpend(selectedDate, maxHoursToSpend) ? "The total travel duration can't end later than one year from now" : null
     };
 }
+
+export const formatDuration = (minutes: number) => {
+    const hours = Math.floor(minutes / 60); // Convert minutes to hours
+    const days = Math.floor(hours / 24); // Convert hours to days
+
+    if (minutes >= 1440) { // More than or equal to 1 day
+        const remainingHours = hours % 24; // Hours left after full days
+        return `${days} day${days > 1 ? 's' : ''}${remainingHours > 0 ? ` and ${remainingHours} hour${remainingHours > 1 ? 's' : ''}` : ''}`;
+    } else if (minutes >= 60) { // More than or equal to 1 hour, less than 1 day
+        const remainingMinutes = minutes % 60; // Minutes left after full hours
+        return `${hours} hour${hours > 1 ? 's' : ''}${remainingMinutes > 0 ? ` and ${remainingMinutes} minute${remainingMinutes > 1 ? 's' : ''}` : ''}`;
+    } else { // Less than 1 hour
+        return `${minutes} minute${minutes !== 1 ? 's' : ''}`;
+    }
+};
