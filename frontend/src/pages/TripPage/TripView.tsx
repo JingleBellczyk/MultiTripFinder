@@ -12,6 +12,8 @@ import busImg from "../../assets/icons/bus.png";
 import trainImg from "../../assets/icons/train.png";
 import planeImg from "../../assets/icons/plane.png";
 import classes from "../../components/Logo/Logo.module.css";
+import {formatDuration} from "../../utils/placesTimeUtils";
+import {formatTime} from "../../utils/formatDateToReadableString";
 
 export function formatDateTime(
     dateTime: string | Date,
@@ -84,7 +86,7 @@ const SavedTripView: React.FC = () => {
 
                             {!isFirstPlace && !isLastPlace && (
                                 <>
-                                    <Text><strong>Stay Duration:</strong> {convertHoursToDays(item.stayDuration)}</Text>
+                                    <Text><strong>Stay Duration:</strong> {formatDuration(item.stayDuration)}</Text>
                                 </>
                             )}
                         </Card>
@@ -97,10 +99,10 @@ const SavedTripView: React.FC = () => {
                                     <Text><strong>Transport:</strong> {item.transportMode}</Text>
                                     <Text><strong>Start Address:</strong> {item.startAddress}</Text>
                                     <Text><strong>Start Date & Time:</strong> {formatDateTime(item.startDateTime)}</Text>
-                                    <Text><strong>Duration:</strong> {convertHoursToDays(item.duration)}</Text>
+                                    <Text><strong>Duration:</strong> {formatDuration(item.duration)}</Text>
                                     <Text><strong>End Date & Time:</strong> {formatDateTime(item.endDateTime)}</Text>
                                     <Text><strong>End Address:</strong> {item.endAddress}</Text>
-                                    <Text><strong>Cost:</strong> {item.cost}€</Text>
+                                    <Text><strong>Cost:</strong> {item.cost.toFixed(2)}€</Text>
                                 </Stack>
                                 {item.transportMode === 'BUS' && (
                                     <img
@@ -157,8 +159,8 @@ const SavedTripView: React.FC = () => {
                     <Stack className={styles.tripdetails}>
                         <Text size="md" key="start"><strong>Trip Start:</strong> {trip.startDate.toLocaleDateString()}</Text>
                         <Text size="md" key="end"><strong>Trip End:</strong> {trip.endDate.toLocaleDateString()}</Text>
-                        <Text size="md" key="cost"><strong>Total Cost:</strong> {trip.totalCost}€</Text>
-                        <Text size="md"><strong>Total Transfer Time:</strong> {convertHoursToDays(trip.totalTransferTime)}</Text>
+                        <Text size="md" key="cost"><strong>Total Cost:</strong> {trip.totalCost.toFixed(2)}€</Text>
+                        <Text size="md"><strong>Total Transfer Time:</strong> {formatTime(trip.totalTransferTime)}</Text>
                     </Stack>
                     <Divider className={styles.divider} />
                     <Stack className={styles.placesTransfersSection}>
@@ -167,7 +169,7 @@ const SavedTripView: React.FC = () => {
                     </Stack>
                 </Card>
             </div>
-            <Footer />
+            <Footer />S
         </MantineProvider>
     );
 };

@@ -36,12 +36,6 @@ public class AmadeusAlgorithmUtils {
             List<PlaceInTrip> placeInTripList, List<Transfer> transferList,
             LocalDateTime localDateTime, Airport airportStart, Airport airportEnd, int passengerCount) {
 
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
         List<TravelSegment> travelSegments = Arrays.asList(
                 new TravelSegment("1", airportStart.getCityCode(), airportEnd.getCityCode(), formatDate(localDateTime), formatTime(localDateTime))
         );
