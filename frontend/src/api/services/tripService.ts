@@ -19,11 +19,12 @@ export async function saveTripToBackend(trip: Trip, userId: number): Promise<{ i
         return { isSuccess: true };
     } catch (error: unknown) {
         if (axios.isAxiosError(error) && error.response) {
-            console.error("Error saving trip:", error.response.data.message || "Unknown error");
+            console.log(error.response.data)
+            console.error("Error saving trip:", error.response.data || "Unknown error");
 
             return {
                 isSuccess: false,
-                errorMessage: error.response.data.message || "An error occurred while saving the trip.",
+                errorMessage: error.response.data || "An error occurred while saving the trip.",
             };
         } else if (error instanceof Error) {
             console.error("Error saving trip:", error.message);

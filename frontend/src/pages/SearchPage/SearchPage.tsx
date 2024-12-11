@@ -159,6 +159,8 @@ function SearchFunction(paramDto: SearchDTO) {
                 setServerError('Server error');
                 setNotificationVisible(true);
                 setTimeout(() => setNotificationVisible(false), 3000); // Hide after 3 seconds
+            }else{
+                setServerError('Validation error');
             }
 
             return [];
@@ -224,6 +226,9 @@ function SearchFunction(paramDto: SearchDTO) {
 
         try {
             const searchResults = await handleSearch(dto);
+            console.log("searchResults")
+
+            console.log(searchResults)
             setTrips(searchResults);
             setReloading(false);
 

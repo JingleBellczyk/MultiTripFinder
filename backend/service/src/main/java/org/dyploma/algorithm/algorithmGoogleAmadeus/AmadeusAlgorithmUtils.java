@@ -140,7 +140,7 @@ public class AmadeusAlgorithmUtils {
                 .cost(cost / segmentsNumber)
                 .startAddress(startAirportName)
                 .endAddress(endAirportName)
-                .transferOrder(transferOrder)
+                .transferOrder(transferOrder + 1) //order from 1
                 .build();
     }
 
@@ -176,7 +176,7 @@ public class AmadeusAlgorithmUtils {
                 .city(city)
                 .isTransfer(isTransfer)
                 .stayDuration(stayDuration)
-                .visitOrder(visitOrder)
+                .visitOrder(visitOrder + 1) //order from 1
                 .build();
     }
 

@@ -49,6 +49,7 @@ public class GoogleAlgorithmUtils {
                     departureTime,
                     prefferedTransport
             );
+            System.out.println("google response" + routesResponse);
 
             if (routesResponse != null && routesResponse.getRoutes() != null) {
                 routesResponse.getRoutes().forEach(route -> {
@@ -146,7 +147,7 @@ public class GoogleAlgorithmUtils {
                 .cost(cost)
                 .startAddress(startAddress)
                 .endAddress(endAddress)
-                .transferOrder(transferOrder)
+                .transferOrder(transferOrder + 1)//order from 1
                 .build();
     }
 
@@ -174,7 +175,7 @@ public class GoogleAlgorithmUtils {
                 .city(city)
                 .isTransfer(isTransfer)
                 .stayDuration(stayDuration)
-                .visitOrder(visitOrder)
+                .visitOrder(visitOrder + 1) //order from 1
                 .build();
     }
 
