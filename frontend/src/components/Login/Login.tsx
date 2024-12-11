@@ -5,7 +5,7 @@ import axios from "axios";
 import {User} from "../../types/UserDTO";
 import {SERVER} from "../../constants/constants";
 
-const CLIENT =  "http://mtf.norwayeast.cloudapp.azure.com"
+const CLIENT =  "http://localhost:3000"
 
 type LoginProps = {
     isAuthenticated: boolean;

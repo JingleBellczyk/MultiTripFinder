@@ -596,7 +596,7 @@ components:
           minimum: 0
         transferOrder:
           type: integer
-          minimum: 0
+          minimum: 1
         startAddress:
           type: string
           minLength: 1
@@ -644,7 +644,7 @@ components:
           minimum: 0
         visitOrder:
           type: integer
-          minimum: 0
+          minimum: 1
 
     searchRequest:
       type: object

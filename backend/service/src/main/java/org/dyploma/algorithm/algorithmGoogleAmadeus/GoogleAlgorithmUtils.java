@@ -62,7 +62,7 @@ public class GoogleAlgorithmUtils {
                                 .toList();
 
                         for (int i = 0; i < filteredSteps.size(); i++) {
-                            Transfer transfer = convertStepIntoTransfer(filteredSteps.get(i + 1), transferList.size() + 1, passengerCount);
+                            Transfer transfer = convertStepIntoTransfer(filteredSteps.get(i), transferList.size(), passengerCount);
 
                             transferList.add(transfer);
 
@@ -70,17 +70,17 @@ public class GoogleAlgorithmUtils {
 
                             //start place
                             if (i == 0 && transferList.size() == 1) {
-                                PlaceInTrip placeInTrip = convertStepIntoPlace(filteredSteps.get(i), false, placeInTripList.size() + 1, true, 0);
+                                PlaceInTrip placeInTrip = convertStepIntoPlace(filteredSteps.get(i), false, placeInTripList.size(), true, 0);
                                 placeInTripList.add(placeInTrip);
                             }
 
                             if (i == (filteredSteps.size() - 1)) {
                                 //places to visit and last place
-                                PlaceInTrip placeInTrip = convertStepIntoPlace(filteredSteps.get(i), false, placeInTripList.size() + 1, false, 0);
+                                PlaceInTrip placeInTrip = convertStepIntoPlace(filteredSteps.get(i), false, placeInTripList.size(), false, 0);
                                 placeInTripList.add(placeInTrip);
                             } else {
                                 //changes
-                                PlaceInTrip placeInTrip = convertStepIntoPlace(filteredSteps.get(i), true, placeInTripList.size() + 1, false, 0);
+                                PlaceInTrip placeInTrip = convertStepIntoPlace(filteredSteps.get(i), true, placeInTripList.size(), false, 0);
                                 placeInTripList.add(placeInTrip);
                             }
 

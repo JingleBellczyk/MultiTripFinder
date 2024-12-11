@@ -1,7 +1,7 @@
 import {Trip} from "../../types/TripDTO";
 import axios from 'axios';
 
-const BASE_URL: string = "http://mtf.norwayeast.cloudapp.azure.com/api";
+const BASE_URL: string = "http://localhost:8080";
 
 export async function saveTripToBackend(trip: Trip, userId: number): Promise<{ isSuccess: boolean; errorMessage?: string }> {
     console.log("Saving trip to backend");
