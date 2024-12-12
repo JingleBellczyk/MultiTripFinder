@@ -3,9 +3,7 @@ import {Button, Group, Text, Avatar} from '@mantine/core';
 import React from 'react';
 import axios from "axios";
 import {User} from "../../types/UserDTO";
-import {SERVER} from "../../constants/constants";
-
-const CLIENT = "http:///localhost:3000"
+import {SERVER, CLIENT} from "../../constants/constants";
 
 type LoginProps = {
     isAuthenticated: boolean;
@@ -19,11 +17,13 @@ const Login: React.FC<LoginProps> = ({ isAuthenticated, token, user }) => {
 
     const handleLogout = async () => {
         try {
-            await axios.post(`${SERVER}/logout`, {}, { withCredentials: true });
+            const response = await axios.get(`${SERVER}/logout`, { withCredentials: true });
+            console.log("logout response: ", response);
             console.log("Logout successful");
             window.location.href = CLIENT;
         } catch (error) {
             console.error("Logout failed:", error);
+            window.location.href = CLIENT;
         }
     };
 

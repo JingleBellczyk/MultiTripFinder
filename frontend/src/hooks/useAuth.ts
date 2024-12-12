@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import {SERVER} from "../constants/constants";
+import {SERVER, CLIENT} from "../constants/constants";
 import {User} from "../types/UserDTO";
-
-
 
 const fetchUser = async (
     setUser: React.Dispatch<React.SetStateAction<User | null>>,
@@ -21,6 +19,7 @@ const fetchUser = async (
             console.error("Unexpected error:", error);
         }
         setIsAuthenticated(false); // Reset authentication if fetching fails
+        window.location.href = CLIENT;
     }
 };
 
