@@ -49,8 +49,11 @@ public class GoogleAlgorithmUtils {
                     departureTime,
                     prefferedTransport
             );
-            System.out.println("google response" + routesResponse);
-
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             if (routesResponse != null && routesResponse.getRoutes() != null) {
                 routesResponse.getRoutes().forEach(route -> {
                     route.getLegs().forEach(leg -> {
