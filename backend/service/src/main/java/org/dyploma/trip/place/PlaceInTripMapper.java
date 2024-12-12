@@ -14,8 +14,8 @@ public class PlaceInTripMapper {
 
     private static PlaceInTrip mapToPlaceInTrip(com.openapi.model.PlaceInTrip placeInTripApi) {
         return PlaceInTrip.builder()
-                .country(placeInTripApi.getCountry().toLowerCase())
-                .city(placeInTripApi.getCity().toLowerCase())
+                .country(placeInTripApi.getCountry())
+                .city(placeInTripApi.getCity())
                 .stayDuration(placeInTripApi.getStayDuration())
                 .visitOrder(placeInTripApi.getVisitOrder())
                 .isTransfer(placeInTripApi.getIsTransfer())

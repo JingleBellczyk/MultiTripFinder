@@ -39,7 +39,7 @@ public class Trip {
     @JoinColumn(name = "user_account_id", nullable = false)
     private UserAccount userAccount;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "Trip_Trip_Tag",
             joinColumns = @JoinColumn(name = "trip_id"),
