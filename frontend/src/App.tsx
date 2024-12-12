@@ -17,7 +17,7 @@ function App() {
 
 
     axios.defaults.withCredentials = true;
-    axios.defaults.baseURL = "http://localhost:8080";
+    axios.defaults.baseURL = "http://mtf.norwayeast.cloudapp.azure.com/api";
     axios.interceptors.response.use(
         response => response,
         error => {
