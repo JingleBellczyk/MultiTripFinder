@@ -85,12 +85,11 @@ public class AmadeusApiClient {
 
             if (response.getStatusCode() == HttpStatus.OK) {
                 this.apiKey = response.getBody().getAccess_token();
-                logger.info("New API key obtained: " + this.apiKey);
             } else {
-                logger.info("Failed to refresh API key: " + response.getStatusCode());
+                logger.error("Failed to refresh Amadeus API key: " + response.getStatusCode());
             }
         } catch (Exception ex) {
-            logger.info("Error refreshing API key: " + ex.getMessage());
+            logger.error("Error refreshing Amadeus API key: " + ex.getMessage());
         }
     }
 
