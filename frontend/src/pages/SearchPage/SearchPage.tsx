@@ -147,7 +147,9 @@ function SearchFunction(paramDto: SearchDTO) {
                     errorMessage.includes("Places to visit should not contain duplicates") ? "Places to visit should not contain duplicates" :
                         errorMessage.includes("Stay duration at each place to visit should be specified") ? "Stay duration at each place to visit should be specified" :
                             errorMessage.includes("Sum of hours to spend at each place to visit should not exceed max trip duration") ? "Sum of hours to spend at each place to visit should not exceed max trip duration" :
-                                errorMessage.includes("Order number of places to visit should be specified") ? "Order number of places to visit should be specified" : null,
+                                errorMessage.includes("Order number of places to visit should be specified") ? "Order number of places to visit should be specified" :
+                                errorMessage.includes("Stay duration at each place to visit should be at most 10 days") ? "Stay duration at each place to visit should be at most 10 days" :
+                                    errorMessage.includes("Stay duration at each place to visit should be at least 10 hours") ? "Stay duration at each place to visit should be at least 10 hours" : null,
                 startPlaceError: errorMessage.includes("Start place error message") ? "Start place error message" : null,
                 endPlaceError: errorMessage.includes("End place error message") ? "End place error message" : null,
                 maxHoursToSpendError: errorMessage.includes("Max hours to spend error message") ? "Max hours to spend error message" : null

@@ -13,6 +13,7 @@ import NameTextInput from "../TextInput/NameTextInput";
 import CustomTags from "../Tags/CustomTags";
 import NameInput from "../NameInput/NameInput";
 import {getBadgeColor, handleSearchForName} from "../../utils/commonListFunctions";
+import {formatTime} from "../../utils/formatDateToReadableString";
 
 const ViewIcon = ({ onClick }: { onClick: () => void }) => (
     <CloseButton
@@ -43,9 +44,9 @@ const ShowTripDetails = ({trip} : DetailsProps) => {
         <Text size="md"><b>Passengers</b>: {trip.passengerCount}</Text>
         <Text size="md"><b>Start date</b>: {trip.startDate.toLocaleDateString()}</Text>
         <Text size="md"><b>End date</b>: {trip.endDate.toLocaleDateString()}</Text>
-        <Text size="md"><b>Total cost</b>: {trip.totalCost} Euro</Text>
+        <Text size="md"><b>Total cost</b>: {trip.totalCost.toFixed(2)} Euro</Text>
         <Text size="md"><b>Duration</b>: {convertHoursToDays(trip.duration)}</Text>
-        <Text size="md"><b>Total transfer time</b>: {convertHoursToDays(trip.totalTransferTime)}</Text>
+        <Text size="md"><b>Total transfer time</b>: {formatTime(trip.totalTransferTime)}</Text>
     </>
 }
 
