@@ -9,18 +9,40 @@ def add_city_to_graph(graph: nx.DiGraph, city: PlaceInSearchRequest):
     graph.add_node(city)
 
 
-# Функция для добавления маршрута (рёбер) между городами в граф
-def add_transfer_to_graph(graph: nx.DiGraph, edge: Connection):
+# Функция для расчета веса для ребра графа
+def calculate_edge_weight(connection: Connection, preferred_transport: Optional[TransportMode], optimization_criteria: CriteriaMode) -> float:
+    # Основной критерий оптимизации (время или стоимость)
+    primary_weight = connection.duration if optimization_criteria == CriteriaMode.DURATION else connection.price
 
+    # Оценка соответствия предпочтительному транспорту
+    transport_score_sum = 0
+    for leg in connection.transport_modes:
+        if leg.transport_mode == preferred_transport:
+            transport_score_sum += 1
+
+    # Средний балл соответствия транспорта
+    transport_score = transport_score_sum / len(connection.transport_modes)
+
+    # Расчет дополнительного веса для соответствия транспорта
+    transport_weight_component = (1 - transport_score) * 0.4286 * primary_weight
+
+    # Итоговый вес
+    combined_weight = primary_weight + transport_weight_component
+    return combined_weight
+
+
+# Функция для добавления маршрута (рёбер) между городами в граф
+def add_transfer_to_graph(graph: nx.DiGraph, connection: Connection, weight: float):
     graph.add_edge(
-        edge.origin_city,
-        edge.destination_city,
-        transport_type=edge.transport_type,
-        cost=edge.price,
-        duration=edge.duration,
-        depart_time=edge.depart_time,
-        arrival_time=edge.arrival_time,
-        segments=edge.segments
+        connection.origin_city,
+        connection.destination_city,
+        transport_type=connection.transport_type,
+        cost=connection.price,
+        duration=connection.duration,
+        depart_time=connection.departure_time,
+        arrival_time=connection.arrival_time,
+        segments=connection.segments,
+        weight=weight  # Добавляем рассчитанный вес
     )
 
 
@@ -70,7 +92,7 @@ def is_valid_stay(graph: nx.DiGraph, current_route: List[str], depart_time: str,
 
     if len(current_route) == 1:
         # Проверяем первый город: мы должны выехать не позднее, чем через 24 часа от указанной даты с автоматически добавленным временем 00:00
-        latest_departure = start_date + timedelta(hours=24)
+        latest_departure = current_time + timedelta(hours=24)
         valid = depart_time_dt <= latest_departure
         logging.info(
             f"Sprawdzenie pierwszego miasta. depart_time: {depart_time_dt}, Dopuszczalny depart_time: {latest_departure}, Wynik: {valid}")

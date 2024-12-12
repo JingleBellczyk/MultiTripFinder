@@ -69,7 +69,7 @@ async def process_pair(session, request: AlgorithmRequest, startPlace, endPlace)
             print(f"Error fetching OTP data: {e}")
     return filtered_itineraries
 
-
+#fix to 3 lists of city pairs
 async def find_routes_otp_async(request: AlgorithmRequest,
                                 city_pairs: List[Tuple[PlaceInSearchRequest, PlaceInSearchRequest]]):
     final_itineraries = []

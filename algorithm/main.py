@@ -37,7 +37,7 @@ async def process_route(request: AlgorithmRequest):
     duration = time.monotonic() - start_time
     logging.info(f"async find_routes_otp executed in {duration:.2f} seconds")
     
-    #amadeus_results = await process_flight_data(request, city_pairs)
+    amadeus_results = await process_flight_data(request, start_city_pairs, visit_city_pairs, end_city_pairs)
     
     return {"status": "Request processed", "results": "pass"}
 
