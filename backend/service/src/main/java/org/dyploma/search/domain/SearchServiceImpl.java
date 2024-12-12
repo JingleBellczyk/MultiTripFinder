@@ -76,7 +76,6 @@ public class SearchServiceImpl implements SearchService {
             AlgorithmRequest algorithmRequestObject = algorithmRequestCreator.createRequest(search);
             //Object algorithmResponse = restTemplate.postForObject(processRouteEndpoint, algorithmRequestObject, Object.class);
 
-            // TODO: Implement algorithm call
             List<Trip> trips = new ArrayList<>();
             for (int i = 0; i < 5; i++) {
                 List<Transfer> transfers = new ArrayList<>();

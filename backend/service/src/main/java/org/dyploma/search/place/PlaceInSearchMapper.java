@@ -11,8 +11,8 @@ public class PlaceInSearchMapper {
 
     public static PlaceInSearch mapToPlaceInSearch(com.openapi.model.PlaceInSearch placeInSearchApi) {
         return PlaceInSearch.builder()
-                .country(placeInSearchApi.getCountry().toLowerCase())
-                .city(placeInSearchApi.getCity().toLowerCase())
+                .country(placeInSearchApi.getCountry())
+                .city(placeInSearchApi.getCity())
                 .stayDuration(placeInSearchApi.getStayDuration())
                 .entryOrder(placeInSearchApi.getEntryOrder())
                 .build();

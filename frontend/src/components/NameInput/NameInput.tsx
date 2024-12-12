@@ -44,7 +44,7 @@ const NameInput: React.FC<NameInputProps> = ({ userId, value, setValue, type, da
             <Autocomplete
                 value={value}
                 onChange={setValue}
-                placeholder="Type or choose an name..."
+                placeholder="Type or choose a name..."
                 data={names}
                 disabled={loading || !userId}
                 limit={5}

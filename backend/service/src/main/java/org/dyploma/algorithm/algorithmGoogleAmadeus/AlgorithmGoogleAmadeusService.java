@@ -181,11 +181,7 @@ public class AlgorithmGoogleAmadeusService {
 
                 i++;
             }
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+
             if (continuePermutationChecking) {
                 Trip trip = prepareTrip(placeInTripList, transferList, passengerCount);
                 Utils.addSolution(bestSolutionsQueue, new Solution(trip.getTotalTransferTime(), trip.getTotalCost(), trip, comparator));

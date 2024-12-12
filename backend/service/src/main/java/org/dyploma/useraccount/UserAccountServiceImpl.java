@@ -1,5 +1,6 @@
 package org.dyploma.useraccount;
 
+import jakarta.transaction.Transactional;
 import org.dyploma.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

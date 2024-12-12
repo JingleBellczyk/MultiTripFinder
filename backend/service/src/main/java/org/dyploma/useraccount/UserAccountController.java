@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:80","http://frontend:80"})
+//@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:80","http://frontend:80"})
 public class UserAccountController implements UserApi {
 
     private final UserAccountService userAccountService;

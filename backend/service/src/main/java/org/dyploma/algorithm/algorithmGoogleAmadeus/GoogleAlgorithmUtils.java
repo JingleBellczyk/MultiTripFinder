@@ -49,8 +49,11 @@ public class GoogleAlgorithmUtils {
                     departureTime,
                     prefferedTransport
             );
-            System.out.println("google response" + routesResponse);
-
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             if (routesResponse != null && routesResponse.getRoutes() != null) {
                 routesResponse.getRoutes().forEach(route -> {
                     route.getLegs().forEach(leg -> {
@@ -234,14 +237,13 @@ public class GoogleAlgorithmUtils {
     private static TransportMode mapToTransportMode(String transportModeString) {
 
         if (transportModeString == null) {
-            return null;
+            return TransportMode.BUS;
         }
 
         return switch (transportModeString) {
             case "HIGH_SPEED_TRAIN", "TRAIN", "RAIL", "HEAVY_RAIL", "LIGHT_RAIL" -> TransportMode.TRAIN;
-            case "BUS" -> TransportMode.BUS;
             case "PLANE" -> TransportMode.PLANE;
-            default -> null;
+            default -> TransportMode.BUS;
         };
     }
 

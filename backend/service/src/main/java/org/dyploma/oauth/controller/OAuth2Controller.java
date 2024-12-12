@@ -4,9 +4,6 @@ import org.dyploma.useraccount.UserAccount;
 import org.dyploma.useraccount.UserAccountServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:80", "http://frontend:80", "http://localhost", "http://mtf.norwayeast.cloudapp.azure.com"})
 public class OAuth2Controller {
     private final UserAccountServiceImpl userAccountService;
 
@@ -46,5 +44,4 @@ public class OAuth2Controller {
 
         return ResponseEntity.ok(userInfo);
     }
-
 }

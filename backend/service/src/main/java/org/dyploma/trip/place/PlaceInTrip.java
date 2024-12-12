@@ -12,15 +12,18 @@ import org.dyploma.trip.domain.Trip;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "trip_place")
+@Table(name = "Trip_Place")
 public class PlaceInTrip {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String country;
     private String city;
+    @Column(name = "is_transfer")
     private boolean isTransfer;
+    @Column(name = "stay_duration")
     private int stayDuration;
+    @Column(name = "visit_order")
     private int visitOrder;
     @ManyToOne
     @JoinColumn(name = "trip_id", nullable = false)

@@ -4,11 +4,12 @@ COPY api-definition/api.yaml ./api-definition/api.yaml
 COPY api-definition/pom.xml ./api-definition/pom.xml
 COPY api-generated/pom.xml ./api-generated/pom.xml
 COPY service/pom.xml ./service/pom.xml
-COPY service/src ./service/src
+COPY service/src/main ./service/src/main
 COPY pom.xml ./pom.xml
 RUN mvn clean install -DskipTests
 FROM eclipse-temurin:17.0.6_10-jre-alpine@sha256:c26a727c4883eb73d32351be8bacb3e70f390c2c94f078dc493495ed93c60c2f
 WORKDIR /app
+COPY --from=builder /build/service/src/main /app/service/src/main
 COPY --from=builder /build/service/target/*.jar /app/MultiTripFinder.jar
 EXPOSE 8080
 CMD ["java", "-jar", "MultiTripFinder.jar"]

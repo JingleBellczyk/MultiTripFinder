@@ -12,7 +12,7 @@ import org.dyploma.search.domain.Search;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "search_place")
+@Table(name = "Search_Place")
 public class PlaceInSearch {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +24,8 @@ public class PlaceInSearch {
 
     private String country;
     private String city;
+    @Column(name = "stay_duration")
     private Integer stayDuration;
+    @Column(name = "entry_order")
     private Integer entryOrder;
 }

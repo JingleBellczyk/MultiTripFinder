@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Builder
-@Table(name = "transfer")
+@Table(name = "Transfer")
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,13 +25,19 @@ public class Transfer {
     @JoinColumn(name = "trip_id", nullable = false)
     private Trip trip;
 
+    @Column(name = "transport_mode")
     private TransportMode transportMode;
     private String carrier;
+    @Column(name = "start_date_time")
     private LocalDateTime startDateTime;
+    @Column(name = "end_date_time")
     private LocalDateTime endDateTime;
     private int duration;
     private double cost;
+    @Column(name = "start_address")
     private String startAddress;
+    @Column(name = "end_address")
     private String endAddress;
+    @Column(name = "transfer_order")
     private int transferOrder;
 }

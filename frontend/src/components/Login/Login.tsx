@@ -18,7 +18,7 @@ const Login: React.FC<LoginProps> = ({ isAuthenticated, token, user }) => {
     const handleLogout = async () => {
         try {
             const response = await axios.get(`${SERVER}/logout`, { withCredentials: true });
-            console.log("logout response: ", response);
+            console.log("logout response:", response);
             console.log("Logout successful");
             window.location.href = CLIENT;
         } catch (error) {

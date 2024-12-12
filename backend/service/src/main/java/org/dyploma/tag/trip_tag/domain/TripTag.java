@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "trip_tag", uniqueConstraints = {
+@Table(name = "Trip_Tag", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"name", "user_account_id"})
 })
 public class TripTag {

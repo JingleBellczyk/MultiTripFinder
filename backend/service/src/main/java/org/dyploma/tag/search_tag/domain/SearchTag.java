@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "search_tag", uniqueConstraints = {
+@Table(name = "Search_Tag", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"name", "user_account_id"})
 })
 public class SearchTag {
