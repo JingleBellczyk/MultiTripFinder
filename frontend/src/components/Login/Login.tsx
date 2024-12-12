@@ -3,9 +3,7 @@ import {Button, Group, Text, Avatar} from '@mantine/core';
 import React from 'react';
 import axios from "axios";
 import {User} from "../../types/UserDTO";
-import {SERVER} from "../../constants/constants";
-
-const CLIENT =  "http://localhost:3000";
+import {SERVER, CLIENT} from "../../constants/constants";
 
 type LoginProps = {
     isAuthenticated: boolean;

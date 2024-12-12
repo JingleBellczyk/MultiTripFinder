@@ -11,7 +11,7 @@ export const MAX_PLACES_TO_VIST_NUMBER = 4
 
 export const PAGE_SIZE=4
 export const SERVER = "http://localhost:8080";
-
+export const CLIENT = "http:///localhost:3000"
 export const ICON_SIZE = 24;
 export const STROKE = 1.3;
 export const SEARCH_LIST="searchList";
