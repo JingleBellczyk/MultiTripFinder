@@ -131,7 +131,7 @@ def is_valid_stay(graph: nx.DiGraph, current_route: List[str], depart_time: str,
 def process_connections_data(start_city: PlaceInSearchRequest, end_city: PlaceInSearchRequest,
                              cities_to_visit: List[PlaceInSearchRequest], passenger_count: int,
                              preferred_transport: Optional[TransportMode], optimization_criteria: CriteriaMode, start_date: datetime,
-                             otp_data: List[Dict[str, Any]], amadeus_data: List[Dict[str, Any]]):
+                             otp_data: List[Connection], amadeus_data: List[Connection]):
     graph = nx.DiGraph()
 
     # Добавляем начальный, конечный города и города для посещения в граф

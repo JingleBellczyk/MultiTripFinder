@@ -20,7 +20,7 @@ logging.basicConfig(level=logging.INFO)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     try:
-        await asyncio.to_thread(start_otp)
+        #await asyncio.to_thread(start_otp)
         yield
     except Exception as e:
         logging.error(f"OTP initialization failed: {e}")
@@ -37,16 +37,16 @@ async def process_route(request: AlgorithmRequest):
     start_city_pairs, visit_city_pairs, end_city_pairs = extract_city_pairs(request)
     city_pairs = start_city_pairs + visit_city_pairs + end_city_pairs
     start_time = time.monotonic()
-    otp_results = await find_routes_otp_async(request, city_pairs)
+    #otp_results = await find_routes_otp_async(request, city_pairs)
     duration = time.monotonic() - start_time
     logging.info(f"async find_routes_otp executed in {duration:.2f} seconds")
     
     amadeus_results = await process_flight_data(request, start_city_pairs, visit_city_pairs, end_city_pairs)
 
     #string of date to datetime with time 00:00:00
-    start_date_datetime = datetime.combine(request.trip_start_date, datetime.min.time())
+    start_date_datetime = datetime.combine(datetime.strptime(request.trip_start_date, "%Y-%m-%d"), datetime.min.time())
 
-    result = process_connections_data(request.start_place, request.end_place, request.places_to_visit, request.passenger_count, request.preferred_transport, request.optimization_criteria, start_date_datetime, otp_results, amadeus_results)
+    result = process_connections_data(request.start_place, request.end_place, request.places_to_visit, request.passenger_count, request.preferred_transport, request.optimization_criteria, start_date_datetime, [], amadeus_results)
     logging.info(result)
     return {"status": "Request processed", "results": result}
 

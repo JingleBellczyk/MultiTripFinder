@@ -17,7 +17,7 @@ public class AlgorithmRequest {
     private PlaceInSearchRequest end_place;
     private List<PlaceInSearchRequest> places_to_visit;
     private int passenger_count;
-    private LocalDate trip_start_date;
+    private String trip_start_date;
     private int max_trip_duration;
     private TransportMode preferred_transport;
     private CriteriaMode optimization_criteria;

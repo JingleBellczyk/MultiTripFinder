@@ -2,12 +2,12 @@ import logging
 import os
 from amadeus import Client, ResponseError
 from datetime import datetime, timedelta
-from typing import List, Tuple
+from typing import List, Tuple, Any
 import asyncio
 import pytz
 from timezonefinder import TimezoneFinder
 
-from dto import AlgorithmRequest, PlaceInSearchRequest, TransportMode, TransportModeLeg
+from dto import AlgorithmRequest, PlaceInSearchRequest, TransportMode, TransportModeLeg, Connection
 
 amadeus_client_id = os.environ.get("AMADEUS_CLIENT_ID")
 amadeus_client_secret = os.environ.get("AMADEUS_CLIENT_SECRET")
@@ -15,10 +15,12 @@ amadeus_client_secret = os.environ.get("AMADEUS_CLIENT_SECRET")
 gmt_plus_one = pytz.timezone("Europe/Berlin")  # GMT+1 timezone
 timezone_finder = TimezoneFinder()
 
+
 def convert_to_gmt_plus_one(local_time: datetime, city: PlaceInSearchRequest) -> datetime:
     """Convert local time to GMT+1 based on the city's coordinates."""
     try:
-        local_tz_name = timezone_finder.timezone_at(lat=float(city.station_coordinates.lat), lng=float(city.station_coordinates.lon))
+        local_tz_name = timezone_finder.timezone_at(lat=float(city.station_coordinates.lat),
+                                                    lng=float(city.station_coordinates.lon))
         local_tz = pytz.timezone(local_tz_name)
         local_time = local_tz.localize(local_time)
         return local_time.astimezone(gmt_plus_one)
@@ -27,9 +29,11 @@ def convert_to_gmt_plus_one(local_time: datetime, city: PlaceInSearchRequest) ->
         return local_time
 
 
-def extract_flight_details(flight: dict, end_datetime: datetime, origin: PlaceInSearchRequest, destination: PlaceInSearchRequest, passenger_count: int) -> dict:
+def extract_flight_details(flight: dict, end_datetime: datetime, origin: PlaceInSearchRequest,
+                           destination: PlaceInSearchRequest, passenger_count: int) -> Connection:
     try:
-        duration = int(timedelta(hours=int(flight["itineraries"][0]["duration"][2:4]), minutes=int(flight["itineraries"][0]["duration"][5:7])).total_seconds() / 60)
+        duration = int(timedelta(hours=int(flight["itineraries"][0]["duration"][2:4]),
+                                 minutes=int(flight["itineraries"][0]["duration"][5:7])).total_seconds() / 60)
         segments = flight["itineraries"][0]["segments"]
 
         segment_details = []
@@ -49,22 +53,24 @@ def extract_flight_details(flight: dict, end_datetime: datetime, origin: PlaceIn
         if flight["numberOfBookableSeats"] < passenger_count:
             return {}
 
-        return {
-            "origin_city": origin,
-            "destination_city": destination,
-            "departure_time": convert_to_gmt_plus_one(segment_details[0]["departure_time"], origin),
-            "arrival_time": convert_to_gmt_plus_one(segment_details[-1]["arrival_time"], destination),
-            "price": flight['price']['total'],
-            "duration": duration,
-            "segments": segment_details,
-            "transport_modes": [TransportModeLeg(transport_mode=TransportMode.PLANE, duration=duration)]
-        }
+        return Connection(
+            origin_city=origin,
+            destination_city=destination,
+            departure_time=convert_to_gmt_plus_one(segment_details[0]["departure_time"], origin),
+            arrival_time=convert_to_gmt_plus_one(segment_details[-1]["arrival_time"], destination),
+            price=flight['price']['total'],
+            duration=duration,
+            segments=segment_details,
+            transport_type=[TransportModeLeg(transport_mode=TransportMode.PLANE, duration=duration)]
+        )
     except KeyError as e:
         logging.info(f"Error extracting data: no such key {e}")
         return {}
 
 
-async def fetch_amadeus_data(body: dict):
+async def fetch_amadeus_data(body: dict, trip_start_date: str, origin: PlaceInSearchRequest,
+                             destination: PlaceInSearchRequest, passenger_count: int) -> \
+        tuple[Any, str, PlaceInSearchRequest, PlaceInSearchRequest, int] | list[Any]:
     amadeus = Client(
         client_id=amadeus_client_id,
         client_secret=amadeus_client_secret
@@ -73,13 +79,14 @@ async def fetch_amadeus_data(body: dict):
     try:
         response = amadeus.shopping.flight_offers_search.post(body)
         await asyncio.sleep(0.05)
-        return response.data
+        return response.data, trip_start_date, origin, destination, passenger_count
     except ResponseError as error:
         logging.info(f"Error fetching flights: {error}")
         return []
 
 
-async def process_start_city_pairs(request: AlgorithmRequest, start_city_pairs: List[Tuple[PlaceInSearchRequest, PlaceInSearchRequest]]):
+async def process_start_city_pairs(request: AlgorithmRequest,
+                                   start_city_pairs: List[Tuple[PlaceInSearchRequest, PlaceInSearchRequest]]):
     tasks = []
     for origin, destination in start_city_pairs:
         if origin.city_code and destination.city_code:
@@ -91,7 +98,7 @@ async def process_start_city_pairs(request: AlgorithmRequest, start_city_pairs: 
                         "originLocationCode": origin.city_code,
                         "destinationLocationCode": destination.city_code,
                         "departureDateTimeRange": {
-                            "date": request.trip_start_date.strftime("%Y-%m-%d")
+                            "date": request.trip_start_date
                         }
                     }
                 ],
@@ -104,13 +111,15 @@ async def process_start_city_pairs(request: AlgorithmRequest, start_city_pairs: 
                     "oneFlightOfferPerDay": True
                 }
             }
-            tasks.append(fetch_amadeus_data(body))
+            tasks.append(
+                fetch_amadeus_data(body, request.trip_start_date, origin, destination, request.passenger_count))
     return await asyncio.gather(*tasks)
 
 
-async def process_visit_city_pairs(request: AlgorithmRequest, visit_city_pairs: List[Tuple[PlaceInSearchRequest, PlaceInSearchRequest]]):
+async def process_visit_city_pairs(request: AlgorithmRequest,
+                                   visit_city_pairs: List[Tuple[PlaceInSearchRequest, PlaceInSearchRequest]]):
     tasks = []
-    base_dates = [request.trip_start_date + timedelta(days=i) for i in range(request.max_trip_duration)]
+    base_dates = [datetime.strptime(request.trip_start_date, "%Y-%m-%d") + timedelta(days=i) for i in range(request.max_trip_duration)]
     for origin, destination in visit_city_pairs:
         if origin.city_code and destination.city_code:
             for base_date in base_dates:
@@ -136,14 +145,17 @@ async def process_visit_city_pairs(request: AlgorithmRequest, visit_city_pairs: 
                         "oneFlightOfferPerDay": True
                     }
                 }
-                tasks.append(fetch_amadeus_data(body))
+                tasks.append(
+                    fetch_amadeus_data(body, request.trip_start_date, origin, destination, request.passenger_count))
     return await asyncio.gather(*tasks)
 
 
-async def process_end_city_pairs(request: AlgorithmRequest, end_city_pairs: List[Tuple[PlaceInSearchRequest, PlaceInSearchRequest]]):
+async def process_end_city_pairs(request: AlgorithmRequest,
+                                 end_city_pairs: List[Tuple[PlaceInSearchRequest, PlaceInSearchRequest]]):
     tasks = []
-    total_min_stay_hours = sum(place.stay_hours_min for place in request.places_to_visit) + request.start_place.stay_hours_min
-    base_date = request.trip_start_date + timedelta(days=total_min_stay_hours // 24)
+    total_min_stay_hours = sum(
+        place.stay_hours_min for place in request.places_to_visit) + request.start_place.stay_hours_min
+    base_date = datetime.strptime(request.trip_start_date, "%Y-%m-%d") + timedelta(days=total_min_stay_hours // 24)
     for origin, destination in end_city_pairs:
         if origin.city_code and destination.city_code:
             body = {
@@ -168,7 +180,8 @@ async def process_end_city_pairs(request: AlgorithmRequest, end_city_pairs: List
                     "oneFlightOfferPerDay": True
                 }
             }
-            tasks.append(fetch_amadeus_data(body))
+            tasks.append(
+                fetch_amadeus_data(body, request.trip_start_date, origin, destination, request.passenger_count))
     return await asyncio.gather(*tasks)
 
 
@@ -176,8 +189,13 @@ async def process_flight_data(request: AlgorithmRequest, start_city_pairs, visit
     start_results = await process_start_city_pairs(request, start_city_pairs)
     visit_results = await process_visit_city_pairs(request, visit_city_pairs)
     end_results = await process_end_city_pairs(request, end_city_pairs)
-    return {
-        "start_results": start_results,
-        "visit_results": visit_results,
-        "end_results": end_results
-    }
+
+    results = start_results + visit_results + end_results
+    # apply extract_flight_details to all results
+    final_results = []
+    for result in results:
+        flight, end_datetime, origin, destination, passenger_count = result
+        if result:
+            final_results.append(extract_flight_details(flight, end_datetime, origin, destination, passenger_count))
+
+    return final_results

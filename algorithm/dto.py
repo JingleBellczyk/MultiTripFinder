@@ -46,7 +46,7 @@ class AlgorithmRequest(BaseModel):
     end_place: PlaceInSearchRequest
     places_to_visit: List[PlaceInSearchRequest]
     passenger_count: int
-    trip_start_date: date
+    trip_start_date: str
     max_trip_duration: int
     preferred_transport: Optional[TransportMode]
     optimization_criteria: CriteriaMode
@@ -60,4 +60,4 @@ class Connection(BaseModel):
     price: float
     duration: int
     segments: List[dict]
-    transport_type: TransportMode
+    transport_type: List[TransportModeLeg]

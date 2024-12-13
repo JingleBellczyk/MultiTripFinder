@@ -50,7 +50,7 @@ async def fetch_otp_data(session, body):
 async def process_pair(session, request: AlgorithmRequest, startPlace, endPlace):
     filtered_itineraries = []
     for i in range(request.max_trip_duration):
-        date = request.trip_start_date + timedelta(days=i)
+        date = datetime.strptime(request.trip_start_date, "%Y-%m-%d") + timedelta(days=i)
         request_body = create_otp_request_body(
             startPlace.station_coordinates.railway_station_coordinates,
             endPlace.station_coordinates.railway_station_coordinates,
@@ -87,8 +87,14 @@ async def find_routes_otp_async(request: AlgorithmRequest,
     for itineraries in results:
         final_itineraries.extend(itineraries)
 
+    #dict_ = transform_to_dict(final_itineraries)
+
+
+
     return final_itineraries
 
+#def transform_to_dict(itineraries: List[Itinerary]):
+ #   return [itinerary.dict() for itinerary in itineraries]
 
 def create_otp_request_body(fromCoordinates: Coordinates, toCoordinates: Coordinates, date_: date,
                             transportMode: TransportMode):
