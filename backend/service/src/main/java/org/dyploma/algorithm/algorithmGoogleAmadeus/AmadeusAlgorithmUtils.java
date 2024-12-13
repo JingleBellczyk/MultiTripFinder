@@ -36,12 +36,6 @@ public class AmadeusAlgorithmUtils {
             List<PlaceInTrip> placeInTripList, List<Transfer> transferList,
             LocalDateTime localDateTime, Airport airportStart, Airport airportEnd, int passengerCount) {
 
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
         List<TravelSegment> travelSegments = Arrays.asList(
                 new TravelSegment("1", airportStart.getCityCode(), airportEnd.getCityCode(), formatDate(localDateTime), formatTime(localDateTime))
         );
@@ -140,7 +134,7 @@ public class AmadeusAlgorithmUtils {
                 .cost(cost / segmentsNumber)
                 .startAddress(startAirportName)
                 .endAddress(endAirportName)
-                .transferOrder(transferOrder)
+                .transferOrder(transferOrder + 1) //order from 1
                 .build();
     }
 
@@ -176,7 +170,7 @@ public class AmadeusAlgorithmUtils {
                 .city(city)
                 .isTransfer(isTransfer)
                 .stayDuration(stayDuration)
-                .visitOrder(visitOrder)
+                .visitOrder(visitOrder + 1) //order from 1
                 .build();
     }
 

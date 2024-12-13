@@ -15,6 +15,7 @@ import LoginFailedPage from './pages/ErrorPages/LoginFailedPage';
 function App() {
     const { isAuthenticated, token, user, loading} = useAuth();
 
+
     axios.defaults.withCredentials = true;
     axios.defaults.baseURL = 'http://localhost:8080';
     axios.interceptors.response.use(

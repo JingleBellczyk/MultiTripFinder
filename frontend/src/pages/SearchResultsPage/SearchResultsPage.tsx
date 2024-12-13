@@ -7,25 +7,11 @@ import {SaveSearchTripModal} from "../../components/SaveSearchTripModal/SaveSear
 import {transportIcons, TransportMode} from "../../constants/constants";
 import {saveTripToBackend} from "../../api/services/tripService";
 import useAuth from "../../hooks/useAuth";
+import {formatDuration} from "../../utils/placesTimeUtils";
 
 interface AccordionLabelProps {
     trip: Trip;
 }
-const formatDuration = (minutes: number) => {
-    const hours = Math.floor(minutes / 60); // Convert minutes to hours
-    const days = Math.floor(hours / 24); // Convert hours to days
-
-    if (minutes >= 1440) { // More than or equal to 1 day
-        const remainingHours = hours % 24; // Hours left after full days
-        return `${days} day${days > 1 ? 's' : ''}${remainingHours > 0 ? ` and ${remainingHours} hour${remainingHours > 1 ? 's' : ''}` : ''}`;
-    } else if (minutes >= 60) { // More than or equal to 1 hour, less than 1 day
-        const remainingMinutes = minutes % 60; // Minutes left after full hours
-        return `${hours} hour${hours > 1 ? 's' : ''}${remainingMinutes > 0 ? ` and ${remainingMinutes} minute${remainingMinutes > 1 ? 's' : ''}` : ''}`;
-    } else { // Less than 1 hour
-        return `${minutes} minute${minutes !== 1 ? 's' : ''}`;
-    }
-};
-
 
 const AccordionLabel: React.FC<AccordionLabelProps> = ({trip}) => {
     const {startDate, endDate, passengerCount, totalCost, totalTransferTime, duration, places} = trip;
