@@ -74,7 +74,7 @@ public class SearchServiceImpl implements SearchService {
             return algorithmGoogleAmadeusService.search(search);
         } else {
             AlgorithmRequest algorithmRequestObject = algorithmRequestCreator.createRequest(search);
-            //Object algorithmResponse = restTemplate.postForObject(processRouteEndpoint, algorithmRequestObject, Object.class);
+            Object algorithmResponse = restTemplate.postForObject(processRouteEndpoint, algorithmRequestObject, Object.class);
 
             // TODO: Implement algorithm call
             List<Trip> trips = new ArrayList<>();

@@ -18,7 +18,7 @@ timezone_finder = TimezoneFinder()
 def convert_to_gmt_plus_one(local_time: datetime, city: PlaceInSearchRequest) -> datetime:
     """Convert local time to GMT+1 based on the city's coordinates."""
     try:
-        local_tz_name = timezone_finder.timezone_at(lat=float(city.station_coordinates.lat), lon=float(city.station_coordinates.lon))
+        local_tz_name = timezone_finder.timezone_at(lat=float(city.station_coordinates.lat), lng=float(city.station_coordinates.lon))
         local_tz = pytz.timezone(local_tz_name)
         local_time = local_tz.localize(local_time)
         return local_time.astimezone(gmt_plus_one)

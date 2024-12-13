@@ -21,6 +21,7 @@ class TransportModeLeg(BaseModel):
     transport_mode: TransportMode
     duration: int
 
+
 class Coordinates(BaseModel):
     lat: str
     lon: str
@@ -49,6 +50,7 @@ class AlgorithmRequest(BaseModel):
     max_trip_duration: int
     preferred_transport: Optional[TransportMode]
     optimization_criteria: CriteriaMode
+
 
 class Connection(BaseModel):
     origin_city: PlaceInSearchRequest

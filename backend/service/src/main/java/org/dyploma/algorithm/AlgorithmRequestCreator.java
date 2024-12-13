@@ -50,7 +50,7 @@ public class AlgorithmRequestCreator {
                 .end_place(mapToPlaceInSearchRequest(endPlace))
                 .places_to_visit(placesToVisit.stream().map(this::mapToPlaceInSearchRequest).toList())
                 .passenger_count(searchRequest.getPassengerCount())
-                .trip_start_date(searchRequest.getTripStartDate().toString())
+                .trip_start_date(searchRequest.getTripStartDate())
                 .max_trip_duration(getMaxTripDurationDays(searchRequest.getMaxTripDuration()))
                 .preferred_transport(searchRequest.getPreferredTransport())
                 .optimization_criteria(searchRequest.getOptimizationCriteria())
