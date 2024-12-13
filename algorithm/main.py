@@ -25,8 +25,8 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logging.error(f"OTP initialization failed: {e}")
         sys.exit(1)
-    finally:
-        stop_otp()
+    #finally:
+        #stop_otp()
 
 
 app = FastAPI(lifespan=lifespan)
@@ -42,7 +42,7 @@ async def process_route(request: AlgorithmRequest):
     logging.info(f"async find_routes_otp executed in {duration:.2f} seconds")
     
     amadeus_results = await process_flight_data(request, start_city_pairs, visit_city_pairs, end_city_pairs)
-
+    logging.info(f"Amadeus results: {amadeus_results}")
     #string of date to datetime with time 00:00:00
     start_date_datetime = datetime.combine(datetime.strptime(request.trip_start_date, "%Y-%m-%d"), datetime.min.time())
 

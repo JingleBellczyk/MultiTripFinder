@@ -8,7 +8,9 @@ import heapq  # Для хранения 5 лучших маршрутов
 
 # Функция для добавления узлов (городов) в граф
 def add_city_to_graph(graph: nx.DiGraph, city: PlaceInSearchRequest):
-    graph.add_node(city)
+    #create city id
+    city_id = city.city + ", " + city.country
+    graph.add_node(city_id, city=city)
 
 
 # Функция для расчета веса для ребра графа
@@ -18,7 +20,7 @@ def calculate_edge_weight(connection: Connection, preferred_transport: Optional[
 
     transport_score_sum = 0
     total_duration = 0
-    for leg in connection.transport_modes:
+    for leg in connection.transport_type:
         total_duration += leg.duration
         if leg.transport_mode == preferred_transport:
             transport_score_sum += leg.duration
@@ -32,8 +34,8 @@ def calculate_edge_weight(connection: Connection, preferred_transport: Optional[
 # Функция для добавления маршрута (рёбер) между городами в граф
 def add_transfer_to_graph(graph: nx.DiGraph, connection: Connection, passenger_count: int, weight: float):
     graph.add_edge(
-        connection.origin_city,
-        connection.destination_city,
+        f"{connection.origin_city.city}, {connection.origin_city.country}",
+        f"{connection.destination_city.city}, {connection.destination_city.country}",
         transport_type=connection.transport_type,
         cost=connection.price * passenger_count,
         duration=connection.duration,
@@ -82,7 +84,7 @@ def find_optimal_routes(graph: nx.DiGraph, start: PlaceInSearchRequest, end: Pla
                     # Рекурсивно посещаем следующий город
                     dfs(next_city, visited.union({next_city}), new_cost, new_route, depart_time_dt)
 
-    dfs(start, {start}, 0, [start], start_date)
+    dfs(start, {f"{start.city}, {start.country}"}, 0, [f"{start.city}, {start.country}"], start_date)
 
     # Конвертируем маршруты в понятный формат
     return [(route, -cost) for cost, route in sorted(best_routes, reverse=True)]

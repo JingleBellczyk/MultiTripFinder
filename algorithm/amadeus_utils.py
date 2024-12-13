@@ -1,5 +1,5 @@
 import logging
-import os
+import os, re
 from amadeus import Client, ResponseError
 from datetime import datetime, timedelta
 from typing import List, Tuple, Any
@@ -19,8 +19,8 @@ timezone_finder = TimezoneFinder()
 def convert_to_gmt_plus_one(local_time: datetime, city: PlaceInSearchRequest) -> datetime:
     """Convert local time to GMT+1 based on the city's coordinates."""
     try:
-        local_tz_name = timezone_finder.timezone_at(lat=float(city.station_coordinates.lat),
-                                                    lng=float(city.station_coordinates.lon))
+        local_tz_name = timezone_finder.timezone_at(lat=float(city.station_coordinates.railway_station_coordinates.lat),
+                                                    lng=float(city.station_coordinates.railway_station_coordinates.lon))
         local_tz = pytz.timezone(local_tz_name)
         local_time = local_tz.localize(local_time)
         return local_time.astimezone(gmt_plus_one)
@@ -29,46 +29,53 @@ def convert_to_gmt_plus_one(local_time: datetime, city: PlaceInSearchRequest) ->
         return local_time
 
 
-def extract_flight_details(flight: dict, end_datetime: datetime, origin: PlaceInSearchRequest,
+def extract_flight_details(flights: list[dict], end_datetime: datetime, origin: PlaceInSearchRequest,
                            destination: PlaceInSearchRequest, passenger_count: int) -> Connection:
     try:
-        duration = int(timedelta(hours=int(flight["itineraries"][0]["duration"][2:4]),
-                                 minutes=int(flight["itineraries"][0]["duration"][5:7])).total_seconds() / 60)
-        segments = flight["itineraries"][0]["segments"]
+        connections = []
+        for flight in flights:
+            duration_str = flight["itineraries"][0]["duration"]
+            hours = int(re.search(r'(\d+)H', duration_str).group(1)) if 'H' in duration_str else 0
+            minutes = int(re.search(r'(\d+)M', duration_str).group(1)) if 'M' in duration_str else 0
+            duration = int(timedelta(hours=hours, minutes=minutes).total_seconds() / 60)
 
-        segment_details = []
-        for segment in segments:
-            departure_time = datetime.strptime(segment["departure"]["at"], "%Y-%m-%dT%H:%M:%S")
-            arrival_time = datetime.strptime(segment["arrival"]["at"], "%Y-%m-%dT%H:%M:%S")
-            segment_info = {
-                "departure_time": departure_time,
-                "departure_city_code": segment["departure"]["iataCode"],
-                "arrival_time": arrival_time,
-                "arrival_city_code": segment["arrival"]["iataCode"],
-            }
-            segment_details.append(segment_info)
+            segments = flight["itineraries"][0]["segments"]
 
-        if segment_details[-1]["arrival_time"] > end_datetime:
-            return {}
-        if flight["numberOfBookableSeats"] < passenger_count:
-            return {}
+            segment_details = []
+            for segment in segments:
+                departure_time = datetime.strptime(segment["departure"]["at"], "%Y-%m-%dT%H:%M:%S")
+                arrival_time = datetime.strptime(segment["arrival"]["at"], "%Y-%m-%dT%H:%M:%S")
+                segment_info = {
+                    "departure_time": departure_time,
+                    "departure_city_code": segment["departure"]["iataCode"],
+                    "arrival_time": arrival_time,
+                    "arrival_city_code": segment["arrival"]["iataCode"],
+                }
+                segment_details.append(segment_info)
+            if segment_details[-1]["arrival_time"] > end_datetime:
+                return {}
+            if flight["numberOfBookableSeats"] < passenger_count:
+                return {}
 
-        return Connection(
-            origin_city=origin,
-            destination_city=destination,
-            departure_time=convert_to_gmt_plus_one(segment_details[0]["departure_time"], origin),
-            arrival_time=convert_to_gmt_plus_one(segment_details[-1]["arrival_time"], destination),
-            price=flight['price']['total'],
-            duration=duration,
-            segments=segment_details,
-            transport_type=[TransportModeLeg(transport_mode=TransportMode.PLANE, duration=duration)]
-        )
+            connection = Connection(
+                origin_city=origin,
+                destination_city=destination,
+                departure_time=convert_to_gmt_plus_one(segment_details[0]["departure_time"], origin),
+                arrival_time=convert_to_gmt_plus_one(segment_details[-1]["arrival_time"], destination),
+                price=flight['price']['total'],
+                duration=duration,
+                segments=segment_details,
+                transport_type=[TransportModeLeg(transport_mode=TransportMode.PLANE, duration=duration)]
+            )
+            connections.append(connection)
+
+        return connections
     except KeyError as e:
         logging.info(f"Error extracting data: no such key {e}")
         return {}
 
 
-async def fetch_amadeus_data(body: dict, trip_start_date: str, origin: PlaceInSearchRequest,
+async def fetch_amadeus_data(body: dict, origin: PlaceInSearchRequest,
                              destination: PlaceInSearchRequest, passenger_count: int) -> \
         tuple[Any, str, PlaceInSearchRequest, PlaceInSearchRequest, int] | list[Any]:
     amadeus = Client(
@@ -78,8 +85,10 @@ async def fetch_amadeus_data(body: dict, trip_start_date: str, origin: PlaceInSe
 
     try:
         response = amadeus.shopping.flight_offers_search.post(body)
+        logging.info(f"Fetched flights from {origin.city} to {destination.city}")
+        logging.info(response.data)
         await asyncio.sleep(0.05)
-        return response.data, trip_start_date, origin, destination, passenger_count
+        return response.data, origin, destination, passenger_count
     except ResponseError as error:
         logging.info(f"Error fetching flights: {error}")
         return []
@@ -112,7 +121,7 @@ async def process_start_city_pairs(request: AlgorithmRequest,
                 }
             }
             tasks.append(
-                fetch_amadeus_data(body, request.trip_start_date, origin, destination, request.passenger_count))
+                fetch_amadeus_data(body, origin, destination, request.passenger_count))
     return await asyncio.gather(*tasks)
 
 
@@ -146,7 +155,7 @@ async def process_visit_city_pairs(request: AlgorithmRequest,
                     }
                 }
                 tasks.append(
-                    fetch_amadeus_data(body, request.trip_start_date, origin, destination, request.passenger_count))
+                    fetch_amadeus_data(body, origin, destination, request.passenger_count))
     return await asyncio.gather(*tasks)
 
 
@@ -181,11 +190,17 @@ async def process_end_city_pairs(request: AlgorithmRequest,
                 }
             }
             tasks.append(
-                fetch_amadeus_data(body, request.trip_start_date, origin, destination, request.passenger_count))
+                fetch_amadeus_data(body, origin, destination, request.passenger_count))
     return await asyncio.gather(*tasks)
 
 
 async def process_flight_data(request: AlgorithmRequest, start_city_pairs, visit_city_pairs, end_city_pairs):
+    # str to date
+    start_date = datetime.strptime(request.trip_start_date, "%Y-%m-%d")
+    max_days = request.max_trip_duration
+    # start_date + max days + end of the day
+    end_datetime = start_date + timedelta(days=max_days, hours=23, minutes=59)
+
     start_results = await process_start_city_pairs(request, start_city_pairs)
     visit_results = await process_visit_city_pairs(request, visit_city_pairs)
     end_results = await process_end_city_pairs(request, end_city_pairs)
@@ -194,8 +209,8 @@ async def process_flight_data(request: AlgorithmRequest, start_city_pairs, visit
     # apply extract_flight_details to all results
     final_results = []
     for result in results:
-        flight, end_datetime, origin, destination, passenger_count = result
+        flight, origin, destination, passenger_count = result
         if result:
-            final_results.append(extract_flight_details(flight, end_datetime, origin, destination, passenger_count))
+            final_results.extend(extract_flight_details(flight, end_datetime, origin, destination, passenger_count))
 
     return final_results

@@ -26,10 +26,28 @@ class Coordinates(BaseModel):
     lat: str
     lon: str
 
+    def __hash__(self):
+        return hash((self.lat, self.lon))
+
+    def __eq__(self, other):
+        if not isinstance(other, Coordinates):
+            return False
+        return self.lat == other.lat and self.lon == other.lon
+
 
 class StationCoordinates(BaseModel):
     railway_station_coordinates: Optional[Coordinates]
     bus_station_coordinates: Optional[Coordinates]
+
+    def __hash__(self):
+        return hash((self.railway_station_coordinates, self.bus_station_coordinates))
+
+    def __eq__(self, other):
+        return (self.railway_station_coordinates == other.railway_station_coordinates and
+                self.bus_station_coordinates == other.bus_station_coordinates)
+
+    def __repr__(self):
+        return f"StationCoordinates({self.railway_station_coordinates}, {self.bus_station_coordinates})"
 
 
 class PlaceInSearchRequest(BaseModel):
